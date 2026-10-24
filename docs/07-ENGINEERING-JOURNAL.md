@@ -16,6 +16,12 @@
 - Distinguish **implemented** / **tested** / **observed** / **inferred** / **untested** / **deferred**. No statement of profitability without results.
 - Include enough context that a smaller-model bulk session can be reviewed independently by a higher-reasoning lead without rereading the full codebase. Summarize what matters, don't narrate every edit.
 
+## Progress and persistent memory policy
+
+Measure progress toward the **research-qualified and demo-safe v1 development definition of done**, **not** proven profitability or authorized live trading. Report after each reviewed Codex PR: `Estimated verified completion X% / remaining 100-X%`; breakdown and uncertainty, with basis. Use *rough phase-gate weights* P0 **10%**, P1 **15%**, P2 **20%**, P3 **25%**, P4 **10%**, P5 **15%**, P6 **5%**. Only award a phase's full weight when its evidence-based gate passes; optional provisional subphase credit must list objective completed artifacts and cannot imply promotion. The initial implementation estimate is **0%** as of this documentation review; original design consultation is complete but no gate has been implemented. If evidence invalidates a gate, revise the estimate openly. This rubric estimates product capabilities, not calendar time or Codex quota remaining.
+
+After each reviewed session, add a **short durable memory capsule**: what changed in code, exact commits/PRs, verified tests and datasets, nontrivial implementation decisions and why, reproducible important defects and fixes, affected architecture/feature versions, next gate and owner questions. Preserve knowledge via source-linked ADRs rather than long conversational recollections. Distinguish research observations from production facts. Keep prompts/agent memories summarized with bounded retention; do not commit credentials, raw sensitive account data or large raw market streams into Git. Market-data storage and authoritative event truth follow `02`.
+
 ## Milestone / phase status
 
 | Gate | Status | Actual evidence | Next |
@@ -54,6 +60,8 @@
 - **P2/P3 deferred:** short note and reason it doesn't prevent NEXT_GATE.
 - **Doc updates:** links/paths to sources updated in this PR.
 - **Reviewer verdict:** PASS / PASS WITH DEFERRED NONBLOCKERS / BLOCKED; reviewer and date.
+- **Estimated completion and remaining:** X% / Y% demo-qualified scope; gate credits and uncertainty, session/quota usage if measurable.
+- **Expert strategy standard (where relevant):** upstream solutions examined; positive/failed practitioner cases; causal replay and discrepancies.
 - **NEXT_GATE / next Codex task:** explicit phase-oriented action and why it follows.
 ```
 
@@ -70,6 +78,13 @@
 - **ChatGPT Project source sync:** **PENDING USER ACTION** — create a project, paste `docs/08-CHATGPT-PROJECT-INSTRUCTIONS.md` into Instructions, upload the same ten Markdown files from the provided ZIP. No tool here can create/modify the user's ChatGPT Project directly.
 - **Bootstrap review:** doc count and instruction length verified, and agreement with fixed v1.5 vision inspected. There are **no implementation tests yet**. Next milestone unchanged: C01. No Codex session used for this bootstrap.
 - **NEXT_GATE:** C01 / ADR-EXEC-001 and minimal lifecycle contracts. No signed Binance trading.
+
+### 2026-10-24 — DOC-QUALITY-001 — Owner's expert-level and quota-aware refinement
+- **Owner clarified:** prebuilt **best-working trading logic**, not superficial basic indicators; actual trader-level market interpretation; deep strategy research using implementation code, historical examples, charts and trading-community evidence, tempered by causal and economic testing. Maintain creative solutions without pointless defensive boilerplate or scope creep.
+- **Delivery refinement:** choose Sol only for real unresolved complexity; use Luna on settled bulk implementation; default C05/C09 to independent project-lead reviews, optional Sol escalation. Use separable subagents where beneficial. The conditional critical path is now ~7 Codex sessions, not 9 automatic charges.
+- **Continuity:** phase-weighted verified progress percentages after reviews; bounded market/agent memory and durable code/test/ADR journaling; owner asked on genuinely material unknowns. This changes **working methods and research rigor**, not the agreed trading vision or risk ceilings.
+- **Tests/research:** DOCUMENTATION ONLY. No new implementation, validated strategy, historical replay or Codex session claimed. Phase and NEXT_GATE remain P0/C01.
+
 
 ## Deferred issues / parking lot (P2/P3 only)
 
