@@ -163,4 +163,4 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 ### C02 delivery addendum
 
 - **Delivery:** branch `codex/c02-market-data-intelligence`; base SHA `fa7cdedda8c9ce32ae02f42efbd2bb82590beb4f`; implementation commit `5be83b74d555748b64028f17580fbd8c94ac46b9`; [PR #2](https://github.com/KasunKarandagolla/AstraBot/pull/2), targeting `main`. PR is open and not merged. Its body requests independent project-lead review; no reviewer identity was assigned. No auto-merge was enabled.
-- **Workflow:** local checks above passed before publication. GitHub Actions status is checked after PR creation and recorded in the handoff; remote CI is not described as passing until GitHub reports a completed successful run.
+- **Workflow:** local checks above passed before publication. At handoff, the GitHub connector returned no PR workflow runs or combined status for the published head, and the GitHub CLI run-list request returned HTTP 403. Remote CI is therefore **unreported**, not passed; local checks remain the available verification evidence.
