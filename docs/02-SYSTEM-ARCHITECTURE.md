@@ -114,6 +114,34 @@ Before choosing a database/queue/retention period, measure ingestion and query l
 
 Python pinned dependency lock, formatting/typecheck, unit/contract fixtures, causal-prefix replay, component golden tests, integration fakes, fault harness, and optionally public demo adapter tests. Real API keys never enter CI or LLM runtime. Tests are tiered so basic commits stay fast. All nontrivial behavior and adopted versions need references in `03` register and `07` journal.
 
+## C02 read-only implementation boundary
+
+The C02 branch adds `data/models.py`, a typed observation layer using the C01
+Decimal and UTC conventions; `data/binance.py`, an unauthenticated GET-only
+allowlist for public USD-M metadata, candles, aggregate trades, book snapshots,
+24h ticker, OI, mark/index and funding data; and `data/replay.py` for stable
+raw normalization, gap checks and manifests. Live REST observations use the
+capture time as their availability boundary when Binance supplies no publish
+time. Archive replay uses the explicit exchange-close or trade-time proxy in
+its manifest. Forming candles are omitted.
+
+`universe/eligibility.py` applies the provisional v1.5 thresholds to the
+point-in-time metadata snapshot and required feeds. Every input symbol keeps a
+record with state and exclusion/selection reasons. The maximum 15-symbol output
+is explicitly `RESEARCH_WATCHLIST`, with `executable=false`; range-edge
+proximity, median spread and turnover are deterministic context/tie-breaks,
+not strategy or profitability scores. Missing verified event clearance stays
+warming.
+
+`features/providers.py` exposes A01 aggregate-trade signed volume with
+continuity/readiness, A02 UTC-session candle VWAP labeled
+`BAR_DERIVED_APPROX`, and A03 as `UNAVAILABLE` until one inspected SMC
+implementation passes expanding-prefix availability checks. No A03 hindsight
+labels are copied into features. C02 adds offline synthetic and actual archive
+fixtures plus CI; it does not change C01 execution contracts or expose private
+account/order methods. The historical sample is a normalization smoke panel,
+not eligible-universe or strategy evidence.
+
 ## Acceptance for architecture phase
 
 A fake data snapshot can produce deterministic feature IDs and a NO_TRADE/proposal decision, without signed Binance access. A toy OpenBot coordinator can call the typed tools and cannot access trading keys. Services restart without losing recorded setup or approval state. Version pinning/fixture tests catch changed units or timestamps in adopted packages. No order-writing endpoint is accessible from the agent network.

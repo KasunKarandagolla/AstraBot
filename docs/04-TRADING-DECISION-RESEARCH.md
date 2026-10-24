@@ -36,6 +36,43 @@ Use a **two-layer qualification**: (1) **case-study/trader-level parity review**
 - **Bias prevention:** replay from an expanding prefix; data appended in the future must not change any feature *emitted as known earlier*. Confirmed swing may emit later only with appropriate available_at. Historical selection cannot use survivors-only today's universe.
 - **News:** verified event feed and versioned deterministic blackout rules. News cannot directly generate BUY/SELL; missing critical event coverage vetoes affected new entries.
 
+### C02 evidence state
+
+The C02 implementation supplies a GET-only USD-M reader, deterministic raw
+replay, point-in-time Stage A gate, and a 15-symbol maximum research shortlist.
+Its tested policy requires 720 contiguous closed 1H bars, 200 contiguous closed
+4H bars, 21 closed 15M bars (the latest plus 20 prior), 20 closed 5M bars for
+the recent-range proximity context, 60 consecutive one-minute
+spread samples, fresh ticker/depth/OI observations, validated OI notional, and
+an explicit event-clearance record. The numeric filters remain v1.5 research
+defaults. The shortlist sorts by recent-range edge proximity, spread, turnover
+and symbol only; it does not create candidates or score profitability.
+
+C02 freshness cutoffs are metadata ≤1 hour, ticker and latest spread sample
+≤60 seconds, depth ≤10 seconds, current OI ≤300 seconds, event clearance ≤1
+hour, and the newest expected 5M close available no more than 10 seconds late.
+The one-hour event-clearance cutoff is a provisional C02 engineering default;
+the v1.5 source requires current verified event coverage but does not prescribe
+this exact duration.
+
+The Binance USDⓈ-M OI response names a current `openInterest` quantity and the
+history response includes `sumOpenInterestValue`, but the published field
+schema does not state a unit. The adapter preserves that raw history value and
+does not set USDT notional or `unit_validated`; the scanner therefore remains
+warming for this mandatory gate until a documented or numerically validated
+unit mapping is supplied. The fully ready eligibility fixture uses an explicit
+validated test notional and does not claim live OI qualification.
+
+A01 smoke output is signed Binance aggregate-trade base volume with continuity
+and source-window readiness. A02 is UTC-midnight VWAP from closed 5M typical
+price × base volume, explicitly approximate. A03 returns `UNAVAILABLE` while
+the inspected retrospective SMC sources remain unqualified for prefix
+causality. The committed actual archive panel covers only BTCUSDT 1H candles
+for 2024-10-28 and the first 100 APEUSDT aggregate trades on 2024-10-18. It is
+parser/feature evidence, not a strategy panel, valid warm-up, liquidity
+qualification, or event/news feed. C03 must still establish its own setup
+chronologies and required causal structural sources.
+
 ## 3. Regime versus persistent setup
 
 `TREND_UP`, `TREND_DOWN`, `BALANCE`, `UNKNOWN` and stress/volatility/liquidity flags are context. Breakout is a **timestamped event**, not merely a mutually exclusive market regime label. Research transition persistence/hysteresis, avoid oscillation due to repeated bar checks. Unknown required context = NO TRADE, but a persisted setup does not evaporate because a breakout label disappears on the next bar. Freeze all anchors/ATR, invalidate by **strategy-specific** clauses.
