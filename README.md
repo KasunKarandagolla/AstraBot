@@ -27,6 +27,16 @@ Assembly is **not** a basic-indicator bot. Choose the most suitable **working, m
 
 Codex model selection is **complexity-triggered, not a Sol/Luna alternating pattern**; independent lead reviews can replace some paid Sol tasks. Use subagents for separable research/coding/review under one accountable task without multiplying sessions or tool costs blindly. Report estimated **demo-qualification completion % and remaining %** after each reviewed PR using the weighted gate ledger in `07`; identify what the estimate does/doesn't measure. Persist concise verified findings, storage decisions, code and test references across sessions; distinguish development memory from runtime market-data retention and durable trading events. Ask the owner when missing facts affect material or irreversible decisions. No generic repeated disclaimers; no dilution of real exchange/order-safety controls.
 
+## MVP-first delivery rule (2026-10-25)
+
+**Build an evidence-led MVP before completing the platform.** The MVP is a narrow, integrated *vertical slice*, not ten shallow indicators or a UI demo.
+
+- **Research MVP (MVP-R, C02–C04; economic review C05):** real read-only Binance USD-M data → dynamic eligible altcoin shortlist → prebuilt, causal market-analysis providers → one precisely defined candidate setup with real structural levels and costs → TRADE_CANDIDATE or NO_TRADE → saved reproducible replay/report. Start this vertical slice as early as C02; no live orders.
+- **Agentic paper MVP (MVP-A, C06):** OpenBot coordinates the deterministic workflow; explicit owner approval of a bounded one-use proposal; **fake/paper** order execution, position management and decision journal on a reproducible scenario. A research-only policy can only run in simulation, never gain live authority through a demo. No full Binance order-management platform is needed for this milestone.
+- **Demo-qualified v1 (C07–C09):** independently proven single order owner, Binance demo exchange integration, protective order reconciliation, partial exits, restart recovery and 12-hour timer. This comes later and is gated separately.
+
+**MVP acceptance:** reproduce a real historical candidate and a justified no-trade case, report input provenance and economic assumptions, show a working end-to-end paper trace including approval/hold-or-exit/journal, and run relevant tests. If no policy survives economic review, **report research MVP achieved but policy unqualified**; do not fake a profitable trade or advance to funded execution. Preserve all A01–A10 in final scope; activate only validated dependencies in the MVP. No extra Codex session is automatic: deliver these slices inside C02–C06 and existing gates.
+
 ## Current focus and next action
 
 **Phase 0: pre-code contract and economic feasibility.** Run the scoped engine-owner feasibility spike and the data/cost audit **before** constructing a full autonomous platform. The first Codex task is `C01` in `docs/06-CODEX-DELIVERY-PLAN.md`; do not jump to execution or live infrastructure. After every Codex task: push commits, open a PR, update the engineering journal and relevant live docs, and submit the PR for independent ChatGPT Project review before merge.
