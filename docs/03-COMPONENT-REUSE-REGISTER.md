@@ -29,6 +29,14 @@
 
 Do not silently substitute `[tpwilo/smc](https://github.com/tpwilo/smc)` for the upstream SMC package; it is a fork. Pin the actual imported artifact, not an approximate GitHub link. Prebuilt code can still be unsuitable for causal features without a wrapper or tests.
 
+## 1A. Best-working-project selection, not a shallow library checklist
+
+The project lead must **search for complete, mature implementations of the target trading logic** before proposing basic custom indicators. Search upstream repos, actual tested trading engines, well-maintained strategy implementations, documented example policies, and verifiable public trading analysis. For each serious candidate, record (a) **what it actually computes/decides** and under what market context, (b) whether it is executable/live/replay tested rather than README-only, (c) causal data and feature semantics, (d) stop/target and thesis-management coverage, (e) reproducible meaningful examples, negative cases and failure modes, (f) integration/maintenance cost, and (g) the thinnest viable adapter. Compare the best 2–3 credible candidates, not dozens of repositories by stars.
+
+**Reuse substantive judgment when available**: e.g. footprint/delta calculations with price response, real structure confirmation, anchored VWAP regime interpretation, properly sourced volume profiles, not simply ten indicator values. If an expert-grade prebuilt component exists but requires adaptation, adapt it before building a toy replacement. A proven analytical library is not automatically a profitable trading strategy; the actual composed executable policy still needs a deep strategy study, practitioner-case parity checks and whole-policy economic evaluation per `04`.
+
+Candidate demos, social-media chart annotations and claimed trader win rates are evidence of ideas/behavior **only**, not independently verified track records. Prefer unambiguous test data, code behavior and repeated out-of-sample cases. Record decisions briefly and avoid repeatedly re-shopping a qualified component absent a material deficiency.
+
 ## 2. Engine-owner feasibility decision C01 (short, hard gate)
 
 In one scoped **GPT-6.1 Sol** session compare pinned versions of: (A) official USD-M SDK + thin durable gateway, (B) Freqtrade as *sole* writer, (C) NautilusTrader as *sole* writer. Research only exact gap costs, not generic popularity. Use fake venue plus supported Binance demo for:
