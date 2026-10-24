@@ -65,7 +65,10 @@
 - **Prepared documentation:** root README, eight live `docs/` operational sources, one preserved v1.5 reference file; exact ten Markdown files including README.
 - **Preserved vision:** OpenBot-only coordinator/free models, three roles, Binance USD-M dynamic altcoins, all ten families, sniper/target rules, approved one-use trades, twelve-hour age, active supervision, single execution owner, reuse-first and research-before-platform build.
 - **Open implementation facts:** neither research nor exchange/tool integration has run. Model availability/permissions must be verified in the first actual Codex task.
-- **GitHub write/PR evidence:** enter actual branch, commit, PR and reviewer verdict after confirmed upload. Do not mark a write successful from file creation alone.
+- **GitHub publication VERIFIED:** initial bootstrap committed directly to the empty `main` branch (documentation initialization exception, not Codex implementation). GitHub recursively returned exactly ten Markdown blobs. The preserved v1.5 reference was uploaded at commit `7a6bc96e19c67d6216103312fc6c971130a67320`; each living file has a distinct initial commit, and project instructions are present. No PR was used because this initialized a blank repository.
+- **GitHub content verification:** compared file-blob SHA-1 for all ten documents against local output; nine GitHub copies omit only the final newline, while the v1.5 reference is byte-identical. Package copies will match GitHub.
+- **ChatGPT Project source sync:** **PENDING USER ACTION** — create a project, paste `docs/08-CHATGPT-PROJECT-INSTRUCTIONS.md` into Instructions, upload the same ten Markdown files from the provided ZIP. No tool here can create/modify the user's ChatGPT Project directly.
+- **Bootstrap review:** doc count and instruction length verified, and agreement with fixed v1.5 vision inspected. There are **no implementation tests yet**. Next milestone unchanged: C01. No Codex session used for this bootstrap.
 - **NEXT_GATE:** C01 / ADR-EXEC-001 and minimal lifecycle contracts. No signed Binance trading.
 
 ## Deferred issues / parking lot (P2/P3 only)
