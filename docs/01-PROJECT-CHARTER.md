@@ -26,6 +26,12 @@ Build **AstraBot**, a Binance USDⓈ-M USDT-settled perpetual-futures system whi
 
 **Provisional v1 hard ceilings, from v1.5**: per-trade modeled stop risk ≤0.25% reconciled equity; aggregate pending+open modeled stop risk ≤0.50%; entry halt after 1% daily UTC equity-baseline decline; ≤2 concurrent positions; one independent position per symbol; isolated margin; effective leverage ≤2×. Model risk is not a worst-case loss guarantee. These ceilings may be tightened within a research configuration; loosening or changing their meaning requires owner sign-off.
 
+## Expert-trader quality requirement (owner clarification, 2026-10-24)
+
+AstraBot must aim for **experienced retail-trader-level market interpretation**, not superficial use of A01–A10 as independent indicator checkboxes. Strategy selection and real trade management must account for regimes, contextual anchors, order-flow/price-response interaction, liquidity conditions, confluence/dependency, failed setups and changing thesis. An elegant basic implementation is insufficient if it cannot interpret meaningful historical cases. This standard **does not require** a huge custom AI, copying a guru's discretionary intuition, or activating all families at once. Investigate qualified prebuilt expert-grade logic before writing bespoke rules; verify it with rigorous case review and causal economic testing.
+
+Practical project leadership: minimize total Codex resource consumption while maintaining this quality bar, delegate genuinely independent subagent tasks when available, keep stateful engineering memory and runtime market-data storage bounded, and estimate demo-qualification progress after every PR review. Avoid repetitive generic warnings; explain material constraints once, then solve the task. Ask the owner if a genuinely decision-changing fact is unknown; proceed on reversible small implementation details under recorded assumptions.
+
 ## What is NOT proven
 
 No currently chosen software candidate has been installed, pinned and exercised end-to-end for this system. No backtest has proven profit. No live order flows or Binance testnet capabilities have passed acceptance tests. Labels in documentation are **hypotheses**, not certifications.
