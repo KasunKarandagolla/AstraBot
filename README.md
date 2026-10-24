@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: DESIGN / PRE-IMPLEMENTATION.** No exchange integration, backtest, economic edge or live safety qualification has yet been established.  
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01 merged; C02 read-only implementation prepared for independent review.** The public adapter has not been verified against a live Binance endpoint. No trading operations, strategy backtest, economic edge or live safety qualification has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,7 +39,7 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**Phase 0: pre-code contract and economic feasibility.** Run the scoped engine-owner feasibility spike and the data/cost audit **before** constructing a full autonomous platform. The first Codex task is `C01` in `docs/06-CODEX-DELIVERY-PLAN.md`; do not jump to execution or live infrastructure. After every Codex task: push commits, open a PR, update the engineering journal and relevant live docs, and submit the PR for independent ChatGPT Project review before merge.
+**C02 / P1: read-only discovery and causal data.** C01 contracts and the proposed execution-owner ADR are merged on `main`. C02 implements an offline replayable Binance public-data boundary, dynamic research eligibility, and A01/A02/A03 smoke adapters. Its PR remains subject to independent review; that review determines whether the C02 phase gate passes. C03 setup chronologies are the proposed next milestone only after the C02 review accepts its prerequisites. No live execution work is authorized by this status.
 
 ## Source authority and drift prevention
 

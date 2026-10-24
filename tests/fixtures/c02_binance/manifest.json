@@ -1,0 +1,22 @@
+{
+  "manifest_version": "c02.synthetic-fixture.v1",
+  "normalization_version": "c02-replay-v1",
+  "synthetic": true,
+  "fidelity": "SYNTHETIC_FIXTURE",
+  "feed": "klines:5m",
+  "symbol": "BTCUSDT",
+  "instrument_id": "BINANCE_USDM:PERPETUAL:BTCUSDT:SETTLE:USDT",
+  "source": "local hand-authored deterministic fixture",
+  "source_url": null,
+  "coverage_start": "2026-10-24T00:00:00.000Z",
+  "coverage_end": "2026-10-24T00:09:59.999Z",
+  "record_count": 2,
+  "retained_file": "klines_synthetic.json",
+  "retained_file_sha256": "73e8d2b28d7c83a7b50f12cd87c62d06dd34ec34baf3587d88923cb0a326df3c",
+  "archive_sha256": null,
+  "timestamp_interpretation": "Binance-shaped epoch milliseconds UTC, generated for tests; not an exchange observation.",
+  "availability_assumption": "closed close_time + 1 millisecond, replay only",
+  "original_units": "OHLC quote per base; volume in base asset; quote volume in quote asset",
+  "known_gaps": [],
+  "corrections": []
+}

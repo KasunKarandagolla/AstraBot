@@ -1,0 +1,61 @@
+{
+  "manifest_version": "c02.historical-panel.v1",
+  "normalization_version": "c02-replay-v1",
+  "panel_scope": "Small point-in-time normalization sample; not universe warm-up or strategy research evidence.",
+  "records": [
+    {
+      "file": "BTCUSDT-1h-2024-10-28.csv",
+      "feed": "klines:1h",
+      "symbol": "BTCUSDT",
+      "instrument_id": "BINANCE_USDM:PERPETUAL:BTCUSDT:SETTLE:USDT",
+      "coverage_start": "2024-10-28T00:00:00.000Z",
+      "coverage_end": "2024-10-28T23:59:59.999Z",
+      "record_count": 24,
+      "source_url": "https://data.binance.vision/data/futures/um/daily/klines/BTCUSDT/1h/BTCUSDT-1h-2024-10-28.zip",
+      "archive_id": "BTCUSDT-1h-2024-10-28.zip",
+      "archive_sha256": "8310448cfc4978c89070a13d17636d3b726e8f784068ea8f7dbb5bbfc69ce581",
+      "retained_file_sha256": "73930ee78240d99a8184e5dedf808dbd998799c22fcc632732ffdc12dd465c1b",
+      "mirror_url": "https://github.com/freqtrade/freqtrade/blob/1f394eaebc2f46a83d26971388628707802f8602/tests/testdata/binance/binance_public_data/futures-um-klines-BTCUSDT-1h-2024-10-28.zip",
+      "mirror_commit": "1f394eaebc2f46a83d26971388628707802f8602",
+      "mirror_git_blob_sha1": "5bda1b27101dedd7d639726b70ebb2229076c411",
+      "timestamp_interpretation": "Binance kline open_time and inclusive close_time in epoch milliseconds UTC.",
+      "availability_assumption": "Available at close_time + 1 millisecond. The archive does not contain original publication or ingestion latency.",
+      "original_units": "OHLC in USDT per BTC; base volume in BTC; quote volume in USDT.",
+      "fidelity": "VENUE_REPORTED",
+      "synthetic": false,
+      "known_gaps": [],
+      "corrections": [],
+      "coverage_note": "One full calendar day of 1h klines only; 24 records and no claim of a complete warm-up window."
+    },
+    {
+      "file": "APEUSDT-aggTrades-2024-10-18-first100.csv",
+      "feed": "aggTrades:bounded-first-100",
+      "symbol": "APEUSDT",
+      "instrument_id": "BINANCE_USDM:PERPETUAL:APEUSDT:SETTLE:USDT",
+      "coverage_start": "2024-10-18T00:00:03.958Z",
+      "coverage_end": "2024-10-18T00:01:24.156Z",
+      "record_count": 100,
+      "source_day_record_count": 45342,
+      "source_url": "https://data.binance.vision/data/futures/um/daily/aggTrades/APEUSDT/APEUSDT-aggTrades-2024-10-18.zip",
+      "archive_id": "APEUSDT-aggTrades-2024-10-18.zip",
+      "archive_sha256": "32f6d372fe74b265dcdbedf92e8d9dcdd5a88ab6396674b163af3f7adaf65a64",
+      "retained_file_sha256": "52ff319bf0526d02d757b21939ea33f73a125d057469e775e2f119aaaf5fd778",
+      "mirror_url": "https://github.com/freqtrade/freqtrade/blob/1f394eaebc2f46a83d26971388628707802f8602/tests/testdata/binance/binance_public_data/futures-APEUSDT-aggTrades-2024-10-18.zip",
+      "mirror_commit": "1f394eaebc2f46a83d26971388628707802f8602",
+      "mirror_git_blob_sha1": "ea734e4cad6b4a3125cc71d9f71ec9ed389ef834",
+      "timestamp_interpretation": "Binance aggregate transact_time in epoch milliseconds UTC; exchange aggregate trade IDs retained.",
+      "availability_assumption": "Exchange transact_time is used as an event-time availability proxy. The archive has no stream arrival or backfill publication timestamps.",
+      "original_units": "Price in USDT per APE; quantity in APE; buyer-maker boolean retained; IDs are aggregate-trade IDs.",
+      "fidelity": "TRADE_AGG",
+      "synthetic": false,
+      "known_gaps": [],
+      "corrections": [],
+      "coverage_note": "Only the first 100 contiguous aggregate trades of the source day are retained. This is a bounded trade-derived smoke window, not a full-day CVD or liquidity sample."
+    }
+  ],
+  "limitations": [
+    "No ETH archive was present in the inspected source fixture set; BTC is the available context contract.",
+    "This bounded panel does not satisfy 720 closed 1h or 200 closed 4h eligibility warm-up and does not contain spread, depth, OI, funding, or verified event history.",
+    "Historical availability is represented by the stated exchange-time assumptions; the original archive publication latency was not available."
+  ]
+}

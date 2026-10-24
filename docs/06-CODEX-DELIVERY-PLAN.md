@@ -13,7 +13,11 @@
 7. A session that hits a genuine P0/P1 blocker stops at a **safe partial output**, records precise reproduction and proposed cheapest fix, and does not quietly deviate to another phase.
 8. Never use production Binance credentials; no live capital. Keep test/dry-run flags and gateways disabled until separate owner authorization.
 
-## Explicit MVP-first strategy (does not change C01 as next task)
+## Current implementation checkpoint
+
+C01 is merged on `main` (PR #1, merge commit `fa7cdedda8c9ce32ae02f42efbd2bb82590beb4f`); its contracts and execution-owner decision remain unchanged. C02 / P1 is the current implementation and review boundary. The C02 PR's independent review decides whether its phase gate passes. C03 is the **proposed** next milestone only after that review records a passing verdict; this checkpoint does not approve or start C03.
+
+## Explicit MVP-first strategy (C02 review remains the active gate)
 
 An MVP is an **end-to-end working capability**, not packages installed or ten basic signals. Prioritize the smallest credible vertical slice early, then expand after its evidence gate.
 
@@ -62,7 +66,7 @@ Market expertise is a **phase deliverable**, not optional polish: the C03 resear
 | P5 Protected demo execution | single writer, one-use plan, partial exits, 12h, recovery | all activated lifecycle safety cases pass |
 | P6 Integrated demonstration/review | trace from scan to closed trade and owner-facing report, lessons recorded | independent final review and owner-controlled promotion |
 
-## Ready-to-run C01 Codex cloud brief (copy/paste as first task)
+## Historical C01 Codex cloud brief (completed)
 
 > Repository: `KasunKarandagolla/AstraBot`. Read `README.md`, `docs/01-PROJECT-CHARTER.md`, `docs/03-COMPONENT-REUSE-REGISTER.md`, `docs/05-EXECUTION-SUPERVISION.md`, `docs/06-CODEX-DELIVERY-PLAN.md`, `docs/07-ENGINEERING-JOURNAL.md` and relevant sections of `docs/reference/AGENTIC_SPEC_v1.5.md`. This is **C01 / Sol / complex feasibility only**. Do not scaffold the whole product. Evaluate pinned official Binance USD-M SDK+small gateway, Freqtrade sole-owner, and NautilusTrader sole-owner against exact approval failure-closed behavior, IOC unknown result, stop/TP coexistence, partial fill protection, safe stop replacement, restart reconciliation and 12h timer. Use fake-venue fixtures and no real credentials. Provide a concise measured matrix, choose a **provisional** single-writer approach via `ADR-EXEC-001` and state remaining unknowns. Define minimal typed lifecycle, approval and economics contracts to unblock subsequent bulk work. Record the decision, versions, tests, blockers and next task in `docs/07-ENGINEERING-JOURNAL.md`. Update only impacted docs. Commit/push to one feature branch and open a PR. **Avoid unrelated changes, auto-merge and live deployment.**
 
