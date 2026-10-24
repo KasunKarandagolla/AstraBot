@@ -22,6 +22,23 @@ Measure progress toward the **research-qualified and demo-safe v1 development de
 
 After each reviewed session, add a **short durable memory capsule**: what changed in code, exact commits/PRs, verified tests and datasets, nontrivial implementation decisions and why, reproducible important defects and fixes, affected architecture/feature versions, next gate and owner questions. Preserve knowledge via source-linked ADRs rather than long conversational recollections. Distinguish research observations from production facts. Keep prompts/agent memories summarized with bounded retention; do not commit credentials, raw sensitive account data or large raw market streams into Git. Market-data storage and authoritative event truth follow `02`.
 
+## MVP milestone tracker
+
+| Milestone | Status | Evidence required | Existing task |
+|---|---|---|---|
+| MVP-R0 read-only market slice | NOT STARTED | Real Binance public altcoin shortlist; causal prebuilt analytics adapter; missing-data readiness case | C02 after P0 |
+| MVP-R1 research vertical slice | NOT STARTED | Reproducible setup/NO_TRADE trace, stop/target and costs, causal replay, positive and negative trader-level cases, C05 GO/REVISE/STOP verdict | C03–C05 |
+| MVP-A agentic paper vertical slice | NOT STARTED | OpenBot → deterministic analysis → bounded human approval → fake order → simulated management/exit → journal and failure tests | C06 after research gate |
+| Demo-safe v1 | NOT STARTED | Single-writer demo/recovery/supervision tests | C07–C09 |
+
+MVP milestones are **outcomes of already planned sessions**, not separate tasks. Passing an MVP gate does not authorize live trading. Keep existing P0–P6 percentage weighting; report MVP state separately from progress toward demo-qualified v1.
+
+### 2026-10-25 — DOC-MVP-001 — Explicit first-working-MVP gates
+
+- **Finding:** The phased research/demo roadmap had no explicitly named and testable early MVP; a reader could postpone the first end-to-end demonstration until too late.
+- **Correction:** Added MVP-R0 (C02), MVP-R1 (C03–C05), and MVP-A paper (C06), keeping full demo qualification later (C07–C09). No change to C01 as next gate, Codex session count, trading scope, authority or live-risk limits.
+- **Evidence:** Documentation and repository verification only. No implementation, backtest, strategy qualification or functioning MVP is claimed.
+
 ## Milestone / phase status
 
 | Gate | Status | Actual evidence | Next |
