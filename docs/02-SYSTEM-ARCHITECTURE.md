@@ -100,6 +100,16 @@ Human approval is through authenticated owner-facing API, not the LLM. Even for 
 
 Context 4H → regime 1H → setup 15M → trigger closed 5M; lower-frequency trade-derived windows where qualified. The supervisor is **event-driven** (fills, price and data status, closed bars) plus configurable timer check; do not equate repeated polling of one closed candle with multiple confirmations. The 12-hour clock begins at earliest first fill and never resets. Protect and supervise positions even if coordinator, journal or an agent channel goes down.
 
+## Storage, memory and continuity contract (pre-implementation design)
+
+Separate **three classes of memory** rather than treating agent conversational state as authoritative:
+
+1. **Trading truth (durable):** append-only exchange/intents/approvals/fills/protection/position/supervision events, immutable setup snapshots and earliest-fill clocks in transactional storage; idempotent IDs, versioned schemas, encrypted credentials, backup/restore and replay/reconciliation tests. Never depend on LLM memory for risk or order state.
+2. **Market research and feature data (size-governed):** immutable source provenance/manifests, partitions by symbol/date/feed, cold archives for ticks/aggTrades where justified, bounded hot caches and summarized flow/profile aggregations with gap/readiness labels. Select and measure retention/partition/compaction based on observed feed volume; **do not** default to storing full-depth tick data for every altcoin indefinitely. Preserve enough original observations for causal replay of qualified policies.
+3. **Agent/development memory:** small journal, ADRs, tested component registry, pointers to commits/datasets/results and compact tool outputs. Agents read scoped summaries instead of unbounded histories; document summary provenance, retention, permission and deletion. Journal and LLM-generated narratives are derived explanations, never sources of trading truth.
+
+Before choosing a database/queue/retention period, measure ingestion and query load; document recoverability, backup/checksum procedures, growth limits, secrets protection and a restore drill. Start with existing database and filesystem/object-store facilities rather than a new vector DB, message broker or distributed event platform without demonstrated need.
+
 ## Repo/CI conventions
 
 Python pinned dependency lock, formatting/typecheck, unit/contract fixtures, causal-prefix replay, component golden tests, integration fakes, fault harness, and optionally public demo adapter tests. Real API keys never enter CI or LLM runtime. Tests are tiered so basic commits stay fast. All nontrivial behavior and adopted versions need references in `03` register and `07` journal.
