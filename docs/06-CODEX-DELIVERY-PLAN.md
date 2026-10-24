@@ -13,6 +13,19 @@
 7. A session that hits a genuine P0/P1 blocker stops at a **safe partial output**, records precise reproduction and proposed cheapest fix, and does not quietly deviate to another phase.
 8. Never use production Binance credentials; no live capital. Keep test/dry-run flags and gateways disabled until separate owner authorization.
 
+## Explicit MVP-first strategy (does not change C01 as next task)
+
+An MVP is an **end-to-end working capability**, not packages installed or ten basic signals. Prioritize the smallest credible vertical slice early, then expand after its evidence gate.
+
+| Deliverable | Existing task(s) | Demonstrable minimum | Exit gate |
+|---|---|---|---|
+| **MVP-R0: first real-data slice** | C02 | Public Binance futures altcoin screening, timestamps/readiness, at least one qualified prebuilt analytics adapter, persisted sample evidence | Reproducible shortlist plus missing-data/no-trade explanation; no fake alpha claims |
+| **MVP-R1: research MVP** | C03–C04, C05 review | End-to-end universe → candidate/setup or NO_TRADE → structural entry/stop/target → cost_R → causal replay/report, for at least one testable policy; source-backed trader-level case review | Same policy/timestamps reproduce positive and negative case; economic review says GO/REVISE/STOP without hindsight |
+| **MVP-A: agentic paper MVP** | C06 | OpenBot coordinator → typed analysis tool → bounded human-approval request → simulated execution/position supervision → concise machine-derived journal for a representative case | End-to-end test succeeds; model cannot submit orders or invent risk; expired/rejected proposals cannot trade |
+| **Demo-safe v1** | C07–C09 | One exchange order owner and protective/partial/12h/recovery tests, then integrated demo | Safety/economic promotion gates; later than MVP |
+
+Do **not** defer showing the first working vertical slice until the entire architecture is implemented. Equally, do **not** bypass P0 contracts, research quality or human approval to create a flashy demo. Preserve all A01–A10 as the product capability roadmap; the MVP uses whichever qualified analytical families a policy depends upon, without narrowing final scope. No new Codex task merely to label work MVP—reuse C02–C06 outputs. Record MVP gates separately in the journal and report remaining work to **demo-qualified v1**, not an invented completion claim.
+
 ## Session portfolio — planned maximum core path (conditional)
 
 | Task | Phase | Use | Complexity | Bounded output / why grouped | Gate |
