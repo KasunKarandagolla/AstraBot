@@ -21,6 +21,12 @@
 
 **Exactly ten Markdown files** are included. Upload these same ten files as ChatGPT Project sources; the repository is the **source of truth**, and after approved changes the Project files should be refreshed from the repository. The ChatGPT Project instructions field uses file `08` (paste its contents), which is also stored in Git for traceability.
 
+## Quality bar and completion focus (2026-10-24 clarification)
+
+Assembly is **not** a basic-indicator bot. Choose the most suitable **working, mature, context-aware prebuilt logic and trading projects** first; verify their actual behavior and upgrade/switch candidates when stronger evidence appears. Each promoted strategy requires a focused expert-level deep dive: market context, chronology, liquidity/flow interpretation, failed setups, target/stop and thesis management, practitioner cases plus historical causal replay. Annotated professional/trader charts are useful *qualitative case studies*, not causal data or proof of positive expectancy; validate against contemporaneous data and negative examples. See `03` and `04`.
+
+Codex model selection is **complexity-triggered, not a Sol/Luna alternating pattern**; independent lead reviews can replace some paid Sol tasks. Use subagents for separable research/coding/review under one accountable task without multiplying sessions or tool costs blindly. Report estimated **demo-qualification completion % and remaining %** after each reviewed PR using the weighted gate ledger in `07`; identify what the estimate does/doesn't measure. Persist concise verified findings, storage decisions, code and test references across sessions; distinguish development memory from runtime market-data retention and durable trading events. Ask the owner when missing facts affect material or irreversible decisions. No generic repeated disclaimers; no dilution of real exchange/order-safety controls.
+
 ## Current focus and next action
 
 **Phase 0: pre-code contract and economic feasibility.** Run the scoped engine-owner feasibility spike and the data/cost audit **before** constructing a full autonomous platform. The first Codex task is `C01` in `docs/06-CODEX-DELIVERY-PLAN.md`; do not jump to execution or live infrastructure. After every Codex task: push commits, open a PR, update the engineering journal and relevant live docs, and submit the PR for independent ChatGPT Project review before merge.
