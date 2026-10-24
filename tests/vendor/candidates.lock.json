@@ -1,0 +1,230 @@
+{
+  "schema_version": "c01_candidate_evidence.v1",
+  "observed_date_utc": "2026-10-24",
+  "base_main_commit": "e333818da488ea27788624dbc4937327faa52701",
+  "sdk": {
+    "upstream": "https://github.com/binance/binance-connector-python",
+    "sdk_module_path": "clients/derivatives_trading_usds_futures",
+    "distribution": "binance-sdk-derivatives-trading-usds-futures",
+    "import_module": "binance_sdk_derivatives_trading_usds_futures",
+    "version": "18.1.0",
+    "commit": "6b3ba001274406372d376e218c8b9d04bd9c1720",
+    "release_date": "2026-10-23",
+    "common_version": "4.7.0",
+    "requires_python": "<3.15,>=3.10",
+    "direct_requirements": [
+      "aiohttp<4.0.0,>=3.14.5",
+      "binance-common==4.7.0",
+      "pycryptodome<5,>=3.17",
+      "pydantic>=2.14.1",
+      "requests>=2.34.2",
+      "urllib3>=2.8.0"
+    ],
+    "common_requirements": [
+      "aiohttp<4.0.0,>=3.14.5",
+      "certifi>=2026.10.19",
+      "pycryptodome<5,>=3.17",
+      "pydantic>=2.14.1",
+      "requests>=2.34.2",
+      "urllib3>=2.8.0"
+    ],
+    "pypi_release_artifacts": [
+      {
+        "filename": "binance_sdk_derivatives_trading_usds_futures-18.1.0-py3-none-any.whl",
+        "digests": {
+          "blake2b_256": "005d217a9485211a45757e604c81bb3c792e9ef3dabc36ffb50769daf40c5fa9",
+          "md5": "2e97c3891b87e2dfa115fa51612ba600",
+          "sha256": "51660bf13d069a22f951d97028efb45a488946ee75541f0d08435d95138e37dc"
+        },
+        "upload_time_iso_8601": "2026-10-23T12:10:00.684642Z",
+        "url": "https://files.pythonhosted.org/packages/00/5d/217a9485211a45757e604c81bb3c792e9ef3dabc36ffb50769daf40c5fa9/binance_sdk_derivatives_trading_usds_futures-18.1.0-py3-none-any.whl"
+      },
+      {
+        "filename": "binance_sdk_derivatives_trading_usds_futures-18.1.0.tar.gz",
+        "digests": {
+          "blake2b_256": "c0b1ca9efbb9d378e4d60582742870a6f3043f2f5c6b41ff281bdd27c92dc02c",
+          "md5": "0531e911d559b6e19767bd36a29734ad",
+          "sha256": "8c6bf10b6b68b824664b9b8ec7d93ff36f936b5e85419ae841b54d46e3f8e220"
+        },
+        "upload_time_iso_8601": "2026-10-23T12:09:59.628441Z",
+        "url": "https://files.pythonhosted.org/packages/c0/b1/ca9efbb9d378e4d60582742870a6f3043f2f5c6b41ff281bdd27c92dc02c/binance_sdk_derivatives_trading_usds_futures-18.1.0.tar.gz"
+      }
+    ],
+    "source_sha256": {
+      "clients/derivatives_trading_usds_futures/pyproject.toml": "3cf9896c66fa3c09cd4121eefb814001fcd757e8080a467e1d3e94ee4f8cd117",
+      "common/pyproject.toml": "4b144f500a6d1bf5b22b783716d0f9fff0a291f351f3626bdac01d79dd34d94b",
+      "clients/derivatives_trading_usds_futures/src/binance_sdk_derivatives_trading_usds_futures/rest_api/api/trade_api.py": "0f482140acd6561cc02571110767e5c9dd363a671be0542a859536f014b1c603",
+      "common/src/binance_common/utils.py": "bbc99f348682bdc6caad65a89bf49468dd2fa96ff182d775d40479e4f1327297",
+      "common/src/binance_common/websocket.py": "13de96904e3e79f35cfd7098bb5f3b4e9c6716e876b65bb247244f7a5c5b7235"
+    },
+    "docs_manifest": [
+      {
+        "name": "exchange-info",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "163b98b28ee65a75e5c1108d55c3978b072683e1fa7155d904c9fb4f897ae3e5",
+        "bytes": 1558056,
+        "content_usable": true
+      },
+      {
+        "name": "ud-algo",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Event-Algo-Order-Update",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "20d6769b16bac5985ce970cf4e4e6fc7dc1dbd1bec7a09b26ac4971ffeeb52de",
+        "bytes": 66196,
+        "content_usable": false
+      },
+      {
+        "name": "new-order-legacy",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Order",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "3e889735e46162d3486f034a2f525d6e48efb2dfe3657df6a64a9fe90b79d815",
+        "bytes": 2219161,
+        "content_usable": true
+      },
+      {
+        "name": "ud-general",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Connect",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "20d6769b16bac5985ce970cf4e4e6fc7dc1dbd1bec7a09b26ac4971ffeeb52de",
+        "bytes": 66196,
+        "content_usable": false
+      },
+      {
+        "name": "userinfo",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "710c6e83a98cf40bef78150611f7ee1f4b01fd168e4ddd20aae71858a93059e2",
+        "bytes": 217477,
+        "content_usable": true
+      },
+      {
+        "name": "ud-order",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Event-Order-Update",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "20d6769b16bac5985ce970cf4e4e6fc7dc1dbd1bec7a09b26ac4971ffeeb52de",
+        "bytes": 66196,
+        "content_usable": false
+      },
+      {
+        "name": "trade",
+        "requested_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "3e889735e46162d3486f034a2f525d6e48efb2dfe3657df6a64a9fe90b79d815",
+        "bytes": 2219161,
+        "content_usable": true
+      },
+      {
+        "name": "general",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/general-info",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "6de4416e54f6340d472b3a3c8de65c9063e52699adda919066c58e5f4734c462",
+        "bytes": 232109,
+        "content_usable": true
+      },
+      {
+        "name": "ws-general",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "7520b70235b541ff501a75db78806c717f6803cff97c134f010126d06d585aec",
+        "bytes": 437688,
+        "content_usable": true
+      },
+      {
+        "name": "new-algo-legacy",
+        "requested_url": "https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Algo-Order",
+        "retrieved_date_utc": "2026-10-24",
+        "sha256": "3e889735e46162d3486f034a2f525d6e48efb2dfe3657df6a64a9fe90b79d815",
+        "bytes": 2219161,
+        "content_usable": true
+      }
+    ],
+    "test_scope": "Actual complete checkout modules with installed package metadata and dependencies; mock Session.request and literal mocked signature; all real HTTP/socket connect blocked; no exchange calls",
+    "executed_python": "3.12.14",
+    "probe_result": {
+      "status": "FAKE_TESTED",
+      "scope": "actual full checkout package, mocked transport/signature; no exchange evidence",
+      "versions": {
+        "sdk": "18.1.0",
+        "common": "4.7.0"
+      },
+      "checks": [
+        "ordinary IOC path, client ID, decimal-string serialization",
+        "algo close-all path and distinct ID, omitted quantity/reduceOnly",
+        "invalid close-all/quantity/reduceOnly combination passes local SDK",
+        "missing symbol blocked before transport",
+        "ordinary/algo query, algo cancel, both open-order lists, v3 position routes",
+        "IOC POST timeout wraps NetworkError with one transport attempt",
+        "IOC POST unknown 503 yields generic ServerError, no retry",
+        "four user-data e-field model routes"
+      ],
+      "count": 8
+    }
+  },
+  "frameworks": {
+    "observed_date_utc": "2026-10-24",
+    "runtime": {
+      "python": "3.12.14",
+      "full_framework_packages_installed": false
+    },
+    "freqtrade": {
+      "repository": "https://github.com/freqtrade/freqtrade",
+      "version": "2026.9",
+      "commit": "1f394eaebc2f46a83d26971388628707802f8602",
+      "commit_time": "2026-09-29T19:05:27+02:00",
+      "python_requirement": ">=3.11",
+      "ccxt_requirement": ">=4.5.76",
+      "requirements_txt_ccxt_pin": "4.5.84",
+      "requirements_txt_sqlalchemy_pin": "2.0.54",
+      "source_sha256": {
+        "freqtrade/freqtradebot.py": "6fb6c7bcc00c14412c65978de80480e1d8a5c3dd8161f1d6f33d60bea364c5e4",
+        "freqtrade/rpc/rpc.py": "663ef3d187fae9d7a9fcf63bf5b991bba6d7126071c4b8863b2f5a185a6dd10a",
+        "freqtrade/strategy/strategy_wrapper.py": "791ac142aff61fe8d8f1cbbbf43e8b9b626eaa39b158c7f73fbd706b4516f464"
+      },
+      "executed_probe": "tests/vendor/probe_freqtrade.py",
+      "executed_output": "tests/vendor/observed-results.json",
+      "probe_cases_passed": 9,
+      "probe_classification": "FAKE_TESTED",
+      "full_vendor_suite_run": false,
+      "binance_demo_supported": false,
+      "binance_demo_blocker_source": "freqtrade/exchange/binance.py:49-53; freqtrade/exchange/exchange.py:930-936"
+    },
+    "ccxt": {
+      "version": "4.5.84",
+      "artifact": "ccxt-4.5.84-py3-none-any.whl",
+      "artifact_sha256": "b920f7d92c0fb62873a900c96ee2cfb76ec6ffeaa7343bf5be0cc01b9b2e9617",
+      "installed": false,
+      "executed": false
+    },
+    "nautilus_trader": {
+      "repository": "https://github.com/nautechsystems/nautilus_trader",
+      "version": "1.231.0",
+      "tag": "v1.231.0",
+      "annotated_tag_object": "d3e1685e979925d7b0ffacd1b3f442547686e18f",
+      "commit": "27a8e54e7ac3c57d6cbf8891f0283dfbaee97317",
+      "commit_time": "2026-08-02T21:26:46+10:00",
+      "python_requirement": ">=3.12,<3.15",
+      "rust_requirement": "1.97.1",
+      "edition": "2024",
+      "build_cython_pin": "3.2.9",
+      "dependencies_selected": [
+        "msgspec>=0.21.1,<1.0.0",
+        "pyarrow>=25.0.0",
+        "pandas>=2.3.3,<4.0.0",
+        "uvloop==0.22.1,<1.0.0"
+      ],
+      "source_sha256": {
+        "nautilus_trader/adapters/binance/execution.py": "642b91645bea94648a674db4c202072a96b7a184a91c5f91d33792587dba0d2b",
+        "nautilus_trader/adapters/binance/futures/execution.py": "f4c63936b915c12e89c9eabd356d347a8ed92ecb920039b4f2a86252a60e7cda",
+        "nautilus_trader/adapters/binance/futures/http/account.py": "53ab44531c556adfc772518d668db7f01047becfc4e6007ee5955c0130e36d5e"
+      },
+      "classification": "SOURCE_VERIFIED",
+      "full_vendor_suite_run": false,
+      "vendor_runtime_executed": false,
+      "binance_usdt_demo_http": "https://demo-fapi.binance.com",
+      "binance_usdt_demo_ws": "wss://demo-fstream.binance.com"
+    },
+    "exchange_requests": 0,
+    "credentials_read": false
+  }
+}

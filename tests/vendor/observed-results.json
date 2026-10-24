@@ -1,0 +1,135 @@
+{
+  "sdk_probe": {
+    "status": "FAKE_TESTED",
+    "scope": "actual full checkout package, mocked transport/signature; no exchange evidence",
+    "versions": {
+      "sdk": "18.1.0",
+      "common": "4.7.0"
+    },
+    "checks": [
+      "ordinary IOC path, client ID, decimal-string serialization",
+      "algo close-all path and distinct ID, omitted quantity/reduceOnly",
+      "invalid close-all/quantity/reduceOnly combination passes local SDK",
+      "missing symbol blocked before transport",
+      "ordinary/algo query, algo cancel, both open-order lists, v3 position routes",
+      "IOC POST timeout wraps NetworkError with one transport attempt",
+      "IOC POST unknown 503 yields generic ServerError, no retry",
+      "four user-data e-field model routes"
+    ],
+    "count": 8
+  },
+  "freqtrade_probe": {
+    "classification": "FAKE_TESTED",
+    "vendor_source_verified": true,
+    "method": "AST-extracted complete exact pinned function bodies; fake exchange boundary; RPC validations stubbed",
+    "full_vendor_suite_run": false,
+    "commit": "1f394eaebc2f46a83d26971388628707802f8602",
+    "python": "3.12.14",
+    "source_sha256": {
+      "freqtrade/freqtradebot.py": "6fb6c7bcc00c14412c65978de80480e1d8a5c3dd8161f1d6f33d60bea364c5e4",
+      "freqtrade/rpc/rpc.py": "663ef3d187fae9d7a9fcf63bf5b991bba6d7126071c4b8863b2f5a185a6dd10a",
+      "freqtrade/strategy/strategy_wrapper.py": "791ac142aff61fe8d8f1cbbbf43e8b9b626eaa39b158c7f73fbd706b4516f464"
+    },
+    "passed": 9,
+    "cases": [
+      {
+        "mode": "initial",
+        "outcome": false,
+        "force": false,
+        "existing": false,
+        "callback_calls": 1,
+        "create_order_calls": 0
+      },
+      {
+        "mode": "initial",
+        "outcome": true,
+        "force": false,
+        "existing": false,
+        "callback_calls": 1,
+        "create_order_calls": 1
+      },
+      {
+        "mode": "initial",
+        "outcome": "ValueError",
+        "force": false,
+        "existing": false,
+        "callback_calls": 1,
+        "create_order_calls": 1
+      },
+      {
+        "mode": "initial",
+        "outcome": "RuntimeError",
+        "force": false,
+        "existing": false,
+        "callback_calls": 1,
+        "create_order_calls": 1
+      },
+      {
+        "mode": "pos_adjust",
+        "outcome": false,
+        "force": false,
+        "existing": false,
+        "callback_calls": 0,
+        "create_order_calls": 1
+      },
+      {
+        "mode": "replace",
+        "outcome": false,
+        "force": false,
+        "existing": false,
+        "callback_calls": 0,
+        "create_order_calls": 1
+      },
+      {
+        "mode": "initial",
+        "outcome": false,
+        "force": true,
+        "existing": false,
+        "callback_calls": 1,
+        "create_order_calls": 0
+      },
+      {
+        "mode": "initial",
+        "outcome": "ValueError",
+        "force": true,
+        "existing": false,
+        "callback_calls": 1,
+        "create_order_calls": 1
+      },
+      {
+        "mode": "pos_adjust",
+        "outcome": false,
+        "force": true,
+        "existing": true,
+        "callback_calls": 0,
+        "create_order_calls": 1
+      }
+    ]
+  },
+  "sdk_upstream_tests": {
+    "passed": 20,
+    "deselected": 326,
+    "warnings": 12,
+    "failed": 0,
+    "skipped": 0,
+    "classification": "FAKE_TESTED",
+    "scope": "selected real upstream tests; sockets and HTTP blocked, signing mocked"
+  },
+  "nautilus": {
+    "classification": "SOURCE_VERIFIED",
+    "runtime_tests_run": false
+  },
+  "exchange_requests": 0,
+  "demo_tests_run": 0,
+  "normal_contract_suite": {
+    "command": "env -i PATH=/usr/bin:/bin PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 work/c01-venv/bin/python -m pytest -q",
+    "python": "3.12.14",
+    "pydantic": "2.14.1",
+    "pytest": "8.4.2",
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0,
+    "classification": "FAKE_TESTED",
+    "dependency_check": "No broken requirements found."
+  }
+}

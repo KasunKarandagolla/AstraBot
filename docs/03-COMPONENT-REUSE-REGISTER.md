@@ -8,9 +8,9 @@
 |---|---|---|---|---|
 | Agent coordination | [OpenBot](https://openbot.run/) with its built-in free-model access | role prompts + typed facade calls | local deployment, free-model JSON/tool-call accuracy, workflow retry/outage, bounded permissions | DESIGN / UNTESTED |
 | Binance public, agent-facing skills | [Binance Skills Hub](https://github.com/binance/binance-skills-hub), CLI | import read-only skill into isolated agent environment | read-only BTC + altcoin USD-M calls, no order permissions, timeout/error behavior | CANDIDATE |
-| Binance live transport | [Official USD-M modular Python SDK](https://github.com/binance/binance-connector-python/tree/master/clients/derivatives_trading_usds_futures) | adapter behind single-owner gateway | demo market/user streams, IOC/limit IDs, algo stops, restart, reconnect | DEFAULT CANDIDATE |
-| Alternative single live owner | [Freqtrade](https://github.com/freqtrade/freqtrade) | adapt callbacks only if truly fail-closed | approval fail-closed, early fill protection, paired partial TP, safe stop replacement, unknown submits | COMPARE, not co-run |
-| Alternative single live owner | [NautilusTrader](https://github.com/nautechsystems/nautilus_trader) | native event adapter | exact Binance one-way isolated/order support, bracket limitations, protection, replay/live semantics | COMPARE |
+| Binance live transport | [Official USD-M modular Python SDK](https://github.com/binance/binance-connector-python/tree/master/clients/derivatives_trading_usds_futures) | adapter behind single-owner gateway | demo market/user streams, IOC/limit IDs, algo stops, restart, reconnect | PINNED / C01 provisional recommendation; §7 |
+| Alternative single live owner | [Freqtrade](https://github.com/freqtrade/freqtrade) | adapt callbacks only if truly fail-closed | approval fail-closed, early fill protection, paired partial TP, safe stop replacement, unknown submits | REJECTED as live owner at C01 pin; research use unqualified |
+| Alternative single live owner | [NautilusTrader](https://github.com/nautechsystems/nautilus_trader) | native event adapter | exact Binance one-way isolated/order support, bracket limitations, protection, replay/live semantics | DEFERRED after C01 source comparison; §7 |
 | Generic exchange data fallback | [CCXT](https://github.com/ccxt/ccxt) | Python data-only adapter | required futures endpoint semantics, normalization, rate limits | DEFER unless SDK missing |
 | Additional exchange feeds | [Cryptofeed](https://github.com/bmoscon/cryptofeed) | process-isolated feed adapter | clear data coverage benefit vs SDK WS; dependency cost | DEFER until gap proven |
 | SMC/ICT | [smart-money-concepts upstream](https://github.com/joshyattridge/smart-money-concepts); comparator [pyvsmc](https://github.com/Khaymat/pyvsmc) | causal event wrapper; **do not trust retrospective labels** | expanding-prefix invariance; swing, liquidity, OB and FVG available_at; numerical golden cases | CANDIDATE |
@@ -70,3 +70,27 @@ Agent skills/LLM tools must not receive trading secrets, authenticated Binance C
 ## 6. Integration status vocabulary
 
 `CANDIDATE → PINNED → FIXTURE_TESTED → INTEGRATION_TESTED → DEMO_QUALIFIED → OWNER_LIVE_APPROVED`; `DEFERRED/REJECTED` for nonselected components. No component is `QUALIFIED` just because its repository has stars, tests or polished documentation. Update register when a candidate changes status; quote PR and test evidence. Unrelated optimization candidates remain deferred and do not block the next gate.
+
+## 7. C01 inspected execution-owner pins — pending independent review
+
+[ADR-EXEC-001](adr/ADR-EXEC-001.md) contains the complete 16-row comparison,
+source/test references, reproducible commands, custom responsibilities and rollback
+criteria. [Candidate lock](../tests/vendor/candidates.lock.json) records commits,
+source/artifact/document hashes and runtime requirements. No engine is
+INTEGRATION_TESTED or DEMO_QUALIFIED by this work.
+
+| Candidate | Exact inspected pin | Actual evidence / reason |
+|---|---|---|
+| Official USD-M SDK | 18.1.0 + common 4.7.0; `6b3ba001274406372d376e218c8b9d04bd9c1720` | SOURCE_VERIFIED; actual full-package mocked transport: 8 checks; 20 selected upstream mocked tests passed. Provisionally retain the existing SDK/gateway topology. Approval, reservations, durable intents and supervision are future custom glue. |
+| Freqtrade | 2026.9; `1f394eaebc2f46a83d26971388628707802f8602`; CCXT 4.5.84 Binance source inspected | SOURCE_VERIFIED + 9 actual AST-extracted hook scenarios FAKE_TESTED, not a full runtime. Approval exceptions permit entry, adjustments/replacements bypass the callback, send precedes durable Trade commit, stop replacement cancels first, and Binance demo is explicitly disabled. Rejected as current live owner; research reuse remains a separate qualification. |
+| NautilusTrader | 1.231.0; peeled commit `27a8e54e7ac3c57d6cbf8891f0283dfbaee97317` | SOURCE_VERIFIED only; modern algo/child routing, partial-fill/cache/reconciliation machinery and explicit demo hosts exist. Native linked Binance brackets are rejected; application approval/reservations/exit latch and independent leg coordination remain. Defer until measured benefit justifies larger native/async/cache integration. |
+
+Remaining **UNVERIFIED** for every candidate: actual account mode and demo connectivity,
+whole-position stop plus two partial reduceOnly TPs, overlap replacement safety,
+unknown IOC and parent/child reconciliation under venue faults, protection latency,
+restart fencing and API-priority load behavior. Existing verified stops must be retained
+if elective replacement cannot be qualified. No real account or exchange order was used.
+
+C01's narrow BUILD/WRAP boundary is the already-authorized typed approval/risk/lifecycle
+glue and fake fixture; it introduces no production OMS, new runtime topology or
+indicator implementation. The original v1.5 reference remains unchanged.
