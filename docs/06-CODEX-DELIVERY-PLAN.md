@@ -30,7 +30,7 @@ Under B, require positive AND rejected/expired/negative fake scenarios, human ap
 
 **Owner decision and result (2026-10-25):** B was expressly approved for **one offline-only Codex session**. Independently reviewed/merged [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11), merge `c19758e27fbfc2eae46c2bed591ca151681f75f9`, demonstrated six typed tools, fake one-use approval and protection/exit with **217 passing CI tests**. Real OpenBot integration, MFA and durable journal remain unverified. No additional Codex session, P3 economic GO, full P4 gate or C07 authority follows from this decision.
 
-**NEXT_GATE:** establish availability and conformance plan for a genuine OpenBot runtime without another blind provider/network-probe Codex session. If unavailable, do not claim a mock is OpenBot.
+**NEXT_GATE (updated after PR #15):** genuine OpenBot read-only agent call is owner-reported on Windows 11; verify one short positive/negative **multi-tool** workflow with existing MCP fixtures, no new Codex code. If it works, pause agent extension and return research leadership to P3 evidence; if it exposes an actual blocker, commission only its smallest targeted fix. Do not promote P4, C07/demo or P3 economics from synthetic results.
 
 ## Explicit MVP-first strategy (P3 evidence hold; C06-B limited offline slice reviewed)
 
