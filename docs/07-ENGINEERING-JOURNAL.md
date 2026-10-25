@@ -244,3 +244,16 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Implementation commit:** `4b39523c49d44b06c033366d3e92021e6050c63f` — `C05-C0: add one-shot public observer smoke prototype`.
 - **Branch / PR / verified base:** `codex/c05-c0-public-observer-smoke`; [PR #8](https://github.com/KasunKarandagolla/AstraBot/pull/8) opened against `main` at `d736eb6dc67725498d24bdd2a6b053fe7193b02f`. PR is open and not merged; no auto-merge was enabled.
 - **Independent review requested:** review the endpoint allowlist, request/byte caps, immutable raw provenance, fail-closed quality output, and environment limitations before any continuous collection is considered. Owner runtime/storage/horizon decision and existing NEXT_GATE remain required.
+
+### 2026-10-25 — C05 — Tardis historical-data micro-preflight
+
+- **Baseline / branch / scope:** `main` confirmed at `c75c3f99c49e6f71aa5bc7ade0716e2a551a5922`; branch `codex/c05-tardis-source-microcheck`. Reviewed the existing C05 feasibility/smoke reports and C02 eligibility/data contracts. No production code or dependencies changed.
+- **Observed access:** one GET to the supplied Tardis Binance Futures documentation URL returned no HTTP response (`HTTP=000`, 0 body bytes), with `curl: (56) CONNECT tunnel failed, response 403`. Following the stop rule, no other Tardis URL or sample was requested; no alternate route was used. Tardis coverage, schema, terms, timestamp provenance, OI units, sample access, and pricing remain **NOT VERIFIED / UNKNOWN**.
+- **Evidence and recommendation:** [Tardis third-party data preflight](../research/c05/THIRD_PARTY_DATA_PREFLIGHT.md) records the four requested SOLUSDT/DOGEUSDT date cases, feed matrix, and C02/P3 gaps. Recommendation: **STOP pending owner/provider access clarification**; no account, subscription, or purchase. No Binance request, historical download, C04 replay, or test suite was run.
+- **Status preserved:** P3 remains unqualified; phase credit 45%; `C05 = INSUFFICIENT_EVIDENCE`; T1/R1/B1 remain `RESEARCH_ONLY`; OpenBot, approval/risk controls, and C06–C09 roadmap unchanged. This source check does not advance the gate.
+- **Session/resources:** one session, no subagents, one Tardis GET attempt, 0 response bytes. Precise elapsed time/model quota is unavailable. PR/commit delivery details follow after publication.
+
+#### C05 Tardis micro-preflight delivery addendum — 2026-10-25
+
+- **Commit:** `09a119c28da5acebebd8d81d85512581a159843d` — `Docs: add Tardis historical data preflight`.
+- **Branch / PR / base:** `codex/c05-tardis-source-microcheck`; [PR #9](https://github.com/KasunKarandagolla/AstraBot/pull/9) opened against `main` at verified base `c75c3f99c49e6f71aa5bc7ade0716e2a551a5922`. PR is open and unmerged; no auto-merge was enabled.
