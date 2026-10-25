@@ -279,4 +279,4 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 
 - **Implementation commit:** `20373d9705922061b45d340fecfe7a6f29b6ff73` — `C06-B: add offline paper MVP workflow`.
 - **Branch / PR / verified base:** `codex/c06-b-offline-openbot-paper-mvp`; [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11) opened against `main` at `4a16e96f1229974af8cbc8b28e0e57acccb4ec2e`. The PR remains open and unmerged.
-- **GitHub compare:** one commit ahead, zero behind. The PR creation response reported `mergeable: false`; no merge was attempted. Independent review remains the next gate.
+- **GitHub compare:** immediately after PR creation, one commit ahead and zero behind; after the delivery-record commit, two ahead and zero behind. The PR creation response reported `mergeable: false`; no merge was attempted. Independent review remains the next gate.

@@ -107,7 +107,7 @@ The test environment was an isolated venv populated from the repository's pinned
 
 - Implementation commit: `20373d9705922061b45d340fecfe7a6f29b6ff73`.
 - [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11) is open against `main` at the verified base SHA above; it has not been merged.
-- The GitHub compare result is one commit ahead and zero behind. The PR creation response reported `mergeable: false`; no merge was attempted.
+- Immediately after PR creation, the compare showed one commit ahead and zero behind. After the delivery-record commit, it showed two ahead and zero behind. The PR creation response reported `mergeable: false`; no merge was attempted.
 
 ## Limits and remaining blockers
 
