@@ -1,10 +1,11 @@
-name: C02 offline checks
+name: AstraBot offline checks
 
 on:
   push:
     branches:
       - main
       - codex/c02-market-data-intelligence
+      - codex/c03-causal-trading-intelligence
   pull_request:
     branches: [main]
 
@@ -27,5 +28,9 @@ jobs:
         run: python -m pip install --disable-pip-version-check -r requirements-test.txt
       - name: Compile package and tests
         run: python -m compileall -q src/astrabot tests scripts
-      - name: Run C01 contracts and C02 offline acceptance tests
+      - name: Run C01-C03 offline acceptance tests
         run: python -m pytest -q
+      - name: Verify deterministic C03 research trace
+        run: python scripts/c03_research.py --check --summary
+      - name: Verify incomplete actual archive stays NO_TRADE
+        run: python scripts/c03_research.py --c02-panel --check

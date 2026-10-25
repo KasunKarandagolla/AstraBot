@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "astrabot-contracts"
 version = "0.1.0"
-description = "C01 v1.5 data contracts; no exchange transport"
+description = "AstraBot causal research and v1.5 safety contracts"
 requires-python = ">=3.12"
-dependencies = ["pydantic==2.14.1"]
+dependencies = ["pydantic==2.14.1", "numpy==2.2.6", "TA-Lib==0.6.8"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

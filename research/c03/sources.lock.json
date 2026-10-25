@@ -1,0 +1,187 @@
+{
+  "schema_version": "C03_SOURCE_EVIDENCE_1",
+  "reviewed_on": "2026-10-24",
+  "research_status": "RESEARCH_ONLY",
+  "historical_practitioner_inputs_recovered": false,
+  "primary_comparisons": [
+    {
+      "id": "talib-python",
+      "repository": "TA-Lib/ta-lib-python",
+      "version": "0.6.8",
+      "commit": "cbd8921c340c8ad330257ad807c2809cb557f6c5",
+      "files_read": ["talib/__init__.py", "tests/test_func.py"],
+      "decision": "WRAP_ATR_ADX_EMA",
+      "upstream_runtime_tests": "NOT_RUN",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "talib-c",
+      "repository": "TA-Lib/ta-lib",
+      "version": "0.6.4",
+      "commit": "43f9d5042ecc4bd367941846494ad907bf20ea50",
+      "files_read": [
+        "src/ta_func/ta_ATR.c:200-325",
+        "src/ta_func/ta_ADX.c:250-500",
+        "src/ta_func/ta_EMA.c:280-355"
+      ],
+      "decision": "REUSE_THROUGH_PYTHON_WRAPPER",
+      "first_finite_zero_based_index": {"ATR14": 14, "ADX14": 27, "EMA50": 49},
+      "hourly_bars_for_current_and_720_prior_finite_atr_pct": 735,
+      "upstream_runtime_tests": "NOT_RUN",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "lean",
+      "repository": "QuantConnect/Lean",
+      "commit": "f3d841e60dfd010ee5fc293ea893e56952484108",
+      "files_read": [
+        "Indicators/PivotPointsHighLow.cs",
+        "Tests/Indicators/PivotPointsHighLowTests.cs",
+        "Indicators/IntradayVwap.cs",
+        "Tests/Indicators/IntradayVwapTests.cs",
+        "Indicators/DonchianChannel.cs",
+        "Algorithm.Framework/Alphas/EmaCrossAlphaModel.py",
+        "Algorithm.Framework/Execution/VolumeWeightedAveragePriceExecutionModel.py"
+      ],
+      "decision": "NO_ENGINE_DEPENDENCY_MINIMAL_V15_SWING_FALLBACK",
+      "upstream_runtime_tests": "NOT_RUN",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "drift-vwap",
+      "repository": "jalv92/DriftVwapPullback",
+      "commit": "708235769c1cebc320abbdb3f064293d8b56bbec",
+      "files_read": [
+        "README.md",
+        "propsim/drift_vwap_pullback.py",
+        "research/compare_mirror.py"
+      ],
+      "decision": "NOT_ADOPTED_DIFFERENT_POLICY_AND_UNPASSED_MIRROR_GATE",
+      "upstream_runtime_tests": "9_STANDALONE_SELFCHECKS_PASSED",
+      "standalone_selfcheck_count": 9,
+      "runtime_evidence": {
+        "source_git_blob": "580d3c3df368b6cbdd66b9718c781c14405b96c0",
+        "source_sha256": "5ce18c4ab3ac17eb61f2e55e969b8cc9ed9becf355700093aa57aa91a7ae79c3",
+        "numpy_version": "2.2.6",
+        "command": "env -i PATH=/usr/bin:/bin /workspace/AstraBot/.venv/bin/python /workspace/scratch/c03-upstream-drift.py",
+        "exit_code": 0,
+        "stdout": "selfcheck OK: regime, VWAP session reset, session-confined lookback, coincident close, arming transition, arming re-arm, stop/target sides, short side, time window",
+        "scope": "Exact pinned standalone file, no platform or market-data integration"
+      },
+      "external_mirror_gate": "NOT_RUN_BY_ASTRABOT_SOURCE_REPORTS_NOT_PASSED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    }
+  ],
+  "limited_policy_comparators": [
+    {
+      "id": "goldea",
+      "repository": "eamonnkennedy93-blip/GoldEA",
+      "commit": "7f5ba978ab15a92e992d617f27e318dd0d859cbf",
+      "files_read": [
+        "README.md", "session_levels.py", "swing_structure.py",
+        "strategy_edge.py", "data_fetch.py"
+      ],
+      "decision": "NOT_ADOPTED_CHRONOLOGY_GEOMETRY_AND_TEST_GAPS",
+      "root_tree_inspected": true,
+      "root_test_suite_present": false,
+      "upstream_runtime_tests": "NOT_RUN",
+      "claimed_performance": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "break-retest-daytrader",
+      "repository": "Smashthehedgehog/break-retest-daytrader",
+      "commit": "e1f6ec54be8e87aa3349cf0e924da8e479d32294",
+      "files_read": ["strategy.py", "tests/test_strategy.py"],
+      "decision": "NOT_ADOPTED_DIFFERENT_CHRONOLOGY_AND_EXECUTION_COUPLING",
+      "upstream_runtime_tests": "NOT_RUN",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    }
+  ],
+  "prior_c02_decisions_reused_without_reinvestigation": [
+    {
+      "repository": "freqtrade/freqtrade",
+      "commit": "1f394eaebc2f46a83d26971388628707802f8602",
+      "decision": "NOT_A_CONTINUITY_PRESERVING_CVD_PROVIDER",
+      "authority": "docs/03-COMPONENT-REUSE-REGISTER.md section 8"
+    },
+    {
+      "repository": "joshyattridge/smart-money-concepts",
+      "commit": "1b62fd6c41e1f508e7ed76831a039fa4c82d42f6",
+      "decision": "A03_UNAVAILABLE_RETROSPECTIVE",
+      "authority": "docs/03-COMPONENT-REUSE-REGISTER.md section 8"
+    },
+    {
+      "repository": "Khaymat/pyvsmc",
+      "commit": "55008a6dce09e0e36691d2e34150f0f499ac4f4b",
+      "decision": "A03_UNAVAILABLE_RETROSPECTIVE",
+      "authority": "docs/03-COMPONENT-REUSE-REGISTER.md section 8"
+    }
+  ],
+  "practitioner_cases": [
+    {
+      "id": "clov-vwap",
+      "families": ["T1_POSITIVE_ANALOGY", "T1_NEGATIVE_ANALOGY"],
+      "url": "https://www.smbtraining.com/blog/how-to-use-vwap-to-buy-a-pullback-in-a-meme-stock",
+      "publication_date": "2021-06-29",
+      "instrument": "CLOV equity",
+      "event_timestamp": null,
+      "market_inputs_status": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "es-spring",
+      "families": ["R1_POSITIVE_ANALOGY"],
+      "url": "https://www.smbtraining.com/blog/smb-futures-totd-5-17-18",
+      "publication_date": "2018-05-17",
+      "source_case_date": "2018-05-17",
+      "instrument": "ES futures, contract not recovered, 2M chart",
+      "event_timestamp": null,
+      "market_inputs_status": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "aapl-distribution",
+      "families": ["R1_NEGATIVE_CONTEXT_ANALOGY"],
+      "url": "https://articles.stockcharts.com/article/articles-wyckoff-2018-02-aapl-pie/",
+      "publication_date": "2018-02-04",
+      "instrument": "AAPL equity",
+      "event_timestamp": null,
+      "market_inputs_status": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "btc-conditional-retest",
+      "families": ["B1_POSITIVE_CONDITIONAL_ANALOGY"],
+      "url": "https://www.advfn.com/newspaper/azeez-mustapha/76690/bitcoin-retests-bearish-trendline-following-breakout",
+      "publication_time_as_displayed": "2024-10-27 23:18, timezone unspecified",
+      "instrument": "BITSTAMP:BTCUSD daily chart",
+      "event_timestamp": null,
+      "market_inputs_status": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "enoc-failed-breakout",
+      "families": ["B1_NEGATIVE_ANALOGY"],
+      "url": "https://www.smbtraining.com/blog/the-edge-is-not-just-in-the-chart",
+      "publication_date": "2016-01-26",
+      "instrument": "ENOC equity",
+      "event_timestamp": null,
+      "market_inputs_status": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    },
+    {
+      "id": "aapl-overhead-obstacle",
+      "families": ["TARGET_ROUTE_ANALOGY"],
+      "url": "https://articles.stockcharts.com/article/articles-wyckoff-2016-09-an-aapl-for-your-thoughts/",
+      "publication_date": "2016-09-17",
+      "instrument": "AAPL equity",
+      "event_timestamp": null,
+      "market_inputs_status": "NOT VERIFIED",
+      "evidence_class": "SOURCE/IMPLEMENTATION EVIDENCE"
+    }
+  ],
+  "local_chronology_case_class": "SYNTHETIC TEST FIXTURE",
+  "local_policy_empirical_qualification": "NOT VERIFIED",
+  "c02_panel_strategy_qualification": false
+}
