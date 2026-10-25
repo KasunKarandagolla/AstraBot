@@ -15,7 +15,7 @@
 
 ## Current implementation checkpoint
 
-PRs #1–#9 are reviewed and merged through `9963a7e5295a03f42726ee82c9d9a8c55cc55b86`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
+PRs #1–#16 are reviewed and merged through `8662a6c1f05bf4f714bc6b9f3e9b8fb6451d0583`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
 
 ## Emergency recovery choices — owner-selected limited offline Option B completed
 
@@ -30,7 +30,7 @@ Under B, require positive AND rejected/expired/negative fake scenarios, human ap
 
 **Owner decision and result (2026-10-25):** B was expressly approved for **one offline-only Codex session**. Independently reviewed/merged [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11), merge `c19758e27fbfc2eae46c2bed591ca151681f75f9`, demonstrated six typed tools, fake one-use approval and protection/exit with **217 passing CI tests**. Real OpenBot integration, MFA and durable journal remain unverified. No additional Codex session, P3 economic GO, full P4 gate or C07 authority follows from this decision.
 
-**NEXT_GATE (updated after PR #15):** genuine OpenBot read-only agent call is owner-reported on Windows 11; verify one short positive/negative **multi-tool** workflow with existing MCP fixtures, no new Codex code. If it works, pause agent extension and return research leadership to P3 evidence; if it exposes an actual blocker, commission only its smallest targeted fix. Do not promote P4, C07/demo or P3 economics from synthetic results.
+**NEXT_GATE (updated after C06-D):** owner-reported real OpenBot/Codex agent ran both negative and positive **multi-tool synthetic research** flows, with returned IDs, non-executable hashed research plan, unchanged status after rejected unauthorized `risk_override_usdt`; **C06-D READ-ONLY CONFORMANCE PASS (reported)**. Pause agent integration work. Return to P3 data/market-economic evidence feasibility; seek an explicit owner decision on narrowly bounded source access, observation horizon, runtime/storage, retention and costs **before persistent collection**. No unqualified P4 credit, C07/demo/trading permission or new Codex session follows from C06-D.
 
 ## Explicit MVP-first strategy (P3 evidence hold; C06-B limited offline slice reviewed)
 
