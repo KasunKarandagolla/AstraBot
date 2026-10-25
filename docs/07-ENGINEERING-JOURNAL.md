@@ -1,10 +1,10 @@
 # 07 — AstraBot Engineering Journal, ADR Index and Delivery Ledger
 
 **Type:** append-only factual handoff ledger, not a substitute for tests or code.  
-**Last editorial checkpoint:** 2026-10-25 · independent C06-B PR #11 review and merge.
+**Last editorial checkpoint:** 2026-10-25 · independent PR #15 merge, Windows MCP and real agent-call report reconciled.
 **Current phase:** `P3 — RESEARCH EVIDENCE HOLD` (C04 engineering merged; complete-policy historical economic evidence not qualified).
-**NEXT_GATE:** `Genuine OpenBot runtime/tool conformance feasibility, without blind Codex web probes. Offline C06-B accepted; P3/P4 full gates unqualified; no C07.`
-**Next assigned Codex profile:** `NONE assigned. C06-B one-session owner exception consumed; genuine OpenBot integration prerequisite unresolved.`
+**NEXT_GATE:** `One bounded real-OpenBot positive/NO_TRADE multi-tool conformance check on existing offline fixtures; zero Codex coding until an actual failed gate. Then re-focus P3 evidence. No C07.`
+**Next assigned Codex profile:** `NONE assigned. Owner-reported one real OpenBot read-only MCP call succeeded; next conformance uses installed OpenBot without coding.`
 **Live funds enabled:** **NO**. **Any strategy economically qualified:** **NO**.
 
 ## Rules for updating this file
@@ -28,7 +28,7 @@ After each reviewed session, add a **short durable memory capsule**: what change
 |---|---|---|---|
 | MVP-R0 read-only market slice | PARTIAL / NOT COMPLETE | C04 authentic seven-symbol July–October 2024 OHLCV pilot has 356,454 verified-manifest rows and adequate price warm-up, but a dynamic point-in-time eligible altcoin shortlist is still blocked by missing quote/OI/metadata/event feeds | PR #5; research evidence hold |
 | MVP-R1 research vertical slice | ENGINEERING IMPLEMENTED / EMPIRICAL BLOCKED | C03 synthetic positive/negative policy trace, C04 causal replay and 1,464 hourly authentic-panel snapshots; still zero strict candidates/outcomes, NOT_TESTABLE economics. PR #6 C05 feasibility is a source investigation, not an economic qualification | C03–C05 gate open / research hold |
-| MVP-A agentic paper vertical slice | OFFLINE FIXTURE SLICE INDEPENDENTLY REVIEWED; GENUINE OPENBOT UNVERIFIED | Typed six-tool adapter, C03 `RESEARCH_ONLY` candidate, fake C01 owner/venue, deterministic supervision, event journal and negative cases; real OpenBot compatibility remains unverified | C06-B offline exception; no C07 |
+| MVP-A agentic paper vertical slice | OFFLINE FAKE LIFECYCLE TESTED; REAL READ-ONLY MCP TOOL INVOCATION OWNER-REPORTED | PRs #11/#13/#15: synthetic fake-owner/venue workflow, six strict MCP tools, official SDK-client tests and Windows/OpenBot read-only tool report. Full real-agent multi-step proposal workflow, authenticated approval/MFA and durable journal remain unverified | Real-agent multi-tool fixture conformance, then P3 economic gate |
 | Demo-safe v1 | NOT STARTED | Single-writer demo/recovery/supervision tests | C07–C09 |
 
 MVP milestones are **outcomes of already planned sessions**, not separate tasks. Passing an MVP gate does not authorize live trading. Keep existing P0–P6 percentage weighting; report MVP state separately from progress toward demo-qualified v1.
@@ -47,7 +47,7 @@ MVP milestones are **outcomes of already planned sessions**, not separate tasks.
 | P1 data / coin discovery / feature readiness | PASS FOR FOUNDATION; MVP-R0 INCOMPLETE | Independent review on PR #2; GET-only adapter, causal observation models and empty real-data shortlist | C04 historical panel expansion |
 | P2 T1/R1/B1 deterministic policies | PASS WITH DEFERRED NONBLOCKERS | Independent review on PR #3; pure policies and synthetic trace; all policies remain RESEARCH_ONLY | C04 complete-policy replay |
 | P3 friction and full-policy research | C04 ENGINEERING REVIEWED AND MERGED; EMPIRICAL HOLD | PRs #4–#5: strict C02/C03→E0/E1/E2 synthetic path verified, seven-symbol authentic OHLCV replay (1,464 hourly snapshots); zero strict real candidates/outcomes, BLOCKED_BY_DATA / NOT_TESTABLE. PR #6 accepted a bounded C05 source feasibility preflight only: 2024 retrospective strict economics unsupported by checked sources; C05 economic GO NOT granted | Owner decision on prospective evidence and durable collection plan |
-| P4 OpenBot approval and agent tools | OFFLINE FIXTURE SLICE REVIEWED; GATE NOT PASSED | PR #11 independently reviewed; 217 CI tests, fake bounded approval/protection/partial/time exit and journal. Real OpenBot runtime/MFA/durable journal remain `NOT_VERIFIED`; no full P4 weighted credit | Genuine OpenBot conformance prerequisite; no extra Codex assigned |
+| P4 OpenBot approval and agent tools | READ-ONLY AGENT MCP INVOCATION REPORTED; GATE NOT PASSED | Owner-reported Codex-backed OpenBot `evaluate_symbol` NO_TRADE; PR #13 official MCP subprocess client, PR #15 221 passing CI; C06-B fake approval/protection/exit. Multi-tool runtime, authenticated owner/MFA, durable journal unverified. No full P4 weighted credit | Bounded real-agent multi-tool test, then P3 hold |
 | P5 Binance demo protected execution | NOT STARTED | none | C07 |
 | P6 full demo and independent review | NOT STARTED | none | C08–C09 |
 | Live pilot | BLOCKED BY DESIGN | no owner authorization; not a Codex task by default | separate owner decision |
@@ -59,7 +59,7 @@ MVP milestones are **outcomes of already planned sessions**, not separate tasks.
 | ADR-000 | OpenBot coordinator mandatory for new entries; three live roles; deterministic tools; 10 analytical families preserved | DESIGN BASELINE | Owner conversation / v1.5 |
 | ADR-001 | Binance USD-M USDT perpetual, dynamic altcoins, 12h first-fill age, v1 risk ceilings, one-use human approval | DESIGN BASELINE | Owner conversation / v1.5 |
 | ADR-002 | REUSE-FIRST, no separate OpenCode infrastructure, journal and phase-gated Codex cloud delivery | DESIGN BASELINE | Owner conversation / this bootstrap |
-| ADR-EXEC-001 | Select one live order owner from SDK gateway, Freqtrade or NautilusTrader | **OPEN / C01** | must contain pinned test evidence and comparison |
+| ADR-EXEC-001 | Provisional official USD-M SDK transport plus sole-owner bounded gateway; Freqtrade/Nautilus alternatives examined | **PROVISIONAL / C01 REVIEWED** | PR #1 comparison and fake fault suite; Binance demo order semantics remain unverified |
 | ADR-ENTRY-001 | Armed approvals vs post-trigger baseline | **RESEARCH CANDIDATE** | must include approval delay, fill and economics study |
 | ADR-B1-001 | Original B1 TP ladder 40%@1R + 60%@2R remains research-only | ACCEPTED RESTRICTION | v1.5 arithmetic; no strategy performance claims |
 
@@ -297,3 +297,9 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Tests:** `/workspace/work/c06-c-venv/bin/python -m pytest -q tests/test_c06_mcp_protocol.py` — **3 passed in 6.39s**; `/workspace/work/c06-c-venv/bin/python -m pytest -q` — **220 passed in 20.12s**; `git diff --check` passed.
 - **Status / accounting:** P3 remains `INSUFFICIENT_EVIDENCE`; strategy statuses remain `RESEARCH_ONLY`; preserve 45% credited / 55% unqualified. This protocol adapter gives no P3 evidence or P4/full-MVP promotion. **NEXT_GATE:** independent PR review, then a separately observed OpenBot launch and tool invocation before claiming real host integration.
 - **Delivery:** [PR #13](https://github.com/KasunKarandagolla/AstraBot/pull/13) targets `main` at verified base `8370bc5fed417bf8e5b8cfc8b410d5c48e020601`. It is open and unmerged; no merge was attempted.
+
+### 2026-10-25 — LEAD-C06-C15 — MCP integration and Windows compatibility reconciliation
+
+- **Merged evidence:** [PR #13](https://github.com/KasunKarandagolla/AstraBot/pull/13) MCP stdio adapter and `mcp==2.3.0`, GitHub full suite 220 passed; [PR #14](https://github.com/KasunKarandagolla/AstraBot/pull/14) Windows child `SystemRoot` propagation, 221 CI passed; [PR #15](https://github.com/KasunKarandagolla/AstraBot/pull/15) owner-exported Windows compatibility patch (only `tests/c01_fake.py`, `tests/c06_mcp_client_harness.py`, `tests/test_c06_mcp_protocol.py`, +25/-7), independent review `5643565122`, GitHub CI 221 passed, merged/verified at `2e15f9cc2cf82fd7409c0ad72ab21ff7573e3f9e`. No production code/risk/strategy change in PRs #14/#15.
+- **Runtime evidence (owner-reported, distinct from GitHub CI):** Windows 11 OpenBot provider switched from unsupported OpenCode MCP configuration to Codex with owner-selected model. An actual attached `evaluate_symbol` MCP agent tool call with `ALTUSDT`, `2025-02-01T08:05:05+00:00` returned `NO_TRADE`, `executable=false`, `readiness=UNAVAILABLE`. This supports **READ_ONLY_AGENT_MCP_INVOCATION_REPORTED**, not verification of an end-to-end multi-role agent, real MFA, durable event ledger or trading qualification. No exported agent trace independent of owner handoff was attached to this journal update.
+- **Critical path:** P3 still `INSUFFICIENT_EVIDENCE` with 0 qualified real strict candidates, T1/R1/B1 `RESEARCH_ONLY`. Full P4 unpassed; **45% verified / 55% unqualified** per phase weights. No C07/demo/live promotion. Next is a **no-code short real OpenBot multi-tool positive and NO_TRADE test** using existing offline fixtures; after the check stop agent expansion unless a material P4 blocker exists. No Codex task assigned.
