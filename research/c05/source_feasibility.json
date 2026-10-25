@@ -1,5 +1,6 @@
 {
   "schema_version": "astrabot.c05.source-feasibility.v1",
+  "classification_scope_note": "Classifications describe what is or is not established in the retained C04 panel and the explicitly listed probes; they do not assert that every possible historical archive, third-party provider or private record source is absent. A HEAD 200 confirms candidate object availability only, not inspected feed contents.",
   "created_date_utc": "2026-10-25",
   "repository_base": "64994394b1c318ba996d1ba779a3f52f424ff6da",
   "branch": "codex/c05-feed-feasibility-preflight",
@@ -176,15 +177,15 @@
         "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information",
         "https://www.binance.com/en/support/announcement"
       ],
-      "source_date_coverage_claim": "Current exchangeInfo is a current-state response; C04 has no dated metadata snapshots. No exhaustive official historical filters archive was identified in the bounded source review.",
+      "source_date_coverage_claim": "Current exchangeInfo is a current-state response; C04 has no dated metadata snapshots. No dated filter snapshot was found in retained C04 evidence; the bounded review did not search every archive path or provider.",
       "small_probe_url": null,
       "http_status": null,
       "original_units": "price_tick=USDT per base/contract; quantity_step and minimum_quantity=contract/base units; minimum_notional=USDT",
       "timestamp_and_availability_meaning": "Current response time and capture time do not establish prior effective filters or when a 2024 system could know them.",
       "relevance_to_2024_window": "Required at every historical eligibility and sizing decision; current metadata cannot substitute.",
-      "completeness_and_fidelity_limitations": "Missing point-in-time status/filter changes, inactive symbols and complete historical universe. Individual dated announcements may recover selected events only.",
+      "completeness_and_fidelity_limitations": "Point-in-time status/filter changes, inactive symbols and complete historical universe were not established from retained/probed sources. Individual dated announcements or other providers may recover selected facts; the search was not exhaustive.",
       "c02_readiness_accept_unchanged": false,
-      "classification": "UNAVAILABLE"
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Exact historical rolling 24-hour ticker; OHLCV-derived turnover approximation",
@@ -234,15 +235,15 @@
       "official_documentation_source_urls": [
         "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker"
       ],
-      "source_date_coverage_claim": "Current endpoint gives the best bid/ask at request time. No C04 quote observations were retained; the tested 2024 candidate returned 404.",
+      "source_date_coverage_claim": "Current endpoint gives the best bid/ask at request time. No C04 quote observations were retained; one tested 2024 candidate URL returned 404.",
       "small_probe_url": "https://data.binance.vision/data/futures/um/daily/bookTicker/SOLUSDT/SOLUSDT-bookTicker-2024-09-02.zip",
       "http_status": 404,
       "original_units": "bid/ask=USDT per base asset; quoted quantity=base/contract units; spread=fraction of midpoint",
       "timestamp_and_availability_meaning": "Current capture time is known only for a live request. No historical quote event or ingestion timestamp was recovered.",
       "relevance_to_2024_window": "C02 requires 60 consecutive fresh one-minute samples; this feed would qualify spread only if historical snapshots existed.",
-      "completeness_and_fidelity_limitations": "One candidate URL only; no proof of global archive absence. OHLCV cannot reconstruct bid/ask quotes.",
+      "completeness_and_fidelity_limitations": "The tested candidate URL does not establish archive or provider-wide absence. OHLCV cannot reconstruct bid/ask quotes.",
       "c02_readiness_accept_unchanged": false,
-      "classification": "UNAVAILABLE"
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Historical depth and executable liquidity",
@@ -251,16 +252,16 @@
         "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book",
         "https://data.binance.vision/data/futures/um/daily/bookDepth/SOLUSDT/SOLUSDT-bookDepth-2024-09-02.zip"
       ],
-      "source_date_coverage_claim": "A candidate SOLUSDT 2024-09-02 bookDepth archive object responds HTTP 200 to HEAD. No C04 depth rows were retained.",
+      "source_date_coverage_claim": "A candidate SOLUSDT 2024-09-02 bookDepth URL returned HTTP 200 to HEAD only. No archive bytes or rows were inspected, and C04 retains no depth rows.",
       "small_probe_url": "https://data.binance.vision/data/futures/um/daily/bookDepth/SOLUSDT/SOLUSDT-bookDepth-2024-09-02.zip",
       "http_status": 200,
       "original_units": "Not inspected; expected order-book quantities and prices, but whether full levels or aggregated depth bands is unverified.",
       "timestamp_and_availability_meaning": "Archive payload time convention and original 2024 availability are unverified; retrieval now supplies no historical ingestion time.",
       "relevance_to_2024_window": "Potential sampled liquidity evidence only if the archive schema and cadence match the decision points.",
-      "completeness_and_fidelity_limitations": "HEAD only, no bytes or schema. Aggregated depth bands are not full order-book snapshots; neither proves queue priority or executable IOC fill.",
+      "completeness_and_fidelity_limitations": "HEAD only: object availability, not inspected feed contents. Payload schema, levels, units and timing remain unverified. Aggregated depth bands are not full order-book snapshots; neither proves queue priority or executable IOC fill.",
       "c02_readiness_accept_unchanged": false,
       "c02_acceptance_condition": "Would require verified ordered bid/ask levels and timestamp/availability semantics compatible with DepthSnapshot.",
-      "classification": "RETROSPECTIVE_ONLY"
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Historical USDⓈ-M trade chronology and aggressor side",
@@ -270,7 +271,7 @@
         "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List",
         "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Recent-Trades-List"
       ],
-      "source_date_coverage_claim": "Binance README documents USD-M aggregate/raw trade fields and archive publication cadence. Monthly SOLUSDT Sep and DOGEUSDT Oct aggTrades and SOLUSDT Sep trades objects returned HTTP 200.",
+      "source_date_coverage_claim": "Binance README documents USD-M aggregate/raw trade fields and archive publication cadence. Monthly SOLUSDT Sep and DOGEUSDT Oct aggTrades and SOLUSDT Sep trades candidate URLs returned HTTP 200 to HEAD only; no ZIP bytes or rows were inspected.",
       "small_probe_url": "https://data.binance.vision/data/futures/um/monthly/aggTrades/SOLUSDT/SOLUSDT-aggTrades-2024-09.zip",
       "http_status": 200,
       "probe_urls_and_statuses": [
@@ -280,11 +281,12 @@
       ],
       "original_units": "price=USDT per base; quantity=base; aggregate/raw trade IDs; buyer-maker boolean; quote quantity where raw trades provide it",
       "timestamp_and_availability_meaning": "Exchange transaction time in milliseconds is event time. Binance README says monthly archives appear on the first Monday of the month; actual 2024 live ingestion time is absent.",
-      "relevance_to_2024_window": "Can recover authentic trade chronology for bounded retrospective A01 diagnostics after download, parsing and continuity checks.",
+      "relevance_to_2024_window": "Could support retrospective A01 chronology only if archive contents, fields, coverage and continuity are later verified.",
       "completeness_and_fidelity_limitations": "HEAD only; body size, checksum, row coverage and corrected archive version not inspected. Aggregate trades coalesce executions and do not reveal queue/fill probability.",
-      "c02_readiness_accept_unchanged": true,
-      "c02_acceptance_condition": "Only with complete IDs/continuity, TRADE_AGG fidelity, explicit availability proxy, exact source units and no claim of historical live ingestion.",
-      "classification": "OBSERVED_WITH_AVAILABILITY_PROXY"
+      "c02_readiness_accept_unchanged": false,
+      "potential_c02_schema_mapping": "If the downloaded payload confirms the documented fields, records may map to Trade with TRADE_AGG fidelity; continuity and availability still require verification.",
+      "c02_acceptance_condition": "Not currently accepted; validate payload, coverage, continuity, units and availability first.",
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Historical funding rates and settled funding cash flow",
@@ -294,7 +296,7 @@
         "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip",
         "https://data.binance.vision/data/futures/um/monthly/fundingRate/DOGEUSDT/DOGEUSDT-fundingRate-2024-10.zip"
       ],
-      "source_date_coverage_claim": "Monthly archive objects for SOL Sep and DOGE Oct returned HTTP 200. Exact payload content/row dates were not inspected.",
+      "source_date_coverage_claim": "Monthly archive candidate URLs for SOL Sep and DOGE Oct returned HTTP 200 to HEAD only. No ZIP bytes, rows or timestamp fields were inspected.",
       "small_probe_url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip",
       "http_status": 200,
       "probe_urls_and_statuses": [
@@ -303,11 +305,12 @@
       ],
       "original_units": "fundingRate=fraction of settlement notional; exact settlement cash flow also requires position quantity/contract multiplier and mark-price notional",
       "timestamp_and_availability_meaning": "C02 maps fundingTime to event/settlement time and treats rate as settled. Use settlement time only as an availability proxy for realized cash flow; it is not a rate known at an earlier entry.",
-      "relevance_to_2024_window": "Historical rate events can support outcome-side funding accounting if matching position exposure and settlement price are available.",
+      "relevance_to_2024_window": "Could support outcome-side funding accounting only if payload fields and row coverage are later verified and matching position exposure/settlement price are available.",
       "completeness_and_fidelity_limitations": "No archive bytes, source ingestion time, mark-price alignment or actual account funding ledger. The rate alone is not a full cash-flow record.",
-      "c02_readiness_accept_unchanged": true,
-      "c02_acceptance_condition": "Settled FundingObservation with fraction units and explicit event-time availability proxy; do not expose a future settled rate at entry time.",
-      "classification": "OBSERVED_WITH_AVAILABILITY_PROXY"
+      "c02_readiness_accept_unchanged": false,
+      "potential_c02_schema_mapping": "If archive rows match the local API mapping, they may map to settled FundingObservation records; verify fraction units and fundingTime before use.",
+      "c02_acceptance_condition": "Not currently accepted; verify archive payload, settlement timestamps and availability before use.",
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Historical account-specific maker/taker fees and actual paid fees",
@@ -315,15 +318,15 @@
       "official_documentation_source_urls": [
         "https://www.binance.com/en/fee/futureFee"
       ],
-      "source_date_coverage_claim": "No account fee ledger exists in the C04 artifacts; a current public schedule does not establish a 2024 account tier or paid fee.",
+      "source_date_coverage_claim": "No account fee ledger is retained in C04; a current public schedule does not establish 2024 paid fees. External account records/providers were not searched.",
       "small_probe_url": null,
       "http_status": null,
       "original_units": "fee amount in settlement currency; maker/taker rate in fraction of executed notional",
       "timestamp_and_availability_meaning": "Requires each actual fill/fee event time and the account tier/discount then in effect; none was retained.",
       "relevance_to_2024_window": "Mandatory net economics input; fixed assumed rates are sensitivity parameters, not paid-fee evidence.",
-      "completeness_and_fidelity_limitations": "No account history and no public historical tier archive identified. No private access or credentials used.",
+      "completeness_and_fidelity_limitations": "Actual 2024 account fees were not established from C04; no exhaustive account-record/provider search was performed. No private access or credentials used.",
       "c02_readiness_accept_unchanged": false,
-      "classification": "UNAVAILABLE"
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Authoritative point-in-time event/news clearance",
@@ -332,15 +335,15 @@
         "https://www.binance.com/en/support/announcement",
         "https://github.com/KasunKarandagolla/AstraBot/blob/main/docs/reference/AGENTIC_SPEC_v1.5.md#44-news-and-scheduled-event-intelligence"
       ],
-      "source_date_coverage_claim": "C04 has no verified event records. The project specification requires original publication and fetch times; it states historical event studies require the originally observable publication time.",
+      "source_date_coverage_claim": "C04 retains no verified event records. The project specification requires original publication and fetch times; no historical event-source search was exhaustive in this preflight.",
       "small_probe_url": null,
       "http_status": null,
       "original_units": "Event timestamps with timezone/date precision; canonical symbols and event types; no scalar unit.",
       "timestamp_and_availability_meaning": "published_at and fetched_at are both required. Later news cannot establish earlier awareness or clearance.",
       "relevance_to_2024_window": "Missing verified event clearance blocks the C02 historical universe at every sampled window.",
-      "completeness_and_fidelity_limitations": "No single complete negative-coverage record across exchange, project, security, macro and reputable news sources; absence of articles is not clearance.",
+      "completeness_and_fidelity_limitations": "Complete negative event coverage was not established from retained/probed sources; other event archives/providers were not exhaustively searched. Absence of articles is not clearance.",
       "c02_readiness_accept_unchanged": false,
-      "classification": "UNAVAILABLE"
+      "classification": "UNVERIFIED"
     },
     {
       "data_requirement": "Actual order latency, IOC/partial-fill probability, queue position, stop slippage and realized execution costs",
@@ -348,23 +351,30 @@
       "official_documentation_source_urls": [
         "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api"
       ],
-      "source_date_coverage_claim": "C04 contains no actual submissions or fills; the one-second IOC is unresolved from its 5m candles.",
+      "source_date_coverage_claim": "C04 contains no actual submissions or fills; the one-second IOC is unresolved from its 5m candles. Other account/execution records were not searched.",
       "small_probe_url": null,
       "http_status": null,
       "original_units": "order/fill quantity in contract units; prices in USDT per contract/base; latency in milliseconds; realized fee/slippage in USDT",
       "timestamp_and_availability_meaning": "Requires local submit/receive timestamps and exchange acknowledgments/fill event times; public trades do not expose AstraBot's queue or account fill.",
       "relevance_to_2024_window": "Needed to evaluate entry attrition, partials, stop tails and realized net_R for a full policy.",
-      "completeness_and_fidelity_limitations": "No historical account/OMS log. Market archives cannot synthesize hidden queue state or actual order outcomes.",
+      "completeness_and_fidelity_limitations": "No historical account/OMS log is retained in C04. Market archives cannot synthesize hidden queue state or actual order outcomes; other record sources were not ruled out.",
       "c02_readiness_accept_unchanged": false,
-      "classification": "UNAVAILABLE"
+      "classification": "UNVERIFIED"
     }
   ],
   "research_paths": [
     {
       "path": "A",
       "name": "Recover frozen 2024 study",
-      "evidence_quality": "Complete OHLCV and recoverable trades/funding; only sampled depth object presence; incomplete historical availability.",
-      "missing_mandatory_feeds": ["point-in-time metadata", "exact ticker/quotes", "validated OI notional", "event clearance", "account fees", "actual fills"],
+      "evidence_quality": "Complete OHLCV; trade, funding and depth archive objects respond to HEAD, but their ZIP contents and historical availability are unverified.",
+      "missing_mandatory_feeds": [
+        "not established from retained/probed sources: point-in-time metadata",
+        "not established from retained/probed sources: exact ticker/quotes",
+        "not established from retained/probed sources: validated OI notional",
+        "not established from retained/probed sources: event clearance",
+        "not established from retained/probed sources: account fees",
+        "not established from retained/probed sources: actual fills"
+      ],
       "implementation_complexity": "medium-high",
       "storage_burden": "C04 OHLCV is 15.4 MB compressed; supplementary sizes not downloaded; trade/depth retention grows with cadence.",
       "invalid_conclusion_risk": "high if source event times are mistaken for ingestion times or proxies are promoted to exact observations",
@@ -374,7 +384,9 @@
       "path": "B",
       "name": "Alternative historical period",
       "evidence_quality": "No material improvement demonstrated; alternate period not selected from outcomes.",
-      "missing_mandatory_feeds": ["same source families as A"],
+      "missing_mandatory_feeds": [
+        "same source-family gaps as A; not established from retained/probed sources"
+      ],
       "implementation_complexity": "high due new predeclaration, data audit, holdout and replay",
       "storage_burden": "similar to A plus new period partitions",
       "invalid_conclusion_risk": "very high if chosen after seeing results; otherwise still limited by missing PIT feeds",
@@ -384,7 +396,11 @@
       "path": "C",
       "name": "Prospective public-market observation",
       "evidence_quality": "Potentially strongest: authentic observations with contemporaneous local receive timestamps and feed-gap logs.",
-      "missing_mandatory_feeds": ["complete event-source coverage", "validated OI units", "actual account execution evidence for fill probability"],
+      "missing_mandatory_feeds": [
+        "complete event-source coverage",
+        "validated OI units",
+        "actual account execution evidence for fill probability"
+      ],
       "implementation_complexity": "medium-high for a bounded two-symbol read-only collector",
       "storage_burden": "trade/depth data grows by cadence and observation horizon; choose retention explicitly",
       "invalid_conclusion_risk": "moderate and measurable if gaps fail closed and later evaluation is untouched",
@@ -394,7 +410,9 @@
       "path": "D",
       "name": "Research-only synthetic/paper mechanics",
       "evidence_quality": "Mechanics/accounting only; no empirical market evidence.",
-      "missing_mandatory_feeds": ["all empirical market, event and execution evidence"],
+      "missing_mandatory_feeds": [
+        "all empirical market, event and execution evidence"
+      ],
       "implementation_complexity": "low; C04 already exercises core synthetic paths",
       "storage_burden": "low",
       "invalid_conclusion_risk": "high if synthetic outcomes are presented as strategy performance",
@@ -403,7 +421,7 @@
   ],
   "recommendation": {
     "route": "C",
-    "reason": "C04 OHLCV cannot recover original quote, OI, event, metadata or fill histories. Prospective capture is the only identified path that can create fresh availability timestamps for a later untouched economic evaluation.",
+    "reason": "C04 OHLCV does not contain original quote, OI, event, metadata or fill histories, and the retained/probed sources did not establish them. Prospective capture is the preferred identified path for fresh availability timestamps and a later untouched economic evaluation; other historical providers were not exhaustively searched.",
     "next_task": "Implement an unauthenticated read-only prospective collector for SOLUSDT and DOGEUSDT only; persist raw metadata snapshots, trades, bookTicker, bounded depth, mark/funding and OI with source and ingestion timestamps, units, checksums and gaps. Add no account, signing, tuning or order code; declare a later observation horizon before replay.",
     "owner_help_needed": "NONE for this preflight; a durable read-only runtime and retention horizon must be confirmed before observations begin.",
     "historical_2024_feasibility": "BLOCKED",
