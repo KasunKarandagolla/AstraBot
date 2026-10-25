@@ -47,6 +47,8 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 **C05-D companion derivative-ticker sample (2026-10-25):** Owner supplied genuine gzip/CSV-format SOLUSDT derivative ticks for 2024-10-01: **119,927** rows, OI populated in **119,913**, mark/index prices in all records, published next-funding rate/time, and all **1,440** collector-time minute buckets overlapping with the quote file. [Derivative-ticker original-byte preflight](research/c05/DERIVATIVE_TICKER_PREFLIGHT.md). Status **`SAMPLE_ONLY / DERIVATIVE_TICKER_SCHEMA_COMPATIBLE`**. Raw OI **units and USDT-notional conversion not validated**, funding is not a verified settlement, deeper depth/events/metadata/fills remain missing. **NEXT_GATE:** date-matched `book_snapshot_25` original bytes plus OI units and a rights-checked representative data route.
 
+**C05-E top-25 reconstructed book sample (owner report, 2026-10-25):** Local OpenBot reported validating 94,944,824 compressed bytes, 1,522,898 `binance-futures/SOLUSDT` order-book snapshots (104 columns), UTC 2024-10-01 and within-0.20%-of-mid raw depth. **Independent source bytes and the detailed local Markdown file were not attached for reinspection**; contract quantity/USDT-notional units remain unverified and Tardis reconstructs/remove crossed levels. [Sample preflight](research/c05/BOOK_SNAPSHOT_25_PREFLIGHT.md). **NEXT_GATE:** validate historical SOLUSDT quantity units/filters, then a bounded causal quotes+derivatives+L2 alignment diagnostic, not economic GO. P3 `INSUFFICIENT_EVIDENCE` and overall 45% phase credit unchanged.
+
 ## Source authority and drift prevention
 
 1. Approved owner decisions and merged ADRs in `docs/07-ENGINEERING-JOURNAL.md` override older provisional proposals.
