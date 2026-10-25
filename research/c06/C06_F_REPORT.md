@@ -105,7 +105,7 @@ The dedicated test uses the official MCP SDK and fresh processes. It verifies ex
 
 Compilation, pinned-environment dependency checks and whitespace validation also passed: compileall, pip check reported no broken requirements, and git diff --check was clean. The acceptance harness instruments its parent and subprocesses to reject outbound non-loopback networking and reports zero attempts. Its persistent stores are disposable synthetic fixtures only.
 
-Implementation commit: 21aa2709e9b98e54d28d94672b50f0ad0b6e2d02. GitHub Actions must pass on the final pushed PR head; its observed result is linked from PR #23 and is reported separately from local verification. Local checks do not prove owner-run OpenBot acceptance; that remains OWNER_OPENBOT_ACCEPTANCE_PENDING.
+Implementation commit: 21aa2709e9b98e54d28d94672b50f0ad0b6e2d02. GitHub Actions run [#62](https://github.com/KasunKarandagolla/AstraBot/actions/runs/40217750429) passed on PR head 09056ff563fe1c3727e853e561cb448d259f1b99; compile, full pytest, C03 trace and C04 replay steps all succeeded. CI remains separate from the owner-run OpenBot acceptance, which is OWNER_OPENBOT_ACCEPTANCE_PENDING. The final documentation-only PR head is checked independently.
 
 ## Remaining limits
 
