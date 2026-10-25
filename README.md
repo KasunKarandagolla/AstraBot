@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 and the narrow C05 source-feasibility preflight are merged on `main` at `3e8e4062e6de863f03c3656257e00791c9178cbf`.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 and the narrow C05 source-feasibility preflight are merged on `main`.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
