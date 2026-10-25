@@ -1,10 +1,10 @@
 # 07 — AstraBot Engineering Journal, ADR Index and Delivery Ledger
 
 **Type:** append-only factual handoff ledger, not a substitute for tests or code.  
-**Last editorial checkpoint:** 2026-10-24 · preimplementation docs bootstrap.  
-**Current phase:** `P0 — contracts and single-owner feasibility`  
-**NEXT_GATE:** `C01 — Engine-owner ADR and frozen lifecycle/economics interfaces`  
-**Next assigned Codex profile:** `Sol / complex` (if the named model is available).  
+**Last editorial checkpoint:** 2026-10-25 · C03 independent review and C04 implementation evidence.
+**Current phase:** `P3 — Historical research evidence and complete-policy replay`
+**NEXT_GATE:** `Independent project-lead review of C04 engineering and BLOCKED_BY_DATA evidence`
+**Next assigned Codex profile:** `Luna / bulk research implementation` only if a bounded data-enabled follow-up is assigned; current next action is project-lead review.
 **Live funds enabled:** **NO**. **Any strategy economically qualified:** **NO**.
 
 ## Rules for updating this file
@@ -18,7 +18,7 @@
 
 ## Progress and persistent memory policy
 
-Measure progress toward the **research-qualified and demo-safe v1 development definition of done**, **not** proven profitability or authorized live trading. Report after each reviewed Codex PR: `Estimated verified completion X% / remaining 100-X%`; breakdown and uncertainty, with basis. Use *rough phase-gate weights* P0 **10%**, P1 **15%**, P2 **20%**, P3 **25%**, P4 **10%**, P5 **15%**, P6 **5%**. Only award a phase's full weight when its evidence-based gate passes; optional provisional subphase credit must list objective completed artifacts and cannot imply promotion. The initial implementation estimate is **0%** as of this documentation review; original design consultation is complete but no gate has been implemented. If evidence invalidates a gate, revise the estimate openly. This rubric estimates product capabilities, not calendar time or Codex quota remaining.
+Measure progress toward the **research-qualified and demo-safe v1 development definition of done**, **not** proven profitability or authorized live trading. Report after each reviewed Codex PR: `Estimated verified completion X% / remaining 100-X%`; breakdown and uncertainty, with basis. Use *rough phase-gate weights* P0 **10%**, P1 **15%**, P2 **20%**, P3 **25%**, P4 **10%**, P5 **15%**, P6 **5%**. Only award a phase's full weight when its evidence-based gate passes; optional provisional subphase credit must list objective completed artifacts and cannot imply promotion. The independent C03 review records approximately **45%** development-scope credit for reviewed P0/P1/P2 only; C04 has not been reviewed or awarded P3 credit. This is not a calendar-time, quota, economic qualification or live-readiness estimate. If evidence invalidates a gate, revise the estimate openly.
 
 After each reviewed session, add a **short durable memory capsule**: what changed in code, exact commits/PRs, verified tests and datasets, nontrivial implementation decisions and why, reproducible important defects and fixes, affected architecture/feature versions, next gate and owner questions. Preserve knowledge via source-linked ADRs rather than long conversational recollections. Distinguish research observations from production facts. Keep prompts/agent memories summarized with bounded retention; do not commit credentials, raw sensitive account data or large raw market streams into Git. Market-data storage and authoritative event truth follow `02`.
 
@@ -26,8 +26,8 @@ After each reviewed session, add a **short durable memory capsule**: what change
 
 | Milestone | Status | Evidence required | Existing task |
 |---|---|---|---|
-| MVP-R0 read-only market slice | NOT STARTED | Real Binance public altcoin shortlist; causal prebuilt analytics adapter; missing-data readiness case | C02 after P0 |
-| MVP-R1 research vertical slice | NOT STARTED | Reproducible setup/NO_TRADE trace, stop/target and costs, causal replay, positive and negative trader-level cases, C05 GO/REVISE/STOP verdict | C03–C05 |
+| MVP-R0 read-only market slice | PARTIAL / NOT COMPLETE | C02 read-only smoke and fail-closed eligibility are merged; current panel has only 24 BTC 1H rows plus 100 APE trades, not historical warm-up or altcoin eligibility | C02 foundation; expansion deferred to C04 data recovery |
+| MVP-R1 research vertical slice | ENGINEERING PARTIAL / EMPIRICAL BLOCKED | C03 synthetic positive/negative trace and real-data NO_TRADE; C04 replay/research package exists, but no real eligible historical candidate or C05 economic review is supported | C03–C05 |
 | MVP-A agentic paper vertical slice | NOT STARTED | OpenBot → deterministic analysis → bounded human approval → fake order → simulated management/exit → journal and failure tests | C06 after research gate |
 | Demo-safe v1 | NOT STARTED | Single-writer demo/recovery/supervision tests | C07–C09 |
 
@@ -43,10 +43,10 @@ MVP milestones are **outcomes of already planned sessions**, not separate tasks.
 
 | Gate | Status | Actual evidence | Next |
 |---|---|---|---|
-| P0 architecture and consulted v1.5 | DESIGN BASELINE | preserved in `docs/reference/AGENTIC_SPEC_v1.5.md` | C01 owner-selection feasibility |
-| P1 data / coin discovery / feature readiness | NOT STARTED | none | C02 after C01 |
-| P2 T1/R1/B1 deterministic policies | NOT STARTED | none | C03 |
-| P3 friction and full-policy research | NOT STARTED | none | C04–C05 |
+| P0 contracts and single-owner feasibility | PASS WITH DEFERRED NONBLOCKERS | Independent review on PR #1; ADR-EXEC-001 and fake-only contracts; no live qualification | C02 foundation already merged |
+| P1 data / coin discovery / feature readiness | PASS FOR FOUNDATION; MVP-R0 INCOMPLETE | Independent review on PR #2; GET-only adapter, causal observation models and empty real-data shortlist | C04 historical panel expansion |
+| P2 T1/R1/B1 deterministic policies | PASS WITH DEFERRED NONBLOCKERS | Independent review on PR #3; pure policies and synthetic trace; all policies remain RESEARCH_ONLY | C04 complete-policy replay |
+| P3 friction and full-policy research | C04 ENGINEERING READY FOR REVIEW; EMPIRICAL BLOCKED BY DATA | Current branch uses C02/C03 functions; 0 eligible symbols, 0 strict candidates, actual C03 diagnostics remain NO_TRADE; C05 is not approved | C04 independent review, then bounded data recovery |
 | P4 OpenBot approval and agent tools | NOT STARTED | none | C06 after research gate |
 | P5 Binance demo protected execution | NOT STARTED | none | C07 |
 | P6 full demo and independent review | NOT STARTED | none | C08–C09 |
