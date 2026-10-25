@@ -262,11 +262,18 @@ economic GO/REVISE decision.
 bounded bar-model scenario) and E2 stress mechanics for fees, partial size,
 approval delay, same-bar ambiguity, gaps, target-leg rounding and the 11h55m /
 12h timer. It never imports a Binance order client. OHLC-based outcomes are
-`BAR_APPROX`, separated from observed fills. Synthetic E1/E2 cases verify
-mechanics and are excluded from historical statistics. The declared fallback
-funding proxy integrates each remaining quantity over its modeled holding
-time, so partial exits reduce subsequent proxy exposure; it is not historical
-settlement data. `statistics.py`
+`BAR_APPROX`, separated from observed fills. Strict C03 research candidates
+flow into those scenarios and separate E1/E2 `PortfolioLedger` instances;
+approval, order, fill, exit, reservation, release and funnel counts come from
+their recorded simulated events. The fully eligible integration fixture is
+explicitly synthetic and kept outside the historical outcomes and summaries.
+Stop spread/slippage are embedded once in the modeled stop execution price and
+reconciled once in net PnL; exact long, short, gap, fee and settled-funding
+checks cover this accounting. Synthetic scenarios verify mechanics only and
+are excluded from historical statistics. The declared fallback funding proxy
+integrates each remaining quantity over its modeled holding time, so partial
+exits reduce subsequent proxy exposure; it is not historical settlement data.
+`statistics.py`
 provides deterministic joint market-time-block bootstrap and pre-outcome
 matched-control sampling; with no qualified historical outcomes its interval
 is intentionally undefined.

@@ -1,7 +1,7 @@
 # C04 historical replay and execution economics — research handoff
 
-**Run:** `cf3b94dc4f864928ff3fb3add1b749468352c912e3d826d2c2bc7bf5bb2ada98`
-**Configuration hash:** `ffc988328288d977b4add08acf54aa172aaab8341f6b204a87fd41f9cc26d756`
+**Run:** `9344c555fe642298adf91a0ec5c17a7172734c062bd0d5f528ad85d917dc7d4b`
+**Configuration hash:** `8b3b4b56ef7221227f1d7b77ad943eb020468ac7e0e68d122c04678e7a6fa799`
 **Verdict:** `BLOCKED_BY_DATA`
 **C05 recommendation:** `INSUFFICIENT_EVIDENCE`
 
@@ -35,9 +35,14 @@ No point-in-time exchangeInfo snapshots were retained. Historical listing status
 | STRICT research candidates | 0 |
 | Armed/confirmed diagnostic setups | 0/0 |
 | Diagnostic C03 NO_TRADE records | 288 |
-| Approval, order, fill, protected-position, TP/stop events | 0 |
+| Approval requested / granted / preauthorized | 0 / 0 / 0 |
+| Order attempts / fills / partial fills | 0 / 0 / 0 |
+| Protected positions / TP1 / TP2 / stops | 0 / 0 / 0 / 0 |
+| Entry misses / expiries / unfilled attempts | 0 / 0 / 0 |
+| Portfolio admissions / risk rejections / releases | 0 / 0 / 0 |
+| Cumulative / peak reserved modeled risk (USDT) | 0 / 0 |
 
-The strict scanner uses C02's actual eligibility and deterministic shortlist gates, capped at 15. Because no symbol passes, no symbol enters the strict policy shortlist. The separate diagnostic stream calls the actual C03 engine on panel symbols with an empty bypass list; it does not promote those records into eligible trades. The panel symbol count is source coverage, not a reconstructed historical tradeable universe. Funnel and decision details are in `run.json`.
+The strict scanner uses C02's actual eligibility and deterministic shortlist gates, capped at 15. The historical panel has no strict candidate, so its zero execution counters are derived from an empty simulated-event ledger. The separate diagnostic stream calls the actual C03 engine on panel symbols with an empty bypass list; it does not promote those records into eligible trades. The panel symbol count is source coverage, not a reconstructed historical tradeable universe. Funnel and decision details are in `run.json`.
 
 Top missing-input vetoes include absent metadata, ticker, 5M/15M/4H history, 60 spread samples, depth, validated OI notional, and verified event clearance. The 24 BTC 1H rows also fall short of the C03 735-bar ATR percentile warm-up. APE has only 100 aggregate trades and no candle context.
 
@@ -58,18 +63,36 @@ Where no observed funding settlements exist, synthetic execution scenarios charg
 
 Historical E0/E1/E2 outcomes: no historical candidate reached this stage; there are zero modeled historical execution outcomes.
 
+## Synthetic fully eligible end-to-end test panel
+
+This fixture is labeled `SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE`. Generated observations exercise C02 eligibility, strict C03 candidate formation, and the existing E0/E1/E2 simulator with separate E1/E2 `PortfolioLedger` instances. None are historical market records, and none enter the historical run or empirical statistics.
+
+| Pipeline stage | Result |
+|---|---:|
+| C02 eligible symbol windows | 2 |
+| Strict C03 research candidates | 1 |
+| E0 / E1 / E2 simulated outcomes | E0: UNFILLED, E1: FLAT, E2: FLAT |
+| Approval requested / granted / preauthorized | 1 / 1 / 1 |
+| Order attempts / fills / partial fills | 2 / 2 / 1 |
+| TP1 / TP2 / stops / forced exits | 2 / 2 / 0 / 0 |
+| Cumulative / peak reserved modeled risk (USDT) | 2.1599800 / 1.0799900 |
+
+All synthetic counters above come from recorded simulator and ledger events. The scenario PnL fields in `run.json` exist only to exercise accounting and are excluded from the historical `scenario_outcomes`, performance summaries, and C05 recommendation. These mechanics results do not imply profitability.
+
+## Additional synthetic execution mechanics
+
 Synthetic test fixture outcomes are isolated and cannot enter historical performance summaries:
 
-| Scenario | Status | Filled quantity | Realized net R | Classification |
-|---|---|---:|---:|---|
-| E0 | UNFILLED | 0 | None | NO_EXECUTION_POLICY_TRUTH |
-| E1 | FLAT | 10 | 5.502169433653459606060628887 | SYNTHETIC_MODELLED_EXECUTION |
-| E2_PARTIAL_STRESS | FLAT | 5.0 | 5.474404173166995229869948230 | SYNTHETIC_MODELLED_EXECUTION |
-| E2_DELAYED | MISSED_ENTRY | 0 | None | MODELLED_EXECUTION |
-| E2_SAME_BAR_AMBIGUITY | FLAT | 10 | -1.003405079885930690113298436 | SYNTHETIC_MODELLED_EXECUTION |
-| E2_GAP_STOP | FLAT | 10 | -1.229371692239856913675385582 | SYNTHETIC_MODELLED_EXECUTION |
-| E2_11H55_FLATTEN | FLAT | 10 | -0.1593959032173581810982121492 | SYNTHETIC_MODELLED_EXECUTION |
-| E2_12H_HARD_LIMIT | FLAT | 10 | -0.1594037500649718982415779471 | SYNTHETIC_MODELLED_EXECUTION |
+| Scenario | Status | Filled quantity | Simulated exits | Classification |
+|---|---|---:|---|---|
+| E0 | UNFILLED | 0 | none | NO_EXECUTION_POLICY_TRUTH |
+| E1 | FLAT | 10 | TP1, TP2 | SYNTHETIC_MODELLED_EXECUTION |
+| E2_PARTIAL_STRESS | FLAT | 5.0 | TP1, TP2 | SYNTHETIC_MODELLED_EXECUTION |
+| E2_DELAYED | MISSED_ENTRY | 0 | none | SYNTHETIC_MODELLED_EXECUTION |
+| E2_SAME_BAR_AMBIGUITY | FLAT | 10 | STOP | SYNTHETIC_MODELLED_EXECUTION |
+| E2_GAP_STOP | FLAT | 10 | STOP | SYNTHETIC_MODELLED_EXECUTION |
+| E2_11H55_FLATTEN | FLAT | 10 | FORCED_FLATTEN_11H55 | SYNTHETIC_MODELLED_EXECUTION |
+| E2_12H_HARD_LIMIT | FLAT | 10 | FORCED_FLATTEN_12H_HARD_LIMIT | SYNTHETIC_MODELLED_EXECUTION |
 
 Synthetic outcomes verify accounting paths only. C03's scenario net RR is a conditional successful-ladder benchmark, not expectancy. B1 retains the original 40% at +1R and 60% at +2R ladder, 1.6 gross price-R, and equal-cost threshold `c/d <= 0.04`; the empirical share meeting that threshold is not testable here.
 
@@ -87,9 +110,9 @@ A chronological split is predeclared for a future bounded pilot: dataset window 
 
 ## Performance and reproducibility
 
-Measured on this executor: 0.413194s, peak traced Python allocation 6403095 bytes, 24 availability snapshots, 338 funnel events. These are measurements of the bounded in-memory replay, not archive extraction or broad-universe capacity.
+Measured on this executor: 0.426538s, peak traced Python allocation 6379011 bytes, 24 availability snapshots, 338 funnel events. These are measurements of the bounded in-memory replay, not archive extraction or broad-universe capacity.
 
-Decision ledger SHA256: `20eecdeaae78e02f9c4b05e0d037d157988287c8062547c912cc6a1ed3d5728a`
+Decision ledger SHA256: `a156a924ff8a236ed9da695cb7cb7a53fdcfe00a07be2ac90b5e126fe5cf54e2`
 Funnel ledger SHA256: `e5a4539ab5f86323929ccc6deaad52f64a1da92d4046b912dead24b71a514b7b`
 
 ## Data blocker and next experiment

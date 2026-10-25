@@ -77,6 +77,7 @@ class ScenarioOutcome(Contract):
     status: Literal["NO_TRADE", "REJECTED", "EXPIRED", "MISSED_ENTRY", "UNFILLED", "TARGET_LEG_INFEASIBLE", "FLAT", "UNRESOLVED_AT_SAMPLE_END"]
     fill_fidelity: Literal["NONE", "BAR_APPROX"]
     filled_quantity: D = D(0)
+    entry_price: D | None = None
     first_fill_at: datetime | None = None
     initial_modeled_risk_usdt: D | None = None
     realized_pnl_usdt: D = D(0)
@@ -138,31 +139,31 @@ def simulate_decision(
             fill_fidelity="NONE", reasons=("NO_OWNER_APPROVAL_OR_OBSERVED_FILL",),
             caveats=("E0 claims no owner approval and no exchange execution.",))
     if scenario.approval_outcome == "REJECTED":
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="REJECTED",
             fill_fidelity="NONE", reasons=("HYPOTHETICAL_APPROVAL_REJECTED",))
     if scenario.approval_outcome == "NO_RESPONSE":
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="EXPIRED",
             fill_fidelity="NONE", reasons=("HYPOTHETICAL_APPROVAL_NO_RESPONSE",))
     if data.metadata is None or data.metadata.quantity_step is None or data.metadata.price_tick is None:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="UNFILLED",
             fill_fidelity="NONE", reasons=("EXCHANGE_FILTERS_UNAVAILABLE",))
     deadline = decision.trigger_submit_deadline
     if deadline is None:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="EXPIRED",
             fill_fidelity="NONE", reasons=("TRIGGER_SUBMIT_DEADLINE_MISSING",))
     arrival = max(decision.as_of + timedelta(microseconds=1),
                   decision.earliest_hypothetical_entry_at or decision.as_of) + scenario.approval_delay
     if arrival > deadline:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="MISSED_ENTRY",
             fill_fidelity="NONE", reasons=("APPROVAL_DELAY_EXCEEDS_10S_TRIGGER_DEADLINE",),
             caveats=("The deadline was not relaxed to manufacture a fill.",))
     if arrival > decision.expires_at:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="EXPIRED",
             fill_fidelity="NONE", reasons=("APPROVAL_DELAY_EXCEEDS_PROPOSAL_EXPIRY",))
     reporting_cutoff = scenario.sample_end or max(
@@ -174,7 +175,7 @@ def simulate_decision(
         key=lambda b: (b.open_time, b.source_record_id))
     bound = decision.entry_max if decision.side == "LONG" else decision.entry_min
     if bound is None or bound <= 0:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="UNFILLED",
             fill_fidelity="NONE", reasons=("FROZEN_ADVERSE_ENTRY_BOUND_MISSING",))
     entry_bar = None
@@ -187,7 +188,7 @@ def simulate_decision(
             entry_bar = bar
             break
     if entry_bar is None:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="UNFILLED",
             fill_fidelity="BAR_APPROX", reasons=("NO_POST_ARRIVAL_BAR_SUPPORTS_FILL",),
             caveats=("OHLC bars cannot establish a genuine IOC queue fill.",))
@@ -199,7 +200,7 @@ def simulate_decision(
     min_qty = data.metadata.minimum_quantity or D(0)
     min_notional = data.metadata.minimum_notional or D(0)
     if quantity <= 0 or quantity < min_qty or quantity * entry < min_notional:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="UNFILLED",
             fill_fidelity="BAR_APPROX", reasons=("SIMULATED_FILL_BELOW_EXCHANGE_MINIMUMS",))
     targets = decision.geometry.targets
@@ -207,17 +208,17 @@ def simulate_decision(
     legs = [first_leg, quantity-first_leg]
     for q, target in zip(legs, targets):
         if q <= 0 or q < min_qty or q * target.price < min_notional:
-            return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+            return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
                 decision_id=decision.decision_id, symbol=decision.symbol, status="TARGET_LEG_INFEASIBLE",
-                fill_fidelity="BAR_APPROX", filled_quantity=quantity, first_fill_at=entry_bar.open_time,
+                fill_fidelity="NONE",
                 reasons=("ROUNDED_PARTIAL_TARGET_BELOW_MINIMUM",),
-                caveats=("The actual simulated filled quantity, not proposed quantity, was rounded.",))
+                caveats=("Entry was rejected before a modeled fill because a target leg fails exchange minimums.",))
 
     sign = D(1) if decision.side == "LONG" else D(-1)
     stop = decision.geometry.original_stop
     distance = sign * (entry-stop)
     if distance <= 0:
-        return ScenarioOutcome(evidence_class="MODELLED_EXECUTION", scenario_id=scenario.scenario_id,
+        return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
             decision_id=decision.decision_id, symbol=decision.symbol, status="UNFILLED",
             fill_fidelity="BAR_APPROX", reasons=("STOP_WRONG_SIDE_OF_ADVERSE_FILL",))
     loss_cost = decision.economics.loss_cost_per_unit
@@ -301,7 +302,6 @@ def simulate_decision(
             fees += fee
             friction += stop_cost*q
             realized -= fee
-            realized -= stop_cost*q
             events.append(_event(decision, "STOP", bar.available_at, quantity=str(q), price=str(px),
                                  same_bar_ambiguity=ambiguous, adverse_first=adverse_first))
             remaining = D(0)
@@ -379,7 +379,7 @@ def simulate_decision(
         optimistic_bound = optimistic.realized_net_r or optimistic.mark_to_market_net_r
     return ScenarioOutcome(evidence_class=evidence_class, scenario_id=scenario.scenario_id,
         decision_id=decision.decision_id, symbol=decision.symbol, status=status,
-        fill_fidelity="BAR_APPROX", filled_quantity=quantity, first_fill_at=first_fill,
+        fill_fidelity="BAR_APPROX", filled_quantity=quantity, entry_price=entry, first_fill_at=first_fill,
         initial_modeled_risk_usdt=initial_risk, realized_pnl_usdt=realized,
         unrealized_pnl_usdt=unrealized, realized_net_r=realized_net_r,
         mark_to_market_net_r=mark_net_r, fees_usdt=fees, spread_slippage_usdt=friction,

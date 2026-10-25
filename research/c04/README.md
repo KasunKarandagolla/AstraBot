@@ -13,9 +13,11 @@ work/c04-venv/bin/python -m compileall -q src/astrabot tests scripts
 work/c04-venv/bin/python -m pip check
 ```
 
-The runner is offline. It verifies the retained-file SHA256 values in `research/c02_panel/manifest.json`, normalizes with the existing C02 adapters, advances at declared source availability, calls `scan_universe()` and `research.engine.evaluate()`, and keeps a separate serialized `ResearchState` per symbol. Its exploratory diagnostic stream has no mandatory-gate bypasses. `E0`, `E1` and `E2` simulation outputs remain separate from historical decisions.
+The runner is offline. It verifies retained-file SHA256 values in `research/c02_panel/manifest.json`, normalizes with the existing C02 adapters, advances at declared source availability, calls `scan_universe()` and `research.engine.evaluate()`, and keeps a separate serialized `ResearchState` per symbol. Strict C03 candidates run through E0/E1/E2; E1 and E2 use separate `PortfolioLedger` instances. Approval, fill, exit, risk and funnel counters are derived from the execution-event ledger. Its exploratory diagnostic stream has no mandatory-gate bypasses.
 
-The run computes a stable `run_id`, decision/funnel ledger hashes, counters, and bounded runtime/memory measurements. The event ledger stores source event time, `available_at`, and deterministic replay processing time separately. Re-running with the same retained manifest and config reproduces decision IDs and both ledger hashes; measured runtime may vary.
+The runner also replays a clearly labeled `SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE` through the same C02, C03, simulator and portfolio-ledger path. It proves the integrated path produces approvals, modeled fills, target exits, and risk reservation/release events. Synthetic outcomes are kept out of the historical panel's `scenario_outcomes`, empirical statistics and C05 recommendation. They are mechanics evidence only and do not represent historical market records or profitability.
+
+The run computes a stable `run_id`, decision/funnel ledger hashes, counters, and bounded runtime/memory measurements. The event ledger stores source event time, `available_at`, and deterministic replay processing time separately. Re-running with the same retained manifest and config reproduces decision IDs and ledger hashes; measured runtime may vary. The actual retained panel remains `BLOCKED_BY_DATA` with a C05 recommendation of `INSUFFICIENT_EVIDENCE`.
 
 ## Retained source boundary
 

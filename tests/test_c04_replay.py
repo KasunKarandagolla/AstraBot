@@ -3,13 +3,16 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 from decimal import Decimal as D
+from collections import Counter
 from pathlib import Path
+
+import pytest
 
 from astrabot.data.models import binance_usdm_instrument_id
 from astrabot.data.models import FundingObservation
 from astrabot.research.engine import evaluate
 from astrabot.research.replay import (
-    derive_4h_from_1h, load_c02_panel, replay_panel,
+    derive_4h_from_1h, load_c02_panel, replay_panel, synthetic_eligible_panel,
 )
 from astrabot.research.simulation import ExecutionScenario, PortfolioLedger, simulate_decision
 from astrabot.research.statistics import cluster_bootstrap, matched_controls, summarize
@@ -21,16 +24,16 @@ from scripts.c04_replay import synthetic_execution_trace
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _synthetic_candidate():
+def _synthetic_candidate(side="LONG"):
     formed_at = START + timedelta(seconds=5)
-    original = market(formed_at)
+    original = market(formed_at, side=side)
     kwargs = {"symbol": "ALTUSDT", "instrument_id": binance_usdm_instrument_id("ALTUSDT"),
-        "requested_quantity": D("10"), "strategies": ("T1",), "sides": ("LONG",)}
+        "requested_quantity": D("10"), "strategies": ("T1",), "sides": (side,)}
     formation = evaluate(original, as_of=formed_at, account=demo_account(formed_at),
         profile=demo_costs(), **kwargs)
     confirmed_at = START + timedelta(minutes=5, seconds=5)
     confirmation = candle(START, open="99.9", high="100.5", low="99.8", close="100.4")
-    data = roll_market(original, confirmed_at, extra=(confirmation,))
+    data = roll_market(original, confirmed_at, extra=(confirmation,), side=side)
     result = evaluate(data, as_of=confirmed_at, account=demo_account(confirmed_at),
         profile=demo_costs(), state=formation.state, **kwargs)
     decision = next(d for d in result.emitted if d.decision == "RESEARCH_CANDIDATE")
@@ -68,6 +71,48 @@ def test_c04_full_funnel_is_capped_reproducible_and_fail_closed():
     assert first["modes"]["STRICT_POLICY_REPLAY"]["status"] == "BLOCKED_BY_DATA"
     assert first["modes"]["EXPLORATORY_SIGNAL_DIAGNOSTICS"]["mandatory_gates_bypassed"] == []
     assert first["statistics"]["market_time_block_bootstrap"]["ci95"] is None
+
+
+def test_c04_synthetic_fully_eligible_panel_runs_strict_candidate_through_e0_e1_e2_and_portfolios():
+    panel = synthetic_eligible_panel()
+    run = replay_panel(panel)
+    assert run["source_manifest"]["evidence_class"] == "SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE"
+    assert run["modes"]["STRICT_POLICY_REPLAY"]["status"] == "SYNTHETIC_PIPELINE_TEST_ONLY"
+    assert run["funnel"]["eligible_symbol_windows"] >= 1
+    assert run["funnel"]["strict_candidate_decisions"] == 1
+    assert set(run["scenario_outcomes"]) == {"E0", "E1", "E2"}
+    assert {key: outcomes[0]["status"] for key, outcomes in run["scenario_outcomes"].items()} == {
+        "E0": "UNFILLED", "E1": "FLAT", "E2": "FLAT"}
+    assert run["statistics"]["status"] == "SYNTHETIC_PIPELINE_TEST_ONLY"
+
+    events = run["execution_events"]
+    counts = Counter(event["event_type"] for event in events)
+    metrics = run["execution_statistics"]
+    assert metrics["candidate_scenario_count"] == counts["SCENARIO_OUTCOME_RECORDED"] == 3
+    assert metrics["approval_requested"] == counts["APPROVAL_REQUESTED"] == 1
+    assert metrics["approved"] == counts["APPROVAL_GRANTED"] == 1
+    assert metrics["preauthorized"] == counts["APPROVAL_PREAUTHORIZED"] == 1
+    assert metrics["order_submission_scenarios"] == counts["ORDER_SUBMISSION_ATTEMPTED"] == 2
+    assert metrics["filled_scenarios"] == counts["MODELED_FILL"] == 2
+    assert metrics["partial_fills"] == counts["MODELED_PARTIAL_FILL"] == 1
+    assert metrics["portfolio_admission_attempts"] == counts["PORTFOLIO_ADMISSION_ATTEMPT"] == 2
+    assert metrics["tp1"] == counts["SIMULATED_TP1"] == 2
+    assert metrics["tp2"] == counts["SIMULATED_TP2"] == 2
+    assert metrics["stops"] == counts["SIMULATED_STOP"] == 0
+    reserved = [event for event in events if event["event_type"] == "PORTFOLIO_RISK_RESERVED"]
+    assert D(metrics["cumulative_reserved_risk_usdt"]) == sum(
+        (D(event["details"]["risk_usdt"]) for event in reserved), D(0))
+    assert D(metrics["peak_open_reserved_risk_usdt"]) == max(
+        D(event["details"]["reserved_total_risk_usdt"]) for event in reserved)
+    assert counts["PORTFOLIO_RISK_RELEASED"] == 2
+    for scenario_id in ("E1", "E2"):
+        end = metrics["portfolio_end_state_by_scenario"][scenario_id]
+        assert end["open_risk_usdt"] == "0"
+        assert end["open_reservations"] == {}
+        released = sum((D(event["details"]["realized_pnl_usdt"]) for event in events
+            if event["event_type"] == "PORTFOLIO_RISK_RELEASED"
+            and event["details"]["scenario_id"] == scenario_id), D(0))
+        assert D(end["equity_usdt"]) == D(end["daily_start_equity_usdt"]) + released
 
 
 def test_c04_dynamic_universe_rejects_a_not_yet_listed_symbol():
@@ -202,6 +247,63 @@ def test_c04_settled_funding_inside_exit_bar_charges_remaining_quantity():
     assert D(event.details["signed_debit_usdt"]) == expected_debit
     assert outcome.funding_usdt == expected_debit
     assert not any(e.event_type == "DECLARED_MAX_HOLD_FUNDING_PROXY" for e in outcome.exit_events)
+
+
+@pytest.mark.parametrize(("side", "gap"), [
+    ("LONG", False), ("SHORT", False), ("LONG", True), ("SHORT", True),
+])
+def test_c04_stop_loss_reconciles_once_for_side_gap_fees_and_funding(side, gap):
+    decision, snapshot = _synthetic_candidate(side)
+    arrival = decision.earliest_hypothetical_entry_at
+    assert arrival is not None
+    entry = decision.entry_max if side == "LONG" else decision.entry_min
+    stop = decision.geometry.original_stop
+    entry_bar = candle(arrival, open=str(entry), high=str(entry + D("0.1")),
+        low=str(entry - D("0.1")), close=str(entry))
+    if side == "LONG":
+        open_price = stop-D("0.2") if gap else stop+D("0.2")
+        low = stop-D("0.5") if gap else stop-D("0.1")
+        high = entry
+        close = open_price
+    else:
+        open_price = stop+D("0.2") if gap else stop-D("0.2")
+        high = stop+D("0.5") if gap else stop+D("0.1")
+        low = entry
+        close = open_price
+    stop_bar = candle(arrival+timedelta(minutes=5), open=str(open_price), high=str(high),
+        low=str(low), close=str(close))
+    settlement_time = arrival+timedelta(minutes=7)
+    funding_rate = D("0.00001")
+    funding = FundingObservation(symbol=decision.symbol, instrument_id=decision.instrument_id,
+        event_time=settlement_time, available_at=settlement_time, ingested_at=settlement_time,
+        as_of=settlement_time, data_source="SYNTHETIC_SETTLEMENT", source_version="test.v1",
+        units="RATE", fidelity="SYNTHETIC_FIXTURE", readiness="READY",
+        observation_id=f"stop-reconciliation-{side}-{gap}", config_hash="c04.test.v1",
+        funding_rate=funding_rate, funding_time=settlement_time, is_settled=True)
+    data = snapshot.model_copy(update={"candles_5m": tuple(sorted(
+        (*snapshot.candles_5m, entry_bar, stop_bar), key=lambda b: b.open_time))})
+    profile = demo_costs()
+    outcome = simulate_decision(decision, data,
+        scenario=ExecutionScenario.conservative(sample_end=stop_bar.available_at),
+        profile=profile, funding=(funding,))
+    stop_event = next(event for event in outcome.exit_events if event.event_type == "STOP")
+    quantity = outcome.filled_quantity
+    sign = D(1) if side == "LONG" else D(-1)
+    trigger = min(stop, open_price) if side == "LONG" else max(stop, open_price)
+    stop_cost = profile.stop_spread_per_unit + profile.stop_slippage_per_unit
+    exit_price = trigger-stop_cost if side == "LONG" else trigger+stop_cost
+    gross_at_trigger = (trigger-entry)*quantity if side == "LONG" else (entry-trigger)*quantity
+    exit_friction = stop_cost*quantity
+    expected_fees = (entry*quantity*profile.entry_fee_rate
+        + exit_price*quantity*profile.stop_exit_fee_rate)
+    expected_funding = sign*funding_rate*entry*quantity
+    expected_net = gross_at_trigger-exit_friction-expected_fees-expected_funding
+    assert D(stop_event.details["price"]) == exit_price
+    assert outcome.entry_price == entry
+    assert outcome.spread_slippage_usdt == exit_friction
+    assert outcome.fees_usdt == expected_fees
+    assert outcome.funding_usdt == expected_funding
+    assert outcome.realized_pnl_usdt == expected_net
 
 
 def test_c04_synthetic_stress_matrix_covers_gap_ambiguity_partial_and_both_timers():

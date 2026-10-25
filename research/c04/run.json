@@ -18,17 +18,19 @@
       "version": "c04.synthetic-research-cost.v1"
     },
     "engine": "thin-c02-c03-event-adapter.v1",
-    "execution": "E0 policy truth; E1/E2 isolated counterfactual adapter",
+    "execution": "E0 policy truth; E1/E2 counterfactual simulation with separate per-scenario PortfolioLedger",
+    "panel_evidence_class": "OBSERVED_HISTORICAL_INPUTS_INCOMPLETE",
     "policy_versions": {
       "B1": "B1.original-ladder.v1",
       "R1": "R1.sweep.v1",
       "T1": "T1.reclaim.v1"
     },
+    "portfolio_policy": "v1.5 per-trade/aggregate risk, slots, symbol lock, leverage and UTC loss halt",
     "schema_version": "c04.replay-config.v1",
     "selection": "C02 deterministic point-in-time eligibility/shortlist",
     "shortlist_limit": 15
   },
-  "config_hash": "ffc988328288d977b4add08acf54aa172aaab8341f6b204a87fd41f9cc26d756",
+  "config_hash": "8b3b4b56ef7221227f1d7b77ad943eb020468ac7e0e68d122c04678e7a6fa799",
   "diagnostic_decisions": [
     {
       "adverse_bound": "BUY_MAX",
@@ -39781,22 +39783,89 @@
     "status": "BLOCKED_BY_DATA",
     "synthetic_results_in_empirical_summary": false
   },
-  "funnel": {
+  "execution_events": [],
+  "execution_statistics": {
+    "approval_expired": 0,
+    "approval_rejected": 0,
     "approval_requested": 0,
     "approved": 0,
+    "candidate_scenario_count": 0,
+    "cumulative_reserved_risk_usdt": "0",
+    "entries_missed": 0,
+    "entries_unfilled": 0,
+    "entry_expired": 0,
+    "filled_initial_risk_usdt": "0",
+    "filled_scenarios": 0,
+    "forced_flatten": 0,
+    "order_submission_scenarios": 0,
+    "partial_fills": 0,
+    "peak_open_reserved_risk_usdt": "0",
+    "portfolio_admission_attempts": 0,
+    "portfolio_end_state_by_scenario": {
+      "E0": {
+        "open_reservations": {},
+        "status": "NO_EXECUTION_POLICY"
+      },
+      "E1": {
+        "daily_entry_halt": false,
+        "daily_start_equity_usdt": "10000",
+        "equity_usdt": "10000",
+        "open_reservations": {},
+        "open_risk_usdt": "0",
+        "realized_pnl_today_usdt": "0"
+      },
+      "E2": {
+        "daily_entry_halt": false,
+        "daily_start_equity_usdt": "10000",
+        "equity_usdt": "10000",
+        "open_reservations": {},
+        "open_risk_usdt": "0",
+        "realized_pnl_today_usdt": "0"
+      }
+    },
+    "portfolio_risk_rejected": 0,
+    "preauthorized": 0,
+    "protected_positions": 0,
+    "realized_pnl_released_usdt": "0",
+    "rejected": 0,
+    "risk_releases": 0,
+    "risk_reservations": 0,
+    "stops": 0,
+    "target_ladder_infeasible": 0,
+    "tp1": 0,
+    "tp2": 0,
+    "unresolved_positions": 0
+  },
+  "funnel": {
+    "approval_expired": 0,
+    "approval_rejected": 0,
+    "approval_requested": 0,
+    "approved": 0,
+    "cumulative_reserved_risk_usdt": "0",
     "diagnostic_context_evaluations": 48,
     "diagnostic_no_trade_decisions": 288,
     "eligibility_state_counts_latest": {
       "COLD": 1,
       "WARMING": 1
     },
-    "expired": 0,
+    "eligible_symbol_windows": 0,
+    "entries_missed": 0,
+    "entries_unfilled": 0,
+    "entry_expired": 0,
+    "filled_initial_risk_usdt": "0",
     "filled_scenarios": 0,
     "forced_flatten": 0,
     "order_submission_scenarios": 0,
     "partial_fills": 0,
+    "peak_open_reserved_risk_usdt": "0",
+    "portfolio_admission_attempts": 0,
+    "portfolio_risk_rejected": 0,
+    "preauthorized": 0,
     "protected_positions": 0,
+    "realized_pnl_released_usdt": "0",
     "rejected": 0,
+    "risk_releases": 0,
+    "risk_reservations": 0,
     "setup_state_counts_diagnostic": {},
     "setups_armed": 0,
     "setups_confirmed": 0,
@@ -39810,6 +39879,7 @@
     "symbols_eligible_latest": 0,
     "symbols_shortlisted_latest": 0,
     "symbols_with_source_coverage": 2,
+    "target_ladder_infeasible": 0,
     "tp1": 0,
     "tp2": 0,
     "unresolved_positions": 0,
@@ -49132,10 +49202,10 @@
     "validation": null
   },
   "measurements": {
-    "evaluation_windows_per_second": 58.0840460463491,
-    "funnel_events_per_second": 818.0169818194165,
-    "peak_traced_memory_bytes": 6403095,
-    "runtime_seconds": 0.41319435600007637
+    "evaluation_windows_per_second": 56.266937271251535,
+    "funnel_events_per_second": 792.4260332367925,
+    "peak_traced_memory_bytes": 6379011,
+    "runtime_seconds": 0.42653823299997384
   },
   "modes": {
     "EXPLORATORY_SIGNAL_DIAGNOSTICS": {
@@ -49156,10 +49226,10 @@
     }
   },
   "output_manifest": {
-    "decision_ledger_sha256": "20eecdeaae78e02f9c4b05e0d037d157988287c8062547c912cc6a1ed3d5728a",
+    "decision_ledger_sha256": "a156a924ff8a236ed9da695cb7cb7a53fdcfe00a07be2ac90b5e126fe5cf54e2",
     "funnel_ledger_sha256": "e5a4539ab5f86323929ccc6deaad52f64a1da92d4046b912dead24b71a514b7b",
-    "replay_version": "c04.thin-event-adapter.v1",
-    "run_id": "cf3b94dc4f864928ff3fb3add1b749468352c912e3d826d2c2bc7bf5bb2ada98",
+    "replay_version": "c04.thin-event-adapter.v2",
+    "run_id": "9344c555fe642298adf91a0ec5c17a7172734c062bd0d5f528ad85d917dc7d4b",
     "schema_version": "c04.output-manifest.v1",
     "source_partition_sha256": [
       "52ff319bf0526d02d757b21939ea33f73a125d057469e775e2f119aaaf5fd778",
@@ -49242,408 +49312,99 @@
       "used_for_policy": false
     }
   ],
-  "run_id": "cf3b94dc4f864928ff3fb3add1b749468352c912e3d826d2c2bc7bf5bb2ada98",
+  "portfolio_end_state_by_scenario": {
+    "E0": {
+      "open_reservations": {},
+      "status": "NO_EXECUTION_POLICY"
+    },
+    "E1": {
+      "daily_entry_halt": false,
+      "daily_start_equity_usdt": "10000",
+      "equity_usdt": "10000",
+      "open_reservations": {},
+      "open_risk_usdt": "0",
+      "realized_pnl_today_usdt": "0"
+    },
+    "E2": {
+      "daily_entry_halt": false,
+      "daily_start_equity_usdt": "10000",
+      "equity_usdt": "10000",
+      "open_reservations": {},
+      "open_risk_usdt": "0",
+      "realized_pnl_today_usdt": "0"
+    }
+  },
+  "run_id": "9344c555fe642298adf91a0ec5c17a7172734c062bd0d5f528ad85d917dc7d4b",
   "scenario_outcomes": {
     "E0": [],
     "E1": [],
-    "E2": [],
-    "SYNTHETIC_TEST_FIXTURE": {
-      "E0": {
-        "caveats": [
-          "E0 claims no owner approval and no exchange execution."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "NO_EXECUTION_POLICY_TRUTH",
-        "exit_events": [],
-        "fees_usdt": "0",
-        "fill_fidelity": "NONE",
-        "filled_quantity": "0",
-        "first_fill_at": null,
-        "funding_usdt": "0",
-        "initial_modeled_risk_usdt": null,
-        "mark_to_market_net_r": null,
-        "optimistic_bound_net_r": null,
-        "realized_net_r": null,
-        "realized_pnl_usdt": "0",
-        "reasons": [
-          "NO_OWNER_APPROVAL_OR_OBSERVED_FILL"
-        ],
-        "scenario_id": "E0",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0",
-        "status": "UNFILLED",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E1": {
-        "caveats": [
-          "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
-          "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
-          "The first-fill clock uses the earliest point in the fill bar.",
-          "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
-          "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
-        "exit_events": [
-          {
-            "at": "2025-02-01T08:15:05.000001Z",
-            "details": {
-              "price": "101.278",
-              "quantity": "4.0",
-              "same_bar_ambiguity": false
-            },
-            "event_id": "669181e8f17b94d28265df2d06a812fbeb01a23dea4cdc87acd3d2eb6975e1dd",
-            "event_type": "TP1",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T08:20:05.000001Z",
-            "details": {
-              "price": "107.998",
-              "quantity": "6.0",
-              "same_bar_ambiguity": false
-            },
-            "event_id": "0e276733c831691af7d59bb6385ac8b3d0ab33bb5ab7847a1158970023bddd23",
-            "event_type": "TP2",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T08:20:05.000001Z",
-            "details": {
-              "equivalent_12h_quantity": "0.1805555555555555555555555556",
-              "quantity_seconds": "7800.00",
-              "signed_debit_usdt": "0.0001805555555555555555555555556"
-            },
-            "event_id": "5afba90c9e19249eb36b7f7d3eee8ca3cf2acdb8a9efb9ecca443d398253a327",
-            "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
-            "symbol": "ALTUSDT"
-          }
-        ],
-        "fees_usdt": "0.20573000",
-        "fill_fidelity": "BAR_APPROX",
-        "filled_quantity": "10",
-        "first_fill_at": "2025-02-01T08:05:05.000001Z",
-        "funding_usdt": "0.0001805555555555555555555555556",
-        "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "5.502169433653459606060628887",
-        "optimistic_bound_net_r": null,
-        "realized_net_r": "5.502169433653459606060628887",
-        "realized_pnl_usdt": "48.69408944444444444444444444",
-        "reasons": [],
-        "scenario_id": "E1",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0.0200",
-        "status": "FLAT",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E2_11H55_FLATTEN": {
-        "caveats": [
-          "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
-          "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
-          "The first-fill clock uses the earliest point in the fill bar.",
-          "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
-          "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
-        "exit_events": [
-          {
-            "at": "2025-02-01T20:00:05.000001Z",
-            "details": {
-              "hard_limit": false,
-              "price": "100.3",
-              "quantity": "10"
-            },
-            "event_id": "82ff0a2ff92e60358206cd6cac895b9c602f67647c3403d2a2d76828b5855f27",
-            "event_type": "FORCED_FLATTEN_11H55",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T20:00:05.000001Z",
-            "details": {
-              "equivalent_12h_quantity": "9.930555555555555555555555556",
-              "quantity_seconds": "429000.0",
-              "signed_debit_usdt": "0.009930555555555555555555555556"
-            },
-            "event_id": "817db2603d029c41c9895d784a744528ef736290db910f1ed21e0bebe935308f",
-            "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
-            "symbol": "ALTUSDT"
-          }
-        ],
-        "fees_usdt": "0.200720",
-        "fill_fidelity": "BAR_APPROX",
-        "filled_quantity": "10",
-        "first_fill_at": "2025-02-01T08:05:05.000001Z",
-        "funding_usdt": "0.009930555555555555555555555556",
-        "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "-0.1593959032173581810982121492",
-        "optimistic_bound_net_r": null,
-        "realized_net_r": "-0.1593959032173581810982121492",
-        "realized_pnl_usdt": "-1.410650555555555555555555556",
-        "reasons": [],
-        "scenario_id": "E1",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0",
-        "status": "FLAT",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E2_12H_HARD_LIMIT": {
-        "caveats": [
-          "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
-          "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
-          "The first-fill clock uses the earliest point in the fill bar.",
-          "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
-          "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
-        "exit_events": [
-          {
-            "at": "2025-02-01T20:05:05.000001Z",
-            "details": {
-              "hard_limit": true,
-              "price": "100.3",
-              "quantity": "10"
-            },
-            "event_id": "00d5190ee33cc09d3c8e4478d4cb00e14aca21d84049c56c0929e88098b203cb",
-            "event_type": "FORCED_FLATTEN_12H_HARD_LIMIT",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T20:05:05.000001Z",
-            "details": {
-              "equivalent_12h_quantity": "10",
-              "quantity_seconds": "432000.0",
-              "signed_debit_usdt": "0.010"
-            },
-            "event_id": "5ec4059436a46d5ba8ef9e3a4b01699ac4f39737b5de4c549e59e7c9a7deaee2",
-            "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
-            "symbol": "ALTUSDT"
-          }
-        ],
-        "fees_usdt": "0.200720",
-        "fill_fidelity": "BAR_APPROX",
-        "filled_quantity": "10",
-        "first_fill_at": "2025-02-01T08:05:05.000001Z",
-        "funding_usdt": "0.010",
-        "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "-0.1594037500649718982415779471",
-        "optimistic_bound_net_r": null,
-        "realized_net_r": "-0.1594037500649718982415779471",
-        "realized_pnl_usdt": "-1.410720",
-        "reasons": [],
-        "scenario_id": "E1",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0",
-        "status": "FLAT",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E2_DELAYED": {
-        "caveats": [
-          "The deadline was not relaxed to manufacture a fill."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "MODELLED_EXECUTION",
-        "exit_events": [],
-        "fees_usdt": "0",
-        "fill_fidelity": "NONE",
-        "filled_quantity": "0",
-        "first_fill_at": null,
-        "funding_usdt": "0",
-        "initial_modeled_risk_usdt": null,
-        "mark_to_market_net_r": null,
-        "optimistic_bound_net_r": null,
-        "realized_net_r": null,
-        "realized_pnl_usdt": "0",
-        "reasons": [
-          "APPROVAL_DELAY_EXCEEDS_10S_TRIGGER_DEADLINE"
-        ],
-        "scenario_id": "E2",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0",
-        "status": "MISSED_ENTRY",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E2_GAP_STOP": {
-        "caveats": [
-          "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
-          "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
-          "The first-fill clock uses the earliest point in the fill bar.",
-          "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
-          "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
-        "exit_events": [
-          {
-            "at": "2025-02-01T08:15:05.000001Z",
-            "details": {
-              "adverse_first": true,
-              "price": "99.356",
-              "quantity": "10",
-              "same_bar_ambiguity": false
-            },
-            "event_id": "e7e6bad6dccab2e77b6d17344fef599d00200c13908cd135f856b64f9766b057",
-            "event_type": "STOP",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T08:15:05.000001Z",
-            "details": {
-              "equivalent_12h_quantity": "0.1388888888888888888888888889",
-              "quantity_seconds": "6000.0",
-              "signed_debit_usdt": "0.0001388888888888888888888888889"
-            },
-            "event_id": "184688ca9d81923db3e9c3307d332df6579f85b02a540db01eb7853feebdbbed",
-            "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
-            "symbol": "ALTUSDT"
-          }
-        ],
-        "fees_usdt": "0.1997760",
-        "fill_fidelity": "BAR_APPROX",
-        "filled_quantity": "10",
-        "first_fill_at": "2025-02-01T08:05:05.000001Z",
-        "funding_usdt": "0.0001388888888888888888888888889",
-        "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "-1.229371692239856913675385582",
-        "optimistic_bound_net_r": null,
-        "realized_net_r": "-1.229371692239856913675385582",
-        "realized_pnl_usdt": "-10.87991488888888888888888889",
-        "reasons": [],
-        "scenario_id": "E1",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0.040",
-        "status": "FLAT",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E2_PARTIAL_STRESS": {
-        "caveats": [
-          "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
-          "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
-          "The first-fill clock uses the earliest point in the fill bar.",
-          "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
-          "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
-        "exit_events": [
-          {
-            "at": "2025-02-01T08:15:05.000001Z",
-            "details": {
-              "price": "101.274",
-              "quantity": "2.00",
-              "same_bar_ambiguity": false
-            },
-            "event_id": "25619b70a008e52993e1d8696219b58c0141b88c92447627cb04e0ed22662b9c",
-            "event_type": "TP1",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T08:20:05.000001Z",
-            "details": {
-              "price": "107.994",
-              "quantity": "3.00",
-              "same_bar_ambiguity": false
-            },
-            "event_id": "838451870bbbf066d0470d6b4413ee4dc2916fd52530001939b8398e8c3239b7",
-            "event_type": "TP2",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T08:20:05.000001Z",
-            "details": {
-              "equivalent_12h_quantity": "0.09027777777777777777777777778",
-              "quantity_seconds": "3900.000",
-              "signed_debit_usdt": "0.00009027777777777777777777777778"
-            },
-            "event_id": "99626dc2c41129659f86f32e032c14593e77110189b4c1a824256741f0868471",
-            "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
-            "symbol": "ALTUSDT"
-          }
-        ],
-        "fees_usdt": "0.205726000",
-        "fill_fidelity": "BAR_APPROX",
-        "filled_quantity": "5.0",
-        "first_fill_at": "2025-02-01T08:05:05.000001Z",
-        "funding_usdt": "0.00009027777777777777777777777778",
-        "initial_modeled_risk_usdt": "4.4249900",
-        "mark_to_market_net_r": "5.474404173166995229869948230",
-        "optimistic_bound_net_r": null,
-        "realized_net_r": "5.474404173166995229869948230",
-        "realized_pnl_usdt": "24.22418372222222222222222222",
-        "reasons": [],
-        "scenario_id": "E2",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0.03000",
-        "status": "FLAT",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      },
-      "E2_SAME_BAR_AMBIGUITY": {
-        "caveats": [
-          "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
-          "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
-          "The first-fill clock uses the earliest point in the fill bar.",
-          "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
-          "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
-        ],
-        "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
-        "exit_events": [
-          {
-            "at": "2025-02-01T08:15:05.000001Z",
-            "details": {
-              "adverse_first": true,
-              "price": "99.556",
-              "quantity": "10",
-              "same_bar_ambiguity": true
-            },
-            "event_id": "791b0720c85bcd2736e434c6c8ffaf99abc0b175fa9559111a679e7a695390d3",
-            "event_type": "STOP",
-            "symbol": "ALTUSDT"
-          },
-          {
-            "at": "2025-02-01T08:15:05.000001Z",
-            "details": {
-              "equivalent_12h_quantity": "0.1388888888888888888888888889",
-              "quantity_seconds": "6000.0",
-              "signed_debit_usdt": "0.0001388888888888888888888888889"
-            },
-            "event_id": "184688ca9d81923db3e9c3307d332df6579f85b02a540db01eb7853feebdbbed",
-            "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
-            "symbol": "ALTUSDT"
-          }
-        ],
-        "fees_usdt": "0.1999760",
-        "fill_fidelity": "BAR_APPROX",
-        "filled_quantity": "10",
-        "first_fill_at": "2025-02-01T08:05:05.000001Z",
-        "funding_usdt": "0.0001388888888888888888888888889",
-        "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "-1.003405079885930690113298436",
-        "optimistic_bound_net_r": "5.502169433653459606060628887",
-        "realized_net_r": "-1.003405079885930690113298436",
-        "realized_pnl_usdt": "-8.880114888888888888888888889",
-        "reasons": [],
-        "scenario_id": "E1",
-        "schema_version": "c04.scenario-outcome.v1",
-        "spread_slippage_usdt": "0.040",
-        "status": "FLAT",
-        "symbol": "ALTUSDT",
-        "unrealized_pnl_usdt": "0"
-      }
-    }
+    "E2": []
   },
   "source_checksums": [
     "52ff319bf0526d02d757b21939ea33f73a125d057469e775e2f119aaaf5fd778",
     "73930ee78240d99a8184e5dedf808dbd998799c22fcc632732ffdc12dd465c1b"
   ],
+  "source_manifest": {
+    "limitations": [
+      "No ETH archive was present in the inspected source fixture set; BTC is the available context contract.",
+      "This bounded panel does not satisfy 720 closed 1h or 200 closed 4h eligibility warm-up and does not contain spread, depth, OI, funding, or verified event history.",
+      "Historical availability is represented by the stated exchange-time assumptions; the original archive publication latency was not available."
+    ],
+    "manifest_version": "c02.historical-panel.v1",
+    "normalization_version": "c02-replay-v1",
+    "panel_scope": "Small point-in-time normalization sample; not universe warm-up or strategy research evidence.",
+    "records": [
+      {
+        "archive_id": "BTCUSDT-1h-2024-10-28.zip",
+        "archive_sha256": "8310448cfc4978c89070a13d17636d3b726e8f784068ea8f7dbb5bbfc69ce581",
+        "availability_assumption": "Available at close_time + 1 millisecond. The archive does not contain original publication or ingestion latency.",
+        "corrections": [],
+        "coverage_end": "2024-10-28T23:59:59.999Z",
+        "coverage_note": "One full calendar day of 1h klines only; 24 records and no claim of a complete warm-up window.",
+        "coverage_start": "2024-10-28T00:00:00.000Z",
+        "feed": "klines:1h",
+        "fidelity": "VENUE_REPORTED",
+        "file": "BTCUSDT-1h-2024-10-28.csv",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:BTCUSDT:SETTLE:USDT",
+        "known_gaps": [],
+        "mirror_commit": "1f394eaebc2f46a83d26971388628707802f8602",
+        "mirror_git_blob_sha1": "5bda1b27101dedd7d639726b70ebb2229076c411",
+        "mirror_url": "https://github.com/freqtrade/freqtrade/blob/1f394eaebc2f46a83d26971388628707802f8602/tests/testdata/binance/binance_public_data/futures-um-klines-BTCUSDT-1h-2024-10-28.zip",
+        "original_units": "OHLC in USDT per BTC; base volume in BTC; quote volume in USDT.",
+        "record_count": 24,
+        "retained_file_sha256": "73930ee78240d99a8184e5dedf808dbd998799c22fcc632732ffdc12dd465c1b",
+        "source_url": "https://data.binance.vision/data/futures/um/daily/klines/BTCUSDT/1h/BTCUSDT-1h-2024-10-28.zip",
+        "symbol": "BTCUSDT",
+        "synthetic": false,
+        "timestamp_interpretation": "Binance kline open_time and inclusive close_time in epoch milliseconds UTC."
+      },
+      {
+        "archive_id": "APEUSDT-aggTrades-2024-10-18.zip",
+        "archive_sha256": "32f6d372fe74b265dcdbedf92e8d9dcdd5a88ab6396674b163af3f7adaf65a64",
+        "availability_assumption": "Exchange transact_time is used as an event-time availability proxy. The archive has no stream arrival or backfill publication timestamps.",
+        "corrections": [],
+        "coverage_end": "2024-10-18T00:01:24.156Z",
+        "coverage_note": "Only the first 100 contiguous aggregate trades of the source day are retained. This is a bounded trade-derived smoke window, not a full-day CVD or liquidity sample.",
+        "coverage_start": "2024-10-18T00:00:03.958Z",
+        "feed": "aggTrades:bounded-first-100",
+        "fidelity": "TRADE_AGG",
+        "file": "APEUSDT-aggTrades-2024-10-18-first100.csv",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:APEUSDT:SETTLE:USDT",
+        "known_gaps": [],
+        "mirror_commit": "1f394eaebc2f46a83d26971388628707802f8602",
+        "mirror_git_blob_sha1": "ea734e4cad6b4a3125cc71d9f71ec9ed389ef834",
+        "mirror_url": "https://github.com/freqtrade/freqtrade/blob/1f394eaebc2f46a83d26971388628707802f8602/tests/testdata/binance/binance_public_data/futures-APEUSDT-aggTrades-2024-10-18.zip",
+        "original_units": "Price in USDT per APE; quantity in APE; buyer-maker boolean retained; IDs are aggregate-trade IDs.",
+        "record_count": 100,
+        "retained_file_sha256": "52ff319bf0526d02d757b21939ea33f73a125d057469e775e2f119aaaf5fd778",
+        "source_day_record_count": 45342,
+        "source_url": "https://data.binance.vision/data/futures/um/daily/aggTrades/APEUSDT/APEUSDT-aggTrades-2024-10-18.zip",
+        "symbol": "APEUSDT",
+        "synthetic": false,
+        "timestamp_interpretation": "Binance aggregate transact_time in epoch milliseconds UTC; exchange aggregate trade IDs retained."
+      }
+    ]
+  },
   "statistics": {
     "market_time_block_bootstrap": {
       "block_count": 0,
@@ -49669,11 +49430,11 @@
       "profit_factor": null,
       "wins": 0
     },
-    "reason": "No strict qualified fills or complete outcomes.",
+    "reason": "No strict candidate produced a complete E1 outcome.",
     "status": "NOT_TESTABLE"
   },
   "strict_decisions": [],
-  "synthetic_test_fixture": {
+  "synthetic_execution_mechanics": {
     "caveat": "Generated prices/account/costs are synthetic mechanics evidence, never historical performance.",
     "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
     "evidence_class": "SYNTHETIC_TEST_FIXTURE",
@@ -49690,6 +49451,7 @@
           "E0 claims no owner approval and no exchange execution."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": null,
         "evidence_class": "NO_EXECUTION_POLICY_TRUTH",
         "exit_events": [],
         "fees_usdt": "0",
@@ -49721,6 +49483,7 @@
           "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": "100.42",
         "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [
           {
@@ -49784,6 +49547,7 @@
           "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": "100.42",
         "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [
           {
@@ -49836,6 +49600,7 @@
           "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": "100.42",
         "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [
           {
@@ -49884,7 +49649,8 @@
           "The deadline was not relaxed to manufacture a fill."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
-        "evidence_class": "MODELLED_EXECUTION",
+        "entry_price": null,
+        "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [],
         "fees_usdt": "0",
         "fill_fidelity": "NONE",
@@ -49915,6 +49681,7 @@
           "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": "100.42",
         "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [
           {
@@ -49947,10 +49714,10 @@
         "first_fill_at": "2025-02-01T08:05:05.000001Z",
         "funding_usdt": "0.0001388888888888888888888888889",
         "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "-1.229371692239856913675385582",
+        "mark_to_market_net_r": "-1.224851908014355839096685969",
         "optimistic_bound_net_r": null,
-        "realized_net_r": "-1.229371692239856913675385582",
-        "realized_pnl_usdt": "-10.87991488888888888888888889",
+        "realized_net_r": "-1.224851908014355839096685969",
+        "realized_pnl_usdt": "-10.83991488888888888888888889",
         "reasons": [],
         "scenario_id": "E1",
         "schema_version": "c04.scenario-outcome.v1",
@@ -49968,6 +49735,7 @@
           "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": "100.42",
         "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [
           {
@@ -50031,6 +49799,7 @@
           "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
         ],
         "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+        "entry_price": "100.42",
         "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
         "exit_events": [
           {
@@ -50063,10 +49832,10 @@
         "first_fill_at": "2025-02-01T08:05:05.000001Z",
         "funding_usdt": "0.0001388888888888888888888888889",
         "initial_modeled_risk_usdt": "8.849980",
-        "mark_to_market_net_r": "-1.003405079885930690113298436",
+        "mark_to_market_net_r": "-0.9988852956604296155345988227",
         "optimistic_bound_net_r": "5.502169433653459606060628887",
-        "realized_net_r": "-1.003405079885930690113298436",
-        "realized_pnl_usdt": "-8.880114888888888888888888889",
+        "realized_net_r": "-0.9988852956604296155345988227",
+        "realized_pnl_usdt": "-8.840114888888888888888888889",
         "reasons": [],
         "scenario_id": "E1",
         "schema_version": "c04.scenario-outcome.v1",
@@ -50075,6 +49844,979 @@
         "symbol": "ALTUSDT",
         "unrealized_pnl_usdt": "0"
       }
+    }
+  },
+  "synthetic_full_pipeline": {
+    "config_hash": "813d6bb7e81e14aa9e2a1d316d48e9772136675f27f55501b2c24ae51d197f89",
+    "eligible_events": [
+      {
+        "available_at": "2025-02-01T08:00:00+00:00",
+        "details": {
+          "eligible": true,
+          "reasons": [],
+          "shortlist_status": "SELECTED",
+          "state": "READY"
+        },
+        "event_id": "0ca0176fb403e1f5524e53c40090aca2bef1eaab3161034764da0807b394cab8",
+        "event_type": "ELIGIBILITY_WINDOW",
+        "processing_time": "2025-02-01T08:00:05+00:00",
+        "source_time": "2025-02-01T07:59:59.999000+00:00",
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:00+00:00",
+        "details": {
+          "eligible": true,
+          "reasons": [],
+          "shortlist_status": "SELECTED",
+          "state": "READY"
+        },
+        "event_id": "5b9e57782795ee0b1e3841f194b3ca2085f0dfce3860f8e632d5c43f362e8fb5",
+        "event_type": "ELIGIBILITY_WINDOW",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": "2025-02-01T08:04:59.999000+00:00",
+        "symbol": "ALTUSDT"
+      }
+    ],
+    "execution_events": [
+      {
+        "available_at": "2025-02-01T08:06:35+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "filled_quantity": "0",
+          "realized_net_r": null,
+          "realized_pnl_usdt": "0",
+          "reasons": [
+            "NO_OWNER_APPROVAL_OR_OBSERVED_FILL"
+          ],
+          "scenario_id": "E0",
+          "status": "UNFILLED"
+        },
+        "event_id": "81c94ac09f1559c53ac73cb857f137e468ab2e3b77db16607f997178c541914e",
+        "event_type": "SCENARIO_OUTCOME_RECORDED",
+        "processing_time": "2025-02-01T08:06:35+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05+00:00",
+        "details": {
+          "accepted": true,
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "proposed_quantity": "1.0",
+          "proposed_risk_usdt": "1.0799900",
+          "reason": null,
+          "scenario_id": "E1"
+        },
+        "event_id": "29d52bfcac8b1a95bb0f9a2dc759baed0ce65128e14f794c53857350afaed50b",
+        "event_type": "PORTFOLIO_ADMISSION_ATTEMPT",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "reservation_count": 1,
+          "reserved_symbols": [
+            "ALTUSDT"
+          ],
+          "reserved_total_risk_usdt": "1.0799900",
+          "risk_usdt": "1.0799900",
+          "scenario_id": "E1"
+        },
+        "event_id": "e00b26253811c84b58f5f9403ce8e10253ea6626da23f57e70df2e21cd3920ff",
+        "event_type": "PORTFOLIO_RISK_RESERVED",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05+00:00",
+        "details": {
+          "approval_mode": "POST_TRIGGER_IMMEDIATE",
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "scenario_id": "E1"
+        },
+        "event_id": "583eaf276543d7b8a496d5afa916f2cf9eb73e5fb24b28ee930065e032b8b251",
+        "event_type": "APPROVAL_REQUESTED",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "approval_delay_seconds": 0.0,
+          "approval_mode": "POST_TRIGGER_IMMEDIATE",
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "scenario_id": "E1"
+        },
+        "event_id": "5ee4e476a2e84a2f346a25c08a2c2d09bf65f55069761502087c3ba9ec42f964",
+        "event_type": "APPROVAL_GRANTED",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_model": "OHLC_TOUCH",
+          "ioc_ttl_seconds": 1.0,
+          "scenario_id": "E1"
+        },
+        "event_id": "3ad4ce5ce0dbf2d28936ba2e9f16e5b07fa7da29d5bca24511867de543999213",
+        "event_type": "ORDER_SUBMISSION_ATTEMPTED",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_fidelity": "BAR_APPROX",
+          "initial_modeled_risk_usdt": "1.0799900",
+          "price": "100.42",
+          "quantity": "1.0",
+          "scenario_id": "E1"
+        },
+        "event_id": "74b93f5eb6f5edac3cc57731ef7a6d34da825e2fb7ae4b3d783ccaf75ae17141",
+        "event_type": "MODELED_FILL",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_fidelity": "BAR_APPROX",
+          "scenario_id": "E1",
+          "stop": "99.56",
+          "targets": [
+            "101.28",
+            "108"
+          ]
+        },
+        "event_id": "8ff16b3b7f1c9774234359b596b540417a29beac823c6af4aa482c0db3bd676e",
+        "event_type": "MODELED_POSITION_PROTECTED",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:15:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "price": "101.25",
+          "quantity": "0.40",
+          "same_bar_ambiguity": false,
+          "scenario_id": "E1"
+        },
+        "event_id": "bbb170b4638b32971a771ef3b07a807d9ed6d42bce8f030cdae69ae5df692975",
+        "event_type": "SIMULATED_TP1",
+        "processing_time": "2025-02-01T08:15:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "price": "107.97",
+          "quantity": "0.60",
+          "same_bar_ambiguity": false,
+          "scenario_id": "E1"
+        },
+        "event_id": "564e510af3cb8eaff11020988e0f68f8d6690b77a631695b55313b0d0172662a",
+        "event_type": "SIMULATED_TP2",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "equivalent_12h_quantity": "0.01805555555555555555555555556",
+          "quantity_seconds": "780.000",
+          "scenario_id": "E1",
+          "signed_debit_usdt": "0.0009027777777777777777777777780"
+        },
+        "event_id": "acbedffdd7d156385f1c2c749c347376263b15dd1823b7af9b46969fd32d42d4",
+        "event_type": "SIMULATED_DECLARED_MAX_HOLD_FUNDING_PROXY",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "filled_quantity": "1.0",
+          "realized_net_r": "4.405824333764407283606535451",
+          "realized_pnl_usdt": "4.758246222222222222222222222",
+          "reasons": [],
+          "scenario_id": "E1",
+          "status": "FLAT"
+        },
+        "event_id": "49d853f91c76b87b546142b65b7b47bf6e4a5c04dc194af2d724b7280ea6ca1e",
+        "event_type": "SCENARIO_OUTCOME_RECORDED",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "daily_entry_halt": false,
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "equity_usdt": "10004.75824622222222222222222",
+          "realized_pnl_today_usdt": "4.758246222222222222222222222",
+          "realized_pnl_usdt": "4.758246222222222222222222222",
+          "scenario_id": "E1"
+        },
+        "event_id": "3bc237e5aa2aa313241c0569da0e43d77b7a7b68ac823f43aee4944175ebeb44",
+        "event_type": "PORTFOLIO_RISK_RELEASED",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05+00:00",
+        "details": {
+          "accepted": true,
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "proposed_quantity": "1.0",
+          "proposed_risk_usdt": "1.0799900",
+          "reason": null,
+          "scenario_id": "E2"
+        },
+        "event_id": "017ecd29c7ed5de93355aeb0b6a20c4941e6c6263e17eae87b268806a0186fc6",
+        "event_type": "PORTFOLIO_ADMISSION_ATTEMPT",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "reservation_count": 1,
+          "reserved_symbols": [
+            "ALTUSDT"
+          ],
+          "reserved_total_risk_usdt": "1.0799900",
+          "risk_usdt": "1.0799900",
+          "scenario_id": "E2"
+        },
+        "event_id": "ba0b7f6fcbf9588662a2fbf1a32ac3a0149fc220514c44b908b3d9cd76813d30",
+        "event_type": "PORTFOLIO_RISK_RESERVED",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05+00:00",
+        "details": {
+          "approval_mode": "PREAPPROVED_ARMED",
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "scenario_id": "E2"
+        },
+        "event_id": "7862cd1adc29bcf1bb68b06fa240b6aad6c46d1ce1e264941ef364a504b39da5",
+        "event_type": "APPROVAL_PREAUTHORIZED",
+        "processing_time": "2025-02-01T08:05:05+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_model": "OHLC_TOUCH",
+          "ioc_ttl_seconds": 1.0,
+          "scenario_id": "E2"
+        },
+        "event_id": "e2d384151f19da1cc381cfc1a591e9a9986a3410c2cfe6dc39f37caf9677a95d",
+        "event_type": "ORDER_SUBMISSION_ATTEMPTED",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_fidelity": "BAR_APPROX",
+          "initial_modeled_risk_usdt": "0.53999500",
+          "price": "100.42",
+          "quantity": "0.50",
+          "scenario_id": "E2"
+        },
+        "event_id": "c80266f05a3e3e1649e46da6ac7ed9f547804aea061df1096c96f978a250f59b",
+        "event_type": "MODELED_FILL",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_fidelity": "BAR_APPROX",
+          "initial_modeled_risk_usdt": "0.53999500",
+          "price": "100.42",
+          "proposed_quantity": "1.0",
+          "quantity": "0.50",
+          "scenario_id": "E2"
+        },
+        "event_id": "3d9fc7c4efb713f424ad263c7ccfce4059ecfcfe7aff034ec8bbf614f06cc26e",
+        "event_type": "MODELED_PARTIAL_FILL",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:05:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "fill_fidelity": "BAR_APPROX",
+          "scenario_id": "E2",
+          "stop": "99.56",
+          "targets": [
+            "101.28",
+            "108"
+          ]
+        },
+        "event_id": "2fc2e5f99ef5b1708c823d188a1f26edea5b124f523218326778b81f9b6aa985",
+        "event_type": "MODELED_POSITION_PROTECTED",
+        "processing_time": "2025-02-01T08:05:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:15:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "price": "101.19",
+          "quantity": "0.200",
+          "same_bar_ambiguity": false,
+          "scenario_id": "E2"
+        },
+        "event_id": "ab20a0f3811a05476dfc726bc0e0cc0b6ddb114ce99a81546bf91d0cfd8b4b92",
+        "event_type": "SIMULATED_TP1",
+        "processing_time": "2025-02-01T08:15:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "price": "107.91",
+          "quantity": "0.300",
+          "same_bar_ambiguity": false,
+          "scenario_id": "E2"
+        },
+        "event_id": "048408085be2cfb688a76ab6012fc335dbc3039ae2925cb12db4e1b270331406",
+        "event_type": "SIMULATED_TP2",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "equivalent_12h_quantity": "0.009027777777777777777777777778",
+          "quantity_seconds": "390.0000",
+          "scenario_id": "E2",
+          "signed_debit_usdt": "0.0004513888888888888888888888889"
+        },
+        "event_id": "73baef6c7b91d0915511f51c60272bc09e7da6cb68d2407847235b42b2860381",
+        "event_type": "SIMULATED_DECLARED_MAX_HOLD_FUNDING_PROXY",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "filled_quantity": "0.50",
+          "realized_net_r": "4.255090530673637924630989381",
+          "realized_pnl_usdt": "2.297727611111111111111111111",
+          "reasons": [],
+          "scenario_id": "E2",
+          "status": "FLAT"
+        },
+        "event_id": "7784a34186b46a9b3cfb0d74da1188e3e11db3bb39edaf25f7e39dc287e9388c",
+        "event_type": "SCENARIO_OUTCOME_RECORDED",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      },
+      {
+        "available_at": "2025-02-01T08:20:05.000001+00:00",
+        "details": {
+          "daily_entry_halt": false,
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "equity_usdt": "10002.29772761111111111111111",
+          "realized_pnl_today_usdt": "2.297727611111111111111111111",
+          "realized_pnl_usdt": "2.297727611111111111111111111",
+          "scenario_id": "E2"
+        },
+        "event_id": "be9beb92eb377189d31f6ae28dc59f4498818aba4cb4901c864c9c3190cf1bb6",
+        "event_type": "PORTFOLIO_RISK_RELEASED",
+        "processing_time": "2025-02-01T08:20:05.000001+00:00",
+        "source_time": null,
+        "symbol": "ALTUSDT"
+      }
+    ],
+    "execution_statistics": {
+      "approval_expired": 0,
+      "approval_rejected": 0,
+      "approval_requested": 1,
+      "approved": 1,
+      "candidate_scenario_count": 3,
+      "cumulative_reserved_risk_usdt": "2.1599800",
+      "entries_missed": 0,
+      "entries_unfilled": 0,
+      "entry_expired": 0,
+      "filled_initial_risk_usdt": "1.61998500",
+      "filled_scenarios": 2,
+      "forced_flatten": 0,
+      "order_submission_scenarios": 2,
+      "partial_fills": 1,
+      "peak_open_reserved_risk_usdt": "1.0799900",
+      "portfolio_admission_attempts": 2,
+      "portfolio_end_state_by_scenario": {
+        "E0": {
+          "open_reservations": {},
+          "status": "NO_EXECUTION_POLICY"
+        },
+        "E1": {
+          "daily_entry_halt": false,
+          "daily_start_equity_usdt": "10000",
+          "equity_usdt": "10004.75824622222222222222222",
+          "open_reservations": {},
+          "open_risk_usdt": "0",
+          "realized_pnl_today_usdt": "4.758246222222222222222222222"
+        },
+        "E2": {
+          "daily_entry_halt": false,
+          "daily_start_equity_usdt": "10000",
+          "equity_usdt": "10002.29772761111111111111111",
+          "open_reservations": {},
+          "open_risk_usdt": "0",
+          "realized_pnl_today_usdt": "2.297727611111111111111111111"
+        }
+      },
+      "portfolio_risk_rejected": 0,
+      "preauthorized": 1,
+      "protected_positions": 2,
+      "realized_pnl_released_usdt": "7.055973833333333333333333333",
+      "rejected": 0,
+      "risk_releases": 2,
+      "risk_reservations": 2,
+      "stops": 0,
+      "target_ladder_infeasible": 0,
+      "tp1": 2,
+      "tp2": 2,
+      "unresolved_positions": 0
+    },
+    "funnel": {
+      "approval_expired": 0,
+      "approval_rejected": 0,
+      "approval_requested": 1,
+      "approved": 1,
+      "cumulative_reserved_risk_usdt": "2.1599800",
+      "diagnostic_context_evaluations": 10,
+      "diagnostic_no_trade_decisions": 60,
+      "eligibility_state_counts_latest": {
+        "DEGRADED": 1
+      },
+      "eligible_symbol_windows": 2,
+      "entries_missed": 0,
+      "entries_unfilled": 0,
+      "entry_expired": 0,
+      "filled_initial_risk_usdt": "1.61998500",
+      "filled_scenarios": 2,
+      "forced_flatten": 0,
+      "order_submission_scenarios": 2,
+      "partial_fills": 1,
+      "peak_open_reserved_risk_usdt": "1.0799900",
+      "portfolio_admission_attempts": 2,
+      "portfolio_risk_rejected": 0,
+      "preauthorized": 1,
+      "protected_positions": 2,
+      "realized_pnl_released_usdt": "7.055973833333333333333333333",
+      "rejected": 0,
+      "risk_releases": 2,
+      "risk_reservations": 2,
+      "setup_state_counts_diagnostic": {
+        "INVALIDATED": 2
+      },
+      "setups_armed": 0,
+      "setups_confirmed": 0,
+      "setups_consumed": 0,
+      "stops": 0,
+      "strict_candidate_decisions": 1,
+      "strict_context_evaluations": 2,
+      "symbol_evaluation_windows": 10,
+      "symbol_evaluations_latest": 1,
+      "symbols_discovered": 1,
+      "symbols_eligible_latest": 0,
+      "symbols_shortlisted_latest": 0,
+      "symbols_with_source_coverage": 1,
+      "target_ladder_infeasible": 0,
+      "tp1": 2,
+      "tp2": 2,
+      "unresolved_positions": 0,
+      "vetoes_by_reason": {
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING": 4,
+        "C02_UNIVERSE_NOT_READY": 48,
+        "DEPTH_MISSING": 24,
+        "DEPTH_STALE": 25,
+        "EVENT_CLEARANCE_MISSING_OR_FUTURE": 24,
+        "GAP_OR_ORDER_5M_WARMUP": 19,
+        "INSUFFICIENT_15M_WARMUP": 18,
+        "INSUFFICIENT_1H_WARMUP": 18,
+        "INSUFFICIENT_4H_WARMUP": 18,
+        "MALFORMED_INTERVAL_5M": 6,
+        "MANDATORY_CONTEXT_UNAVAILABLE": 36,
+        "METADATA_MISSING": 18,
+        "MISSING_LATEST_CLOSED_15M": 12,
+        "MISSING_LATEST_CLOSED_1H": 18,
+        "OPEN_INTEREST_MISSING": 24,
+        "OPEN_INTEREST_STALE": 19,
+        "R1_STABLE_BALANCE_UNQUALIFIED": 4,
+        "SETUP_ARMED_AWAITING_FUTURE_BAR": 2,
+        "SPREAD_SAMPLES_STALE": 25,
+        "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 24,
+        "T1_CONTEXT_NOT_ALIGNED": 2,
+        "TICKER_24H_MISSING": 24,
+        "TICKER_24H_STALE": 25
+      }
+    },
+    "modes": {
+      "EXPLORATORY_SIGNAL_DIAGNOSTICS": {
+        "candidate_count": 0,
+        "decision_count": 60,
+        "evidence_class": "SYNTHETIC_DIAGNOSTICS",
+        "mandatory_gates_bypassed": [],
+        "policy_eligible_trade_count": 0
+      },
+      "STRICT_POLICY_REPLAY": {
+        "candidate_count": 1,
+        "eligible_symbol_count_latest": 0,
+        "evidence_class": "SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE",
+        "shortlisted_symbol_windows": 2,
+        "status": "SYNTHETIC_PIPELINE_TEST_ONLY",
+        "strict_decision_count": 12,
+        "symbol_count": 1
+      }
+    },
+    "output_manifest": {
+      "decision_ledger_sha256": "bf6e2843e02d7c966762c3df804e363377bd4de269c5442bab4b2a8ea10e53d6",
+      "funnel_ledger_sha256": "c287af0f2619d73e6724121cfc077027dcb2b453b89aa67c10f99af60029fbf0",
+      "replay_version": "c04.thin-event-adapter.v2",
+      "run_id": "8671fd083990943779599a55fa70b56be24468d2a4f647d7b9bf4c08cd635a2e",
+      "schema_version": "c04.output-manifest.v1",
+      "source_partition_sha256": [
+        "09851c2e426bfcb5432d140103380c98c841a7e64d5fea808595f92ebeef8b72"
+      ]
+    },
+    "partitions": [
+      {
+        "actual_row_count": 1175,
+        "availability_status": "SYNTHETIC_FIXTURE",
+        "could_be_known_at_replay_time": "SYNTHETIC_FIXTURE_ONLY",
+        "feed": "synthetic-eligible-c02-c03-execution-panel",
+        "fidelity": "SYNTHETIC_FIXTURE",
+        "first_event_time": "2025-02-01T07:01:05+00:00",
+        "historical_listing_metadata": "NOT_APPLICABLE_SYNTHETIC_FIXTURE",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+        "last_event_time": "2025-02-01T08:05:05+00:00",
+        "normalized_row_count": 1175,
+        "retained_input_sha256": "09851c2e426bfcb5432d140103380c98c841a7e64d5fea808595f92ebeef8b72",
+        "symbol": "ALTUSDT",
+        "used_for_policy": true
+      }
+    ],
+    "portfolio_end_state_by_scenario": {
+      "E0": {
+        "open_reservations": {},
+        "status": "NO_EXECUTION_POLICY"
+      },
+      "E1": {
+        "daily_entry_halt": false,
+        "daily_start_equity_usdt": "10000",
+        "equity_usdt": "10004.75824622222222222222222",
+        "open_reservations": {},
+        "open_risk_usdt": "0",
+        "realized_pnl_today_usdt": "4.758246222222222222222222222"
+      },
+      "E2": {
+        "daily_entry_halt": false,
+        "daily_start_equity_usdt": "10000",
+        "equity_usdt": "10002.29772761111111111111111",
+        "open_reservations": {},
+        "open_risk_usdt": "0",
+        "realized_pnl_today_usdt": "2.297727611111111111111111111"
+      }
+    },
+    "run_id": "8671fd083990943779599a55fa70b56be24468d2a4f647d7b9bf4c08cd635a2e",
+    "scenario_outcomes": {
+      "E0": [
+        {
+          "caveats": [
+            "E0 claims no owner approval and no exchange execution."
+          ],
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "entry_price": null,
+          "evidence_class": "NO_EXECUTION_POLICY_TRUTH",
+          "exit_events": [],
+          "fees_usdt": "0",
+          "fill_fidelity": "NONE",
+          "filled_quantity": "0",
+          "first_fill_at": null,
+          "funding_usdt": "0",
+          "initial_modeled_risk_usdt": null,
+          "mark_to_market_net_r": null,
+          "optimistic_bound_net_r": null,
+          "realized_net_r": null,
+          "realized_pnl_usdt": "0",
+          "reasons": [
+            "NO_OWNER_APPROVAL_OR_OBSERVED_FILL"
+          ],
+          "scenario_id": "E0",
+          "schema_version": "c04.scenario-outcome.v1",
+          "spread_slippage_usdt": "0",
+          "status": "UNFILLED",
+          "symbol": "ALTUSDT",
+          "unrealized_pnl_usdt": "0"
+        }
+      ],
+      "E1": [
+        {
+          "caveats": [
+            "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
+            "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
+            "The first-fill clock uses the earliest point in the fill bar.",
+            "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
+            "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
+          ],
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "entry_price": "100.42",
+          "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
+          "exit_events": [
+            {
+              "at": "2025-02-01T08:15:05.000001Z",
+              "details": {
+                "price": "101.25",
+                "quantity": "0.40",
+                "same_bar_ambiguity": false
+              },
+              "event_id": "8a1080b7d594beaa4ace6a1ebf3f42df40cf241635ffb99652485cd48a78c54c",
+              "event_type": "TP1",
+              "symbol": "ALTUSDT"
+            },
+            {
+              "at": "2025-02-01T08:20:05.000001Z",
+              "details": {
+                "price": "107.97",
+                "quantity": "0.60",
+                "same_bar_ambiguity": false
+              },
+              "event_id": "88a79829a69f0752bd640525e42b1b0aa041a13425f3a0d7487448cb6d5cf7e6",
+              "event_type": "TP2",
+              "symbol": "ALTUSDT"
+            },
+            {
+              "at": "2025-02-01T08:20:05.000001Z",
+              "details": {
+                "equivalent_12h_quantity": "0.01805555555555555555555555556",
+                "quantity_seconds": "780.000",
+                "signed_debit_usdt": "0.0009027777777777777777777777780"
+              },
+              "event_id": "20e9b8a2859c6fa65555640cc95d84a533001de16223032f7ffb4c425e1ea76a",
+              "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
+              "symbol": "ALTUSDT"
+            }
+          ],
+          "fees_usdt": "0.10285100",
+          "fill_fidelity": "BAR_APPROX",
+          "filled_quantity": "1.0",
+          "first_fill_at": "2025-02-01T08:05:05.000001Z",
+          "funding_usdt": "0.0009027777777777777777777777780",
+          "initial_modeled_risk_usdt": "1.0799900",
+          "mark_to_market_net_r": "4.405824333764407283606535451",
+          "optimistic_bound_net_r": null,
+          "realized_net_r": "4.405824333764407283606535451",
+          "realized_pnl_usdt": "4.758246222222222222222222222",
+          "reasons": [],
+          "scenario_id": "E1",
+          "schema_version": "c04.scenario-outcome.v1",
+          "spread_slippage_usdt": "0.0300",
+          "status": "FLAT",
+          "symbol": "ALTUSDT",
+          "unrealized_pnl_usdt": "0"
+        }
+      ],
+      "E2": [
+        {
+          "caveats": [
+            "OHLC bar touch/close is a model assumption, not an observed IOC fill.",
+            "Entry spread/adverse movement is embedded once at the frozen adverse limit.",
+            "The first-fill clock uses the earliest point in the fill bar.",
+            "The profile funding fallback is a declared quantity-time proxy, not historical funding.",
+            "A funding settlement within an OHLC exit bar is charged before that modeled bar exit."
+          ],
+          "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+          "entry_price": "100.42",
+          "evidence_class": "SYNTHETIC_MODELLED_EXECUTION",
+          "exit_events": [
+            {
+              "at": "2025-02-01T08:15:05.000001Z",
+              "details": {
+                "price": "101.19",
+                "quantity": "0.200",
+                "same_bar_ambiguity": false
+              },
+              "event_id": "1743fbb551fd171e7a1cfeda10f460fbdc979ebedc953727c092963329efb58d",
+              "event_type": "TP1",
+              "symbol": "ALTUSDT"
+            },
+            {
+              "at": "2025-02-01T08:20:05.000001Z",
+              "details": {
+                "price": "107.91",
+                "quantity": "0.300",
+                "same_bar_ambiguity": false
+              },
+              "event_id": "20190dc48ed46ec6a54eac8d6a46b3324fd711561ab9f6244ffc6c56f16e55a0",
+              "event_type": "TP2",
+              "symbol": "ALTUSDT"
+            },
+            {
+              "at": "2025-02-01T08:20:05.000001Z",
+              "details": {
+                "equivalent_12h_quantity": "0.009027777777777777777777777778",
+                "quantity_seconds": "390.0000",
+                "signed_debit_usdt": "0.0004513888888888888888888888889"
+              },
+              "event_id": "36d8cd1ca5e99d4ffa877dcf097414ab5ae4151253f1ceeb82d66ac6c0e9f316",
+              "event_type": "DECLARED_MAX_HOLD_FUNDING_PROXY",
+              "symbol": "ALTUSDT"
+            }
+          ],
+          "fees_usdt": "0.102821000",
+          "fill_fidelity": "BAR_APPROX",
+          "filled_quantity": "0.50",
+          "first_fill_at": "2025-02-01T08:05:05.000001Z",
+          "funding_usdt": "0.0004513888888888888888888888889",
+          "initial_modeled_risk_usdt": "0.53999500",
+          "mark_to_market_net_r": "4.255090530673637924630989381",
+          "optimistic_bound_net_r": null,
+          "realized_net_r": "4.255090530673637924630989381",
+          "realized_pnl_usdt": "2.297727611111111111111111111",
+          "reasons": [],
+          "scenario_id": "E2",
+          "schema_version": "c04.scenario-outcome.v1",
+          "spread_slippage_usdt": "0.04500",
+          "status": "FLAT",
+          "symbol": "ALTUSDT",
+          "unrealized_pnl_usdt": "0"
+        }
+      ]
+    },
+    "source_manifest": {
+      "evidence_class": "SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE",
+      "fixture_version": "c04.synthetic-eligible-pipeline.v1",
+      "performance_evidence": false
+    },
+    "statistics_status": "SYNTHETIC_PIPELINE_TEST_ONLY",
+    "strict_candidates": [
+      {
+        "adverse_bound": "BUY_MAX",
+        "as_of": "2025-02-01T08:05:05Z",
+        "context_id": "543248dfe155232c39fd2b0e09d39a1feb3f43acff2153e89eb9e5df9a5bf5dc",
+        "cost_profile_hash": "13ad936cdd03c85905a610087985b91535bb34fe0a3e485134d0f68b5b1a2da2",
+        "decision": "RESEARCH_CANDIDATE",
+        "decision_id": "e0adfc46c5446b2d490c9817887a97720a8cb66988ea9f67a45bfaca960e071d",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "543248dfe155232c39fd2b0e09d39a1feb3f43acff2153e89eb9e5df9a5bf5dc"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "OpenInterestObservation:2025-02-01T08:05:05+00:00"
+            ]
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "READY",
+            "role": "VETO",
+            "source_ids": [
+              "SYNTHETIC_EVENT_CLEARANCE"
+            ]
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "earliest_hypothetical_entry_at": "2025-02-01T08:05:05.000001Z",
+        "economics": {
+          "account_risk_ceiling_usdt": "25.0000",
+          "actual_filled_initial_modeled_risk_usdt": null,
+          "approved_max_risk_usdt": null,
+          "cost_r": "0.2558023255813953488372093023",
+          "execution_economics": null,
+          "full_policy_expectancy": null,
+          "gross_price_r": "5.688372093023255813953488372",
+          "loss_cost_per_unit": "0.219990",
+          "midpoint_screen_net_rr": null,
+          "proposed_modeled_loss_usdt": "1.0799900",
+          "proposed_quantity": "1.0",
+          "realized_net_r": null,
+          "scenario_net_rr": "4.360349632866970990472134001",
+          "status": "RESEARCH_ONLY",
+          "target_quantities": [
+            "0.40",
+            "0.60"
+          ],
+          "win_cost_per_unit": "0.1828660"
+        },
+        "entry_max": "100.42",
+        "entry_method": "MARKETABLE_IOC_LIMIT_RESEARCH",
+        "entry_min": "100.38",
+        "executable": false,
+        "expires_at": "2025-02-01T08:06:35Z",
+        "feature_refs": [
+          "965016b461e9a87ac7161a831022733cab839ae89a04981499c559bf6bfa5e8a",
+          "992cbe1e7615f5afa7e1a8e4fe37c305c7f62bc591ce328037100f3ee833f824",
+          "0427489d5929625d45ce5a7a7a4d0d1d582aaa1b54eb7e3cd5cd223ee687e60f",
+          "88aa22d21ad74f041dacd578047dd26954380eff6fc6835d902bd153131e8185",
+          "b1509e940d09425e4c8c3b1f886a6530eff198d9bc5205f7dd1041779cb24921",
+          "f52346d1799f27851999ef5bb6a881d6346870d4804e59a009798c1611620a9d",
+          "83baa7166241ddd10a78a3a95c773654aa14fc1df5bd431d9eb4c61393d3cb94",
+          "35b4500399e057ed11bebc5c1232029f9b7c627c25db594eb1eb738ecaa830ca",
+          "fd4a6cdb0bb60af5338691453b9ddf037730f9b29793f54b1a50363afd38b27d"
+        ],
+        "flatten_objective": "PT11H55M",
+        "geometry": {
+          "kind": "FIXED",
+          "original_stop": "99.56",
+          "targets": [
+            {
+              "fraction": "0.4",
+              "price": "101.28"
+            },
+            {
+              "fraction": "0.6",
+              "price": "108"
+            }
+          ]
+        },
+        "holding_limit": "PT12H",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+        "management_policy_hash": "28a92fa926d4cc506a19ee60bff98fd87c27f08f8632c517ff47b9bb80f7089c",
+        "original_anchor_ids": [
+          "38de9c10b73c41d3974ef241c95d8e1dd9857a3a2104e285d84a1584a2f93919"
+        ],
+        "original_stop": "99.56",
+        "readiness": "READY",
+        "rejected_level_ids": [],
+        "rejection_reason_codes": [],
+        "research_status": "RESEARCH_ONLY",
+        "scenario_net_rr": "4.360349632866970990472134001",
+        "schema_version": "research_decision.c03.v1",
+        "setup_id": "4fc2167145a45a5cb4de83e176a7ee979792b705e93e7c484a4a06647370dae0",
+        "side": "LONG",
+        "source_snapshot_id": "5f4303f3bad872a9c703e1d65d9905087416f649342428f313da290ec90cf4ce",
+        "strategy_id": "T1",
+        "strategy_version": "T1.reclaim.v1",
+        "symbol": "ALTUSDT",
+        "target_level_ids": [
+          "668999e07ee8e460567b9561417b887dea484301a7447e628b3236d86f349917"
+        ],
+        "targets": [
+          {
+            "fraction": "0.4",
+            "price": "101.28"
+          },
+          {
+            "fraction": "0.6",
+            "price": "108"
+          }
+        ],
+        "trigger_event_id": "fixture:5m:2025-02-01T08:00:00+00:00",
+        "trigger_submit_deadline": "2025-02-01T08:05:09.999000Z"
+      }
+    ],
+    "time_range": {
+      "evaluation_windows": 10,
+      "first_available_at": "2025-02-01T07:45:00+00:00",
+      "last_available_at": "2025-02-01T08:20:05.000001+00:00"
     }
   },
   "time_range": {

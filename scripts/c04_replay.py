@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from astrabot.data.models import config_hash
 from astrabot.research.engine import evaluate
 from astrabot.research.replay import (
-    load_c02_panel, replay_panel, run_c02_panel, synthetic_account, synthetic_cost_profile,
+    load_c02_panel, replay_panel, synthetic_account, synthetic_cost_profile, synthetic_eligible_panel,
 )
 from astrabot.research.simulation import ExecutionScenario, simulate_decision
 from astrabot.research.demo import START, account, candle, costs, market, roll_market
@@ -104,6 +104,12 @@ def report_markdown(run: dict[str, object], synthetic: dict[str, object]) -> str
     exploratory = run["modes"]["EXPLORATORY_SIGNAL_DIAGNOSTICS"]
     funnel = run["funnel"]
     parts = run["partitions"]
+    full_pipeline = synthetic["full_pipeline"]
+    mechanics = synthetic["execution_mechanics"]
+    pipeline_metrics = full_pipeline["execution_statistics"]
+    pipeline_scenarios = full_pipeline["scenario_outcomes"]
+    pipeline_statuses = ", ".join(
+        f"{key}: {rows[0]['status']}" for key, rows in pipeline_scenarios.items())
     lines = [
         "# C04 historical replay and execution economics — research handoff",
         "",
@@ -143,9 +149,14 @@ def report_markdown(run: dict[str, object], synthetic: dict[str, object]) -> str
         f"| STRICT research candidates | {strict['candidate_count']} |",
         f"| Armed/confirmed diagnostic setups | {funnel['setups_armed']}/{funnel['setups_confirmed']} |",
         f"| Diagnostic C03 NO_TRADE records | {exploratory['decision_count']} |",
-        "| Approval, order, fill, protected-position, TP/stop events | 0 |",
+        f"| Approval requested / granted / preauthorized | {funnel['approval_requested']} / {funnel['approved']} / {funnel['preauthorized']} |",
+        f"| Order attempts / fills / partial fills | {funnel['order_submission_scenarios']} / {funnel['filled_scenarios']} / {funnel['partial_fills']} |",
+        f"| Protected positions / TP1 / TP2 / stops | {funnel['protected_positions']} / {funnel['tp1']} / {funnel['tp2']} / {funnel['stops']} |",
+        f"| Entry misses / expiries / unfilled attempts | {funnel['entries_missed']} / {funnel['entry_expired']} / {funnel['entries_unfilled']} |",
+        f"| Portfolio admissions / risk rejections / releases | {funnel['portfolio_admission_attempts']} / {funnel['portfolio_risk_rejected']} / {funnel['risk_releases']} |",
+        f"| Cumulative / peak reserved modeled risk (USDT) | {funnel['cumulative_reserved_risk_usdt']} / {funnel['peak_open_reserved_risk_usdt']} |",
         "",
-        "The strict scanner uses C02's actual eligibility and deterministic shortlist gates, capped at 15. Because no symbol passes, no symbol enters the strict policy shortlist. The separate diagnostic stream calls the actual C03 engine on panel symbols with an empty bypass list; it does not promote those records into eligible trades. The panel symbol count is source coverage, not a reconstructed historical tradeable universe. Funnel and decision details are in `run.json`.",
+        "The strict scanner uses C02's actual eligibility and deterministic shortlist gates, capped at 15. The historical panel has no strict candidate, so its zero execution counters are derived from an empty simulated-event ledger. The separate diagnostic stream calls the actual C03 engine on panel symbols with an empty bypass list; it does not promote those records into eligible trades. The panel symbol count is source coverage, not a reconstructed historical tradeable universe. Funnel and decision details are in `run.json`.",
         "",
         "Top missing-input vetoes include absent metadata, ticker, 5M/15M/4H history, 60 spread samples, depth, validated OI notional, and verified event clearance. The 24 BTC 1H rows also fall short of the C03 735-bar ATR percentile warm-up. APE has only 100 aggregate trades and no candle context.",
         "",
@@ -166,12 +177,32 @@ def report_markdown(run: dict[str, object], synthetic: dict[str, object]) -> str
         "",
         "Historical E0/E1/E2 outcomes: no historical candidate reached this stage; there are zero modeled historical execution outcomes.",
         "",
+        "## Synthetic fully eligible end-to-end test panel",
+        "",
+        "This fixture is labeled `SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE`. Generated observations exercise C02 eligibility, strict C03 candidate formation, and the existing E0/E1/E2 simulator with separate E1/E2 `PortfolioLedger` instances. None are historical market records, and none enter the historical run or empirical statistics.",
+        "",
+        "| Pipeline stage | Result |",
+        "|---|---:|",
+        f"| C02 eligible symbol windows | {full_pipeline['funnel']['eligible_symbol_windows']} |",
+        f"| Strict C03 research candidates | {full_pipeline['funnel']['strict_candidate_decisions']} |",
+        f"| E0 / E1 / E2 simulated outcomes | {pipeline_statuses} |",
+        f"| Approval requested / granted / preauthorized | {pipeline_metrics['approval_requested']} / {pipeline_metrics['approved']} / {pipeline_metrics['preauthorized']} |",
+        f"| Order attempts / fills / partial fills | {pipeline_metrics['order_submission_scenarios']} / {pipeline_metrics['filled_scenarios']} / {pipeline_metrics['partial_fills']} |",
+        f"| TP1 / TP2 / stops / forced exits | {pipeline_metrics['tp1']} / {pipeline_metrics['tp2']} / {pipeline_metrics['stops']} / {pipeline_metrics['forced_flatten']} |",
+        f"| Cumulative / peak reserved modeled risk (USDT) | {pipeline_metrics['cumulative_reserved_risk_usdt']} / {pipeline_metrics['peak_open_reserved_risk_usdt']} |",
+        "",
+        "All synthetic counters above come from recorded simulator and ledger events. The scenario PnL fields in `run.json` exist only to exercise accounting and are excluded from the historical `scenario_outcomes`, performance summaries, and C05 recommendation. These mechanics results do not imply profitability.",
+        "",
+        "## Additional synthetic execution mechanics",
+        "",
         "Synthetic test fixture outcomes are isolated and cannot enter historical performance summaries:",
         "",
-        "| Scenario | Status | Filled quantity | Realized net R | Classification |",
-        "|---|---|---:|---:|---|"])
-    for scenario_id, outcome in synthetic["scenario_outcomes"].items():
-        lines.append(f"| {scenario_id} | {outcome['status']} | {outcome['filled_quantity']} | {outcome['realized_net_r']} | {outcome['evidence_class']} |")
+        "| Scenario | Status | Filled quantity | Simulated exits | Classification |",
+        "|---|---|---:|---|---|"])
+    for scenario_id, outcome in mechanics["scenario_outcomes"].items():
+        exit_types = ", ".join(event["event_type"] for event in outcome["exit_events"]
+            if event["event_type"] in {"TP1", "TP2", "STOP", "FORCED_FLATTEN_11H55", "FORCED_FLATTEN_12H_HARD_LIMIT"}) or "none"
+        lines.append(f"| {scenario_id} | {outcome['status']} | {outcome['filled_quantity']} | {exit_types} | {outcome['evidence_class']} |")
     lines.extend([
         "",
         "Synthetic outcomes verify accounting paths only. C03's scenario net RR is a conditional successful-ladder benchmark, not expectancy. B1 retains the original 40% at +1R and 60% at +2R ladder, 1.6 gross price-R, and equal-cost threshold `c/d <= 0.04`; the empirical share meeting that threshold is not testable here.",
@@ -215,9 +246,26 @@ def report_markdown(run: dict[str, object], synthetic: dict[str, object]) -> str
 def build_artifacts(data_dir: Path) -> tuple[dict[str, object], dict[str, object], str]:
     panel = load_c02_panel(data_dir)
     run = replay_panel(panel)
-    synthetic = synthetic_execution_trace()
-    run["scenario_outcomes"]["SYNTHETIC_TEST_FIXTURE"] = synthetic["scenario_outcomes"]
-    run["synthetic_test_fixture"] = synthetic
+    full = replay_panel(synthetic_eligible_panel())
+    synthetic_pipeline = {
+        "run_id": full["run_id"], "config_hash": full["config_hash"],
+        "source_manifest": full["source_manifest"], "partitions": full["partitions"],
+        "time_range": full["time_range"], "modes": full["modes"], "funnel": full["funnel"],
+        "eligible_events": [event for event in full["funnel_events"]
+            if event["event_type"] == "ELIGIBILITY_WINDOW" and event["details"]["eligible"]],
+        "strict_candidates": [decision for decision in full["strict_decisions"]
+            if decision["decision"] == "RESEARCH_CANDIDATE"],
+        "scenario_outcomes": full["scenario_outcomes"],
+        "execution_events": full["execution_events"],
+        "execution_statistics": full["execution_statistics"],
+        "portfolio_end_state_by_scenario": full["portfolio_end_state_by_scenario"],
+        "statistics_status": full["statistics"]["status"],
+        "output_manifest": full["output_manifest"],
+    }
+    synthetic = {"execution_mechanics": synthetic_execution_trace(),
+        "full_pipeline": synthetic_pipeline}
+    run["synthetic_execution_mechanics"] = synthetic["execution_mechanics"]
+    run["synthetic_full_pipeline"] = synthetic["full_pipeline"]
     run["empirical_qualification"] = {"status": "BLOCKED_BY_DATA",
         "c05_recommendation": "INSUFFICIENT_EVIDENCE", "policy_profitability_claim": False,
         "synthetic_results_in_empirical_summary": False}
@@ -273,12 +321,39 @@ def main() -> int:
             raise SystemExit("C04 retained panel unexpectedly produced a strict historical candidate")
         if run["empirical_qualification"]["c05_recommendation"] != "INSUFFICIENT_EVIDENCE":
             raise SystemExit("C04 replay must not make a C05 economic qualification decision")
+        if any(run["scenario_outcomes"].values()) or run["statistics"]["status"] != "NOT_TESTABLE":
+            raise SystemExit("C04 synthetic outcomes leaked into historical execution statistics")
+        full = synthetic["full_pipeline"]
+        if full["source_manifest"].get("evidence_class") != "SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE":
+            raise SystemExit("C04 full-pipeline fixture is not explicitly synthetic")
+        if full["funnel"]["eligible_symbol_windows"] <= 0 or full["funnel"]["strict_candidate_decisions"] <= 0:
+            raise SystemExit("C04 synthetic fixture did not exercise C02 eligibility and strict C03")
+        if set(full["scenario_outcomes"]) != {"E0", "E1", "E2"} or any(
+                len(full["scenario_outcomes"][key]) != 1 for key in ("E0", "E1", "E2")):
+            raise SystemExit("C04 synthetic fixture did not produce one outcome in each E0/E1/E2 scenario")
+        if full["statistics_status"] != "SYNTHETIC_PIPELINE_TEST_ONLY":
+            raise SystemExit("C04 synthetic execution outcomes were not labeled test-only")
+        metrics = full["execution_statistics"]
+        event_counts = {}
+        for event in full["execution_events"]:
+            event_counts[event["event_type"]] = event_counts.get(event["event_type"], 0) + 1
+        if metrics["filled_scenarios"] != event_counts.get("MODELED_FILL", 0):
+            raise SystemExit("C04 synthetic fill statistics do not reconcile to simulated fill events")
+        if metrics["order_submission_scenarios"] != event_counts.get("ORDER_SUBMISSION_ATTEMPTED", 0):
+            raise SystemExit("C04 synthetic order statistics do not reconcile to submission events")
+        if metrics["portfolio_admission_attempts"] != event_counts.get("PORTFOLIO_ADMISSION_ATTEMPT", 0):
+            raise SystemExit("C04 synthetic portfolio statistics do not reconcile to ledger events")
+        if metrics["tp1"] != event_counts.get("SIMULATED_TP1", 0) or metrics["tp2"] != event_counts.get("SIMULATED_TP2", 0):
+            raise SystemExit("C04 synthetic exit statistics do not reconcile to simulator exit events")
         repeated, repeated_synthetic, repeated_report = build_artifacts(args.data_dir)
         for key in ("run_id", "config_hash", "output_manifest", "funnel", "strict_decisions", "diagnostic_decisions"):
             if run[key] != repeated[key]:
                 raise SystemExit(f"C04 deterministic replay check failed: {key}")
-        if synthetic != repeated_synthetic:
-            raise SystemExit("C04 synthetic replay reproduction check failed")
+        if synthetic["execution_mechanics"] != repeated_synthetic["execution_mechanics"]:
+            raise SystemExit("C04 synthetic mechanics reproduction check failed")
+        for key in ("output_manifest", "funnel", "scenario_outcomes", "execution_events", "execution_statistics"):
+            if synthetic["full_pipeline"][key] != repeated_synthetic["full_pipeline"][key]:
+                raise SystemExit(f"C04 synthetic full-pipeline reproduction check failed: {key}")
     print(json.dumps({"run_id": run["run_id"], "report": str(report_path),
         "run_json": str(json_path), "verdict": "BLOCKED_BY_DATA",
         "measurements": run["measurements"], "strict_candidates": run["funnel"]["strict_candidate_decisions"],
