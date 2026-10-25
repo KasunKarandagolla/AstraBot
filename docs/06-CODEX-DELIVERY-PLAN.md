@@ -15,7 +15,20 @@
 
 ## Current implementation checkpoint
 
-C01–C04 are merged on `main`; C04 merge commit is `2df822cd691dfcef3723e025d3071625e6b31294`. The follow-up branch `codex/c04-authentic-data-pilot` contains a checksum-backed seven-symbol, four-timeframe public Binance USDⓈ-M pilot for July–October 2024, extends source-only warm-up into July, and runs the existing C02/C03/C04 pipeline on bounded hourly snapshots while retaining all source intervals in each as-of context. This cadence can miss transient setup changes between snapshots. STRICT_POLICY_REPLAY remains `BLOCKED_BY_DATA` because OHLCV does not supply point-in-time contract metadata, spreads/depth, validated OI, event clearance or observed fills. The current gate is independent project-lead review of the authentic pilot and its fail-closed evidence; no P3 empirical credit or C05 economic approval is awarded.
+PRs #1–#9 are reviewed and merged through `9963a7e5295a03f42726ee82c9d9a8c55cc55b86`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
+
+## Emergency recovery choices — PROPOSED, not an approved phase change
+
+**Immediately effective process brake:** no more Codex network-probe-only tasks, proxy/region bypass, historical candle duplication, provider purchases, persistent collection or execution development based on unqualified economics. Lead may research accessible official/provider documentation outside Codex; distinguish a documentation claim from inspected original bytes and legal entitlement. Public Tardis docs advertise first-of-month no-key CSV samples, but PR #9 verified no original SOL/DOGE data, rights, units or coverage.
+
+| Choice | Scope and benefit | Boundary |
+|---|---|---|
+| **A — Strict original sequence** | Retain P3 hold; commission no Codex until actual economic evidence route is credible | Preserves the roadmap exactly; risks indefinite paper-MVP delay |
+| **B — Offline-only C06 paper-MVP exception (lead recommendation)** | ONE timeboxed Luna session for a real OpenBot typed-tool workflow, fake one-use owner approval, simulated entry/protection/exit and journal; synthetic fixtures clearly labeled | Requires **explicit owner approval** to work on this narrow P4 slice while P3 remains unqualified. No C07, demo, external orders, credentials, strategy GO, false performance or P3 progress credit. Stop if reusable OpenBot integration cannot be confirmed within the budget |
+
+Under B, require positive AND rejected/expired/negative fake scenarios, human approval security checks, reproducible journal and strict stop conditions. Never claim a fake trade is a real market candidate. **No phase change is authorized by merging this proposed plan.**
+
+**NEXT_GATE:** owner chooses A or B; no Codex task until decision.
 
 ## Explicit MVP-first strategy (C04 historical-data review is the active gate)
 
