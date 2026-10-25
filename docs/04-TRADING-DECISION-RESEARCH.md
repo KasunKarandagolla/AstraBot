@@ -237,3 +237,51 @@ empirical qualification. C02's 124 smoke rows do not constitute a strategy study
 `python scripts/c03_research.py --c02-panel --check` also verifies the retained
 actual BTC archive checksum and produces T1/R1/B1 NO_TRADE records for its
 missing mandatory coverage, with an explicitly synthetic account/cost overlay.
+
+## 10. C04 replay evidence and data blocker
+
+C04 adds `research/replay.py`, a time-ordered adapter around the existing C02
+point-in-time universe scan and C03 pure evaluator; it does not duplicate the
+T1/R1/B1 policies. C03 `ResearchState` is retained per symbol between source
+availability snapshots. The strict scanner emits no C03 policy evaluation
+unless C02 selects the symbol. Separate diagnostics may call C03 on panel
+symbols, with an empty mandatory-gate bypass list; those results never enter
+strict expectancy.
+
+The retained source sample is unchanged: BTCUSDT 1H for 2024-10-28 (24 rows)
+and the first 100 APEUSDT aggregate trades for 2024-10-18. No point-in-time
+instrument metadata, delisted contract history, complete 5M/15M/4H coverage,
+verified event clearance, validated OI units, historical quotes/depth, funding
+or fill observations are present. The archive host remains blocked by the
+selected executor's restricted egress policy. C04 therefore records
+`BLOCKED_BY_DATA`; R0 is `INSUFFICIENT_DATA`, R1/R3 are `NOT_TESTABLE`, and R2
+has zero eligible strict symbols/candidates. This is not a policy stop or an
+economic GO/REVISE decision.
+
+`research/simulation.py` contains named E0 (no-execution truth), E1 (adverse
+bounded bar-model scenario) and E2 stress mechanics for fees, partial size,
+approval delay, same-bar ambiguity, gaps, target-leg rounding and the 11h55m /
+12h timer. It never imports a Binance order client. OHLC-based outcomes are
+`BAR_APPROX`, separated from observed fills. Strict C03 research candidates
+flow into those scenarios and separate E1/E2 `PortfolioLedger` instances;
+approval, order, fill, exit, reservation, release and funnel counts come from
+their recorded simulated events. The fully eligible integration fixture is
+explicitly synthetic and kept outside the historical outcomes and summaries.
+Stop spread/slippage are embedded once in the modeled stop execution price and
+reconciled once in net PnL; exact long, short, gap, fee and settled-funding
+checks cover this accounting. Synthetic scenarios verify mechanics only and
+are excluded from historical statistics. The declared fallback funding proxy
+integrates each remaining quantity over its modeled holding time, so partial
+exits reduce subsequent proxy exposure; it is not historical settlement data.
+`statistics.py`
+provides deterministic joint market-time-block bootstrap and pre-outcome
+matched-control sampling; with no qualified historical outcomes its interval
+is intentionally undefined.
+
+Reproduce the bounded artifact with `python scripts/c04_replay.py --check`.
+The exact source hashes, availability proxies, gaps and retrieval blocker are
+in [C04 source inventory](../research/c04/source_inventory.json) and
+[C04 research report](../research/c04/REPORT.md). A future pilot must collect a
+predeclared window long enough for 735 contiguous hourly bars plus untouched
+post-warm-up development/validation/evaluation blocks; no current-symbol
+metadata may stand in for historical eligibility.

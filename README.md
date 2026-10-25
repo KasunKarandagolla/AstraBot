@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01/C02 merged; C03 causal research policies prepared for independent review.** The public adapter has not been verified against a live Binance endpoint. No trading operations, strategy backtest, economic edge or live safety qualification has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C03 merged and independently reviewed; C04 replay implementation is on a review branch with empirical qualification blocked by data.** The public adapter has not been verified against a live Binance endpoint. No market edge or live safety qualification has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,7 +39,7 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**C03 / P2: causal setups and frozen geometry, pending independent review.** C02 PR #2 and the reviewed head are verified merged on the resolved latest `main`. The C03 branch adds pure context/strict-swing providers, T1/R1/B1 long/short chronologies and conservative research decisions. Run `python scripts/c03_research.py --check --summary` or see [C03 evidence](research/c03/README.md). The actual incomplete C02 archive also produces explicit NO_TRADE. Independent review of the actual diff/evidence remains the next action; no empirical strategy or live qualification is claimed.
+**C04 / P3: causal full-policy replay and economic evidence.** C03 PR #3 passed independent review and merged at `c052bcd60e441ed1f72de18abefa733c1b271729`. C04 wraps actual C02 eligibility and C03 policy functions, persists per-symbol research state, and replays the retained panel. The run returns `BLOCKED_BY_DATA`: 24 BTC 1H rows and 100 APE aggregate trades cannot meet the C02/C03 gates. See [C04 report](research/c04/REPORT.md) and [source inventory](research/c04/source_inventory.json). The engineering implementation is ready for independent review; C05 empirical economics is not testable from this panel.
 
 ## Source authority and drift prevention
 

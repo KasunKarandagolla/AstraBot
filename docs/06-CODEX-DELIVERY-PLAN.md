@@ -15,9 +15,9 @@
 
 ## Current implementation checkpoint
 
-C01 and C02 are merged on `main`; C02 PR #2 and its reviewed head were verified before C03 branch creation. The resolved C03 base is `8105e610963e6e59f5a82d9c30460df3a997d471`. C01 safety contracts and execution-owner foundation remain unchanged. C03 / P2 now supplies working pure T1/R1/B1 chronologies, frozen geometry and research economics for independent project-lead review. The journal's official phase/NEXT_GATE/progress ledger remains unchanged pending that review; this checkpoint does not award gate credit or authorize C04/live promotion.
+C01, C02 and C03 are merged on `main`; the verified C04 base is `c052bcd60e441ed1f72de18abefa733c1b271729`. Independent project-lead reviews accepted C01/P0, C02/P1 foundation and C03/P2 with deferred data/economic nonblockers. C04 implements the P3 replay/evidence pipeline on `codex/c04-causal-market-replay`. Its retained-source run is `BLOCKED_BY_DATA`, not a C05 economic decision; the C04 engineering diff and blocker evidence are ready for independent review. No P3 completion weight or C05 approval is awarded here.
 
-## Explicit MVP-first strategy (C02 review remains the active gate)
+## Explicit MVP-first strategy (C04 engineering review is the active gate)
 
 An MVP is an **end-to-end working capability**, not packages installed or ten basic signals. Prioritize the smallest credible vertical slice early, then expand after its evidence gate.
 

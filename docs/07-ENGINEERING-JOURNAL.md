@@ -1,10 +1,10 @@
 # 07 — AstraBot Engineering Journal, ADR Index and Delivery Ledger
 
 **Type:** append-only factual handoff ledger, not a substitute for tests or code.  
-**Last editorial checkpoint:** 2026-10-24 · preimplementation docs bootstrap.  
-**Current phase:** `P0 — contracts and single-owner feasibility`  
-**NEXT_GATE:** `C01 — Engine-owner ADR and frozen lifecycle/economics interfaces`  
-**Next assigned Codex profile:** `Sol / complex` (if the named model is available).  
+**Last editorial checkpoint:** 2026-10-25 · C03 independent review and C04 implementation evidence.
+**Current phase:** `P3 — Historical research evidence and complete-policy replay`
+**NEXT_GATE:** `Independent project-lead review of C04 engineering and BLOCKED_BY_DATA evidence`
+**Next assigned Codex profile:** `Luna / bulk research implementation` only if a bounded data-enabled follow-up is assigned; current next action is project-lead review.
 **Live funds enabled:** **NO**. **Any strategy economically qualified:** **NO**.
 
 ## Rules for updating this file
@@ -18,7 +18,7 @@
 
 ## Progress and persistent memory policy
 
-Measure progress toward the **research-qualified and demo-safe v1 development definition of done**, **not** proven profitability or authorized live trading. Report after each reviewed Codex PR: `Estimated verified completion X% / remaining 100-X%`; breakdown and uncertainty, with basis. Use *rough phase-gate weights* P0 **10%**, P1 **15%**, P2 **20%**, P3 **25%**, P4 **10%**, P5 **15%**, P6 **5%**. Only award a phase's full weight when its evidence-based gate passes; optional provisional subphase credit must list objective completed artifacts and cannot imply promotion. The initial implementation estimate is **0%** as of this documentation review; original design consultation is complete but no gate has been implemented. If evidence invalidates a gate, revise the estimate openly. This rubric estimates product capabilities, not calendar time or Codex quota remaining.
+Measure progress toward the **research-qualified and demo-safe v1 development definition of done**, **not** proven profitability or authorized live trading. Report after each reviewed Codex PR: `Estimated verified completion X% / remaining 100-X%`; breakdown and uncertainty, with basis. Use *rough phase-gate weights* P0 **10%**, P1 **15%**, P2 **20%**, P3 **25%**, P4 **10%**, P5 **15%**, P6 **5%**. Only award a phase's full weight when its evidence-based gate passes; optional provisional subphase credit must list objective completed artifacts and cannot imply promotion. The independent C03 review records approximately **45%** development-scope credit for reviewed P0/P1/P2 only; C04 has not been reviewed or awarded P3 credit. This is not a calendar-time, quota, economic qualification or live-readiness estimate. If evidence invalidates a gate, revise the estimate openly.
 
 After each reviewed session, add a **short durable memory capsule**: what changed in code, exact commits/PRs, verified tests and datasets, nontrivial implementation decisions and why, reproducible important defects and fixes, affected architecture/feature versions, next gate and owner questions. Preserve knowledge via source-linked ADRs rather than long conversational recollections. Distinguish research observations from production facts. Keep prompts/agent memories summarized with bounded retention; do not commit credentials, raw sensitive account data or large raw market streams into Git. Market-data storage and authoritative event truth follow `02`.
 
@@ -26,8 +26,8 @@ After each reviewed session, add a **short durable memory capsule**: what change
 
 | Milestone | Status | Evidence required | Existing task |
 |---|---|---|---|
-| MVP-R0 read-only market slice | NOT STARTED | Real Binance public altcoin shortlist; causal prebuilt analytics adapter; missing-data readiness case | C02 after P0 |
-| MVP-R1 research vertical slice | NOT STARTED | Reproducible setup/NO_TRADE trace, stop/target and costs, causal replay, positive and negative trader-level cases, C05 GO/REVISE/STOP verdict | C03–C05 |
+| MVP-R0 read-only market slice | PARTIAL / NOT COMPLETE | C02 read-only smoke and fail-closed eligibility are merged; current panel has only 24 BTC 1H rows plus 100 APE trades, not historical warm-up or altcoin eligibility | C02 foundation; expansion deferred to C04 data recovery |
+| MVP-R1 research vertical slice | ENGINEERING PARTIAL / EMPIRICAL BLOCKED | C03 synthetic positive/negative trace and real-data NO_TRADE; C04 replay/research package exists, but no real eligible historical candidate or C05 economic review is supported | C03–C05 |
 | MVP-A agentic paper vertical slice | NOT STARTED | OpenBot → deterministic analysis → bounded human approval → fake order → simulated management/exit → journal and failure tests | C06 after research gate |
 | Demo-safe v1 | NOT STARTED | Single-writer demo/recovery/supervision tests | C07–C09 |
 
@@ -43,10 +43,10 @@ MVP milestones are **outcomes of already planned sessions**, not separate tasks.
 
 | Gate | Status | Actual evidence | Next |
 |---|---|---|---|
-| P0 architecture and consulted v1.5 | DESIGN BASELINE | preserved in `docs/reference/AGENTIC_SPEC_v1.5.md` | C01 owner-selection feasibility |
-| P1 data / coin discovery / feature readiness | NOT STARTED | none | C02 after C01 |
-| P2 T1/R1/B1 deterministic policies | NOT STARTED | none | C03 |
-| P3 friction and full-policy research | NOT STARTED | none | C04–C05 |
+| P0 contracts and single-owner feasibility | PASS WITH DEFERRED NONBLOCKERS | Independent review on PR #1; ADR-EXEC-001 and fake-only contracts; no live qualification | C02 foundation already merged |
+| P1 data / coin discovery / feature readiness | PASS FOR FOUNDATION; MVP-R0 INCOMPLETE | Independent review on PR #2; GET-only adapter, causal observation models and empty real-data shortlist | C04 historical panel expansion |
+| P2 T1/R1/B1 deterministic policies | PASS WITH DEFERRED NONBLOCKERS | Independent review on PR #3; pure policies and synthetic trace; all policies remain RESEARCH_ONLY | C04 complete-policy replay |
+| P3 friction and full-policy research | C04 ENGINEERING READY FOR REVIEW; EMPIRICAL BLOCKED BY DATA | Current branch uses C02/C03 functions; 0 eligible symbols, 0 strict candidates, actual C03 diagnostics remain NO_TRADE; C05 is not approved | C04 independent review, then bounded data recovery |
 | P4 OpenBot approval and agent tools | NOT STARTED | none | C06 after research gate |
 | P5 Binance demo protected execution | NOT STARTED | none | C07 |
 | P6 full demo and independent review | NOT STARTED | none | C08–C09 |
@@ -184,3 +184,26 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Delivery:** branch `codex/c03-causal-trading-intelligence` pushed; [PR #3](https://github.com/KasunKarandagolla/AstraBot/pull/3) opened against verified `main` base `8105e610963e6e59f5a82d9c30460df3a997d471`. This delivery addendum is a documentation-only follow-up on the same PR. No auto-merge or gate acceptance is claimed.
 - **Observed remote CI:** implementation push [run 40152931298](https://github.com/KasunKarandagolla/AstraBot/actions/runs/40152931298) completed **success**. PR-triggered run `40152956773` was queued at this addendum's observation; final-head CI is reported in the handoff. Empty legacy commit statuses were not interpreted as a failed or passing Actions run.
 - **Final local evidence:** 177 tests passed in the scrubbed full suite; compileall, pip check, both deterministic demonstrations and diff whitespace checks passed. Original C01 contracts/reference remain unchanged. Independent project-lead review of actual diff/evidence is explicitly requested in the PR; official journal NEXT_GATE/progress remain untouched.
+
+### 2026-10-25 — C04 — Causal replay, execution economics and research handoff
+
+- **Phase / profile / branch / base / implementation:** P3 engineering prepared for independent review, empirical qualification blocked; requested profile Luna, actual model backend/quota unavailable; `codex/c04-causal-market-replay`; base `c052bcd60e441ed1f72de18abefa733c1b271729`; implementation `322dad0c5ee7eb1a94958be49ef54866e03b6d9e`.
+- **Implemented:** checksum-verified offline C02 panel loader and availability-time replay into actual C02 eligibility and C03 pure policy functions; persistent per-symbol state; strict and diagnostic funnels kept separate; replayable decision/funnel ledgers; complete OHLC counterfactual E0/E1/E2 mechanics and portfolio caps; deterministic joint market-time-block bootstrap and metadata-matched controls; report, source inventory and CI acceptance command. Reuse decision: wrap C02/C03 in a narrow adapter; defer Freqtrade/NautilusTrader framework adoption pending representative data benchmarks.
+- **Observed result:** run `cf3b94dc4f864928ff3fb3add1b749468352c912e3d826d2c2bc7bf5bb2ada98`; 24 availability snapshots, 338 funnel events, 0 latest eligible symbols, 0 strict candidates, 288 C03 diagnostic NO_TRADE records. Verdict is `BLOCKED_BY_DATA`; C05 recommendation is `INSUFFICIENT_EVIDENCE`. Retained evidence remains 24 BTCUSDT hourly rows and 100 APEUSDT aggregate trades with explicit availability proxies. No historical fills, funding, quote/depth, validated OI units, event clearance or point-in-time instrument metadata were created.
+- **Material defect correction:** funding fallback now integrates remaining quantity over modeled holding time and records the declared proxy event. Observed funding settling within an OHLC exit bar is charged conservatively against remaining size before a modeled non-timer exit; a settlement after a timer bar's open is excluded. A focused regression covers funding after a partial exit. Synthetic outputs remain separate from historical statistics.
+- **Verification:** `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 work/c04-venv/bin/python -m pytest -q` → **190 passed**; compileall, pip check, both C03 reproduction commands, C04 `--check`, `git diff --exit-code origin/main -- src/astrabot/contracts.py docs/reference/AGENTIC_SPEC_v1.5.md`, and staged `git diff --cached --check` passed. Local replay measured about 0.41s and 6.4 MB traced Python allocation on 24 windows; not a broad-universe capacity claim.
+- **Review / accounting:** no P3 completion credit or C05 decision is self-awarded. Independent project-lead review of the diff, assumptions and data blocker is requested. Main model backend and quota are unavailable; no subagents were used. No live/demo exchange requests, account changes or writer path were added.
+
+#### C04 GitHub delivery addendum — 2026-10-25
+
+- **Delivery:** branch `codex/c04-causal-market-replay`; [PR #4](https://github.com/KasunKarandagolla/AstraBot/pull/4) opened against `main`, verified base `c052bcd60e441ed1f72de18abefa733c1b271729`. At PR creation, head was `5eb41a0e6bd3ae6beb8e3f7fc64052c022cfc073`; implementation commit is `322dad0c5ee7eb1a94958be49ef54866e03b6d9e`.
+- **Review requested:** PR body requests independent project-lead inspection. No reviewer identity was invented; no merge or auto-merge was requested.
+- **Remote CI observation:** GitHub Actions run [40155175227](https://github.com/KasunKarandagolla/AstraBot/actions/runs/40155175227) for the PR-creation head was `in_progress` at observation. This is not a CI pass; status for the final pushed head is checked separately.
+
+#### C04 blocking review fixes — 2026-10-25
+
+- **Stop accounting:** stop execution price already included stop spread and slippage. Removed the second PnL deduction while retaining the friction ledger amount. Exact Decimal reconciliation tests cover long and short stops, ordinary and gap stops, exit and entry fees, and signed settled funding.
+- **Complete replay path:** strict C03 candidates now flow through E0/E1/E2; E1 and E2 each use an independent `PortfolioLedger`. Approval, submission, modeled fill/partial fill, protection, exits, risk reserve/release, expiry and funnel counters are generated from recorded simulator and ledger events.
+- **Synthetic integration proof:** added `SYNTHETIC_FULLY_ELIGIBLE_TEST_FIXTURE`; its C02-eligible windows produce a strict C03 candidate and exercise E0/E1/E2, partial fills, target exits and portfolio settlement. The labeled synthetic events are kept outside the actual historical outcomes and empirical summaries.
+- **Historical result preserved:** the retained BTC/APE panel remains `BLOCKED_BY_DATA`, with zero strict candidates and `INSUFFICIENT_EVIDENCE` for C05. No historical bars, feeds, fills or profitability were fabricated; C01–C03 contracts and reference spec are unchanged.
+- **Local verification:** 195 regression tests passed; compileall, pip check, C03 `--check --summary`, C03 `--c02-panel --check`, C04 `--check`, `git diff --check` and the C01–C03 contract/reference comparison passed. Final-head GitHub Actions is checked after the PR push; no merge is requested.
