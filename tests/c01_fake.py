@@ -5,6 +5,7 @@ Single-row transactions deliberately serialize account claims with CAS; no
 transaction spans fake venue I/O. Venue truth uses a separate durable database.
 """
 from __future__ import annotations
+from contextlib import closing
 from copy import deepcopy
 from datetime import datetime, timedelta
 from decimal import Decimal as D
@@ -39,7 +40,7 @@ class FakeClock:
 class State:
     def __init__(self, path, initial):
         self.path = str(path)
-        with self.connection() as db:
+        with closing(self.connection()) as db, db:
             db.execute("CREATE TABLE IF NOT EXISTS state(id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL)")
             db.execute("INSERT OR IGNORE INTO state VALUES(1, ?)", (json.dumps(initial),))
 
@@ -47,11 +48,11 @@ class State:
         return sqlite3.connect(self.path, timeout=10)
 
     def read(self):
-        with self.connection() as db:
+        with closing(self.connection()) as db:
             return json.loads(db.execute("SELECT payload FROM state WHERE id=1").fetchone()[0])
 
     def change(self, action):
-        with self.connection() as db:
+        with closing(self.connection()) as db, db:
             db.execute("BEGIN IMMEDIATE")
             state = json.loads(db.execute("SELECT payload FROM state WHERE id=1").fetchone()[0])
             result = action(state)
@@ -60,7 +61,7 @@ class State:
 
     def assert_no_transaction(self):
         # Called from venue I/O hook; a leaked writer lock fails immediately.
-        with sqlite3.connect(self.path, timeout=0) as db:
+        with closing(sqlite3.connect(self.path, timeout=0)) as db:
             db.execute("BEGIN IMMEDIATE")
             db.rollback()
 
