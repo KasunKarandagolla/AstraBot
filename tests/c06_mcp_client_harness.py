@@ -38,15 +38,32 @@ import os
 import socket
 import urllib.request
 
+_LOOPBACK = ('127.0.0.1', '::1')
+_real_connect = socket.socket.connect
+_real_connect_ex = socket.socket.connect_ex
+
+def _is_loopback(address):
+    return isinstance(address, tuple) and bool(address) and address[0] in _LOOPBACK
+
 def _deny(*args, **kwargs):
     with open(os.environ['ASTRABOT_NETWORK_ATTEMPTS'], 'a', encoding='utf-8') as out:
         out.write('blocked\\n')
     raise OSError('network disabled in MCP subprocess test')
 
+def _connect(sock, address):
+    if _is_loopback(address):
+        return _real_connect(sock, address)
+    return _deny()
+
+def _connect_ex(sock, address):
+    if _is_loopback(address):
+        return _real_connect_ex(sock, address)
+    return _deny()
+
 socket.create_connection = _deny
 socket.getaddrinfo = _deny
-socket.socket.connect = _deny
-socket.socket.connect_ex = _deny
+socket.socket.connect = _connect
+socket.socket.connect_ex = _connect_ex
 socket.socket.sendto = _deny
 urllib.request.urlopen = _deny
 """,
