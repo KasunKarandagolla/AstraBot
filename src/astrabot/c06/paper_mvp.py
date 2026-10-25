@@ -11,6 +11,9 @@ from datetime import datetime
 from decimal import Decimal
 from hashlib import sha256
 import json
+import sqlite3
+from contextlib import closing
+from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -143,6 +146,92 @@ PlanState = Literal[
     "CLOSED_RECONCILED",
 ]
 
+_PLAN_STATES = frozenset({
+    "PROPOSED_RESEARCH_ONLY", "FAKE_OWNER_APPROVED", "OWNER_REJECTED",
+    "EXPIRED", "CONSUMED", "SIMULATED_OPEN", "CLOSED_RECONCILED",
+})
+_PLAN_TRANSITIONS = {
+    "PROPOSED_RESEARCH_ONLY": {"FAKE_OWNER_APPROVED", "OWNER_REJECTED", "EXPIRED"},
+    "FAKE_OWNER_APPROVED": {"CONSUMED", "EXPIRED"},
+    "CONSUMED": {"SIMULATED_OPEN", "CLOSED_RECONCILED"},
+    "SIMULATED_OPEN": {"SIMULATED_OPEN", "CLOSED_RECONCILED"},
+    "OWNER_REJECTED": set(), "EXPIRED": set(), "CLOSED_RECONCILED": set(),
+}
+
+
+class _C06SQLite:
+    """Shared, local SQLite schema for optional durable C06 plan/journal state."""
+
+    def __init__(self, path: str | Path) -> None:
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with closing(sqlite3.connect(self.path, timeout=10)) as db, db:
+            db.execute("PRAGMA foreign_keys=ON")
+            db.executescript("""
+                CREATE TABLE IF NOT EXISTS paper_plans (
+                    plan_id TEXT PRIMARY KEY,
+                    lifecycle_id TEXT NOT NULL UNIQUE,
+                    immutable_hash TEXT NOT NULL,
+                    payload TEXT NOT NULL,
+                    expires_at TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS paper_plan_transitions (
+                    plan_id TEXT NOT NULL REFERENCES paper_plans(plan_id),
+                    sequence INTEGER NOT NULL,
+                    from_status TEXT,
+                    to_status TEXT NOT NULL,
+                    occurred_at TEXT NOT NULL,
+                    PRIMARY KEY(plan_id, sequence)
+                );
+                CREATE TABLE IF NOT EXISTS machine_events (
+                    sequence INTEGER PRIMARY KEY,
+                    event_id TEXT NOT NULL UNIQUE,
+                    occurred_at TEXT NOT NULL,
+                    received_at TEXT NOT NULL,
+                    actor TEXT NOT NULL,
+                    event_type TEXT NOT NULL,
+                    plan_id TEXT NOT NULL REFERENCES paper_plans(plan_id),
+                    lifecycle_id TEXT NOT NULL,
+                    correlation_id TEXT NOT NULL,
+                    details_json TEXT NOT NULL,
+                    previous_hash TEXT NOT NULL,
+                    record_hash TEXT NOT NULL
+                );
+                CREATE TRIGGER IF NOT EXISTS paper_plan_identity_is_immutable
+                BEFORE UPDATE OF plan_id, lifecycle_id, immutable_hash, payload, expires_at
+                ON paper_plans BEGIN SELECT RAISE(ABORT, 'immutable paper plan'); END;
+                CREATE TRIGGER IF NOT EXISTS paper_plan_cannot_be_deleted
+                BEFORE DELETE ON paper_plans BEGIN SELECT RAISE(ABORT, 'paper plans are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS plan_transitions_are_append_only_update
+                BEFORE UPDATE ON paper_plan_transitions BEGIN SELECT RAISE(ABORT, 'plan transitions are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS plan_transitions_are_append_only_delete
+                BEFORE DELETE ON paper_plan_transitions BEGIN SELECT RAISE(ABORT, 'plan transitions are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS machine_events_are_append_only_update
+                BEFORE UPDATE ON machine_events BEGIN SELECT RAISE(ABORT, 'machine events are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS machine_events_are_append_only_delete
+                BEFORE DELETE ON machine_events BEGIN SELECT RAISE(ABORT, 'machine events are append-only'); END;
+            """)
+        self.verify_integrity()
+
+    def connect(self):
+        db = sqlite3.connect(self.path, timeout=10)
+        db.execute("PRAGMA foreign_keys=ON")
+        return db
+
+    def verify_integrity(self) -> None:
+        with closing(self.connect()) as db:
+            result = db.execute("PRAGMA integrity_check").fetchone()
+            if not result or result[0] != "ok":
+                raise ValueError("C06 durable state failed SQLite integrity check")
+            if db.execute("PRAGMA foreign_key_check").fetchone() is not None:
+                raise ValueError("C06 durable state has broken foreign-key references")
+
+
+def _canonical(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
 
 class PlanStatusOutput(StrictToolModel):
     plan_id: str
@@ -161,6 +250,7 @@ class JournalEvent(StrictToolModel):
     event_type: str
     plan_id: str
     lifecycle_id: str
+    correlation_id: str
     details: tuple[tuple[str, str], ...] = ()
 
 
@@ -174,85 +264,298 @@ class OperationsSummaryOutput(StrictToolModel):
 
 class PlanRegistry:
     """Harness-side status mirror. It is not exposed as an OpenBot tool."""
+    _transitions = _PLAN_TRANSITIONS
 
-    _transitions = {
-        "PROPOSED_RESEARCH_ONLY": {"FAKE_OWNER_APPROVED", "OWNER_REJECTED", "EXPIRED"},
-        "FAKE_OWNER_APPROVED": {"CONSUMED", "EXPIRED"},
-        "CONSUMED": {"SIMULATED_OPEN", "CLOSED_RECONCILED"},
-        "SIMULATED_OPEN": {"SIMULATED_OPEN", "CLOSED_RECONCILED"},
-        "OWNER_REJECTED": set(),
-        "EXPIRED": set(),
-        "CLOSED_RECONCILED": set(),
-    }
-
-    def __init__(self) -> None:
+    def __init__(self, storage_path: str | Path | None = None) -> None:
         self._plans: dict[str, PaperPlan] = {}
         self._states: dict[str, PlanState] = {}
+        self._store = _C06SQLite(storage_path) if storage_path is not None else None
+        if self._store:
+            self._restore()
 
-    def add(self, plan: PaperPlan) -> None:
+    def _restore(self) -> None:
+        assert self._store
+        self._plans = {}
+        self._states = {}
+        with closing(self._store.connect()) as db:
+            # Read every related row from one SQLite snapshot. A concurrent
+            # status writer must not make the plan row and append-only
+            # transition history appear to disagree transiently.
+            db.execute("BEGIN")
+            rows = db.execute("SELECT plan_id, lifecycle_id, immutable_hash, payload, expires_at, status "
+                              "FROM paper_plans ORDER BY plan_id").fetchall()
+            for plan_id, lifecycle_id, plan_hash, payload, expires_at, status in rows:
+                try:
+                    plan = PaperPlan.model_validate_json(payload)
+                except Exception as exc:
+                    raise ValueError("corrupted persisted paper plan") from exc
+                expected_lifecycle = stable_id("c06.fake_lifecycle", plan_id)
+                if (plan.plan_id != plan_id or plan.immutable_hash != plan_hash or not plan.verify_hash()
+                    or plan.expires_at.isoformat() != expires_at or lifecycle_id != expected_lifecycle
+                    or status not in _PLAN_STATES):
+                    raise ValueError("inconsistent persisted paper plan identity, hash, expiry or status")
+                history = db.execute("SELECT sequence, from_status, to_status FROM paper_plan_transitions "
+                                     "WHERE plan_id=? ORDER BY sequence", (plan_id,)).fetchall()
+                if not history or history[0] != (0, None, "PROPOSED_RESEARCH_ONLY"):
+                    raise ValueError("persisted paper plan is missing its initial status transition")
+                prior_status = None
+                for expected_sequence, (sequence, from_status, to_status) in enumerate(history):
+                    if sequence != expected_sequence or to_status not in _PLAN_STATES:
+                        raise ValueError("corrupted persisted plan transition sequence")
+                    if expected_sequence == 0:
+                        if from_status is not None:
+                            raise ValueError("corrupted initial paper plan status")
+                    elif from_status != prior_status or to_status not in _PLAN_TRANSITIONS[prior_status]:
+                        raise ValueError("invalid persisted paper plan status transition")
+                    prior_status = to_status
+                if prior_status != status:
+                    raise ValueError("persisted paper plan status disagrees with transition history")
+                self._plans[plan_id] = plan
+                self._states[plan_id] = status
+
+    def add(self, plan: PaperPlan, *, lifecycle_id: str | None = None,
+            occurred_at: datetime | None = None) -> None:
+        if not plan.verify_hash():
+            raise ValueError("paper plan hash mismatch")
+        lifecycle_id = lifecycle_id or stable_id("c06.fake_lifecycle", plan.plan_id)
+        if lifecycle_id != stable_id("c06.fake_lifecycle", plan.plan_id):
+            raise ValueError("paper plan lifecycle ID is not deterministic")
         existing = self._plans.get(plan.plan_id)
         if existing and existing != plan:
             raise ValueError("plan ID already exists with different immutable content")
+        if existing and self._states[plan.plan_id] != "PROPOSED_RESEARCH_ONLY":
+            raise ValueError("expired, rejected, approved or consumed paper plan cannot be reused")
+        if self._store:
+            payload = _canonical(plan.model_dump(mode="json"))
+            occurred_at = occurred_at or datetime.now().astimezone()
+            with closing(self._store.connect()) as db, db:
+                db.execute("BEGIN IMMEDIATE")
+                row = db.execute("SELECT immutable_hash, payload, lifecycle_id, status FROM paper_plans "
+                                 "WHERE plan_id=?", (plan.plan_id,)).fetchone()
+                if row:
+                    plan_hash, stored_payload, stored_lifecycle, status = row
+                    if (plan_hash != plan.immutable_hash or stored_payload != payload
+                        or stored_lifecycle != lifecycle_id):
+                        raise ValueError("plan ID already exists with different immutable content")
+                    if status != "PROPOSED_RESEARCH_ONLY":
+                        raise ValueError("expired, rejected, approved or consumed paper plan cannot be reused")
+                else:
+                    now = occurred_at.isoformat()
+                    db.execute("INSERT INTO paper_plans VALUES(?, ?, ?, ?, ?, ?, ?)",
+                        (plan.plan_id, lifecycle_id, plan.immutable_hash, payload,
+                         plan.expires_at.isoformat(), "PROPOSED_RESEARCH_ONLY", now))
+                    db.execute("INSERT INTO paper_plan_transitions VALUES(?, 0, NULL, ?, ?)",
+                        (plan.plan_id, "PROPOSED_RESEARCH_ONLY", now))
+                    event = EventJournal._new_event(occurred_at=occurred_at,
+                        actor="offline_test_driver", event_type="PAPER_PLAN_PERSISTED",
+                        plan_id=plan.plan_id, lifecycle_id=lifecycle_id,
+                        details={"plan_hash": plan.immutable_hash,
+                            "status": "PROPOSED_RESEARCH_ONLY"})
+                    EventJournal._append_sqlite(db, event)
         self._plans[plan.plan_id] = plan
         self._states.setdefault(plan.plan_id, "PROPOSED_RESEARCH_ONLY")
 
     def __len__(self) -> int:
+        if self._store:
+            with closing(self._store.connect()) as db:
+                return db.execute("SELECT COUNT(*) FROM paper_plans").fetchone()[0]
         return len(self._plans)
 
-    def observe_external_state(self, plan_id: str, status: PlanState) -> None:
+    def observe_external_state(self, plan_id: str, status: PlanState, *,
+                               occurred_at: datetime | None = None) -> None:
         """Called by the offline owner/supervisor harness, never by the coordinator."""
         if plan_id not in self._plans:
             raise KeyError("unknown plan")
+        if status not in _PLAN_STATES:
+            raise ValueError("unknown paper plan status")
         prior = self._states[plan_id]
         if status != prior and status not in self._transitions[prior]:
             raise ValueError(f"invalid plan status transition: {prior} -> {status}")
+        if self._store and status != prior:
+            with closing(self._store.connect()) as db, db:
+                db.execute("BEGIN IMMEDIATE")
+                row = db.execute("SELECT status, lifecycle_id FROM paper_plans WHERE plan_id=?",
+                                  (plan_id,)).fetchone()
+                if not row:
+                    raise KeyError("unknown persisted paper plan")
+                if row[0] != prior:
+                    raise ValueError("persisted plan status changed outside this registry; reconcile first")
+                if occurred_at is None:
+                    last_event = db.execute("SELECT occurred_at FROM machine_events "
+                                            "ORDER BY sequence DESC LIMIT 1").fetchone()
+                    occurred_at = datetime.fromisoformat(last_event[0]) if last_event else datetime.now().astimezone()
+                now = occurred_at.isoformat()
+                sequence = db.execute("SELECT COALESCE(MAX(sequence), -1)+1 FROM paper_plan_transitions "
+                                      "WHERE plan_id=?", (plan_id,)).fetchone()[0]
+                db.execute("INSERT INTO paper_plan_transitions VALUES(?, ?, ?, ?, ?)",
+                    (plan_id, sequence, prior, status, now))
+                db.execute("UPDATE paper_plans SET status=?, updated_at=? WHERE plan_id=?",
+                    (status, now, plan_id))
+                event = EventJournal._new_event(occurred_at=occurred_at,
+                    actor="fake_supervisor", event_type="PLAN_STATUS_TRANSITION",
+                    plan_id=plan_id, lifecycle_id=row[1],
+                    details={"from_status": prior, "to_status": status})
+                EventJournal._append_sqlite(db, event)
         self._states[plan_id] = status
 
     def get(self, plan_id: str, as_of: datetime) -> PlanStatusOutput:
+        if self._store:
+            self._restore()
         plan = self._plans[plan_id]
         status = self._states[plan_id]
         if as_of >= plan.expires_at and status in {"PROPOSED_RESEARCH_ONLY", "FAKE_OWNER_APPROVED"}:
             status = "EXPIRED"
+            self.observe_external_state(plan_id, status, occurred_at=as_of)
         return PlanStatusOutput(plan_id=plan.plan_id, plan_hash=plan.immutable_hash,
             approval_nonce=plan.approval_nonce, expires_at=plan.expires_at,
             status=status)
 
 
 class EventJournal:
-    """Append-only deterministic event stream for one offline demonstration."""
+    """Append-only deterministic event stream with optional SQLite persistence."""
 
-    def __init__(self) -> None:
+    def __init__(self, storage_path: str | Path | None = None) -> None:
         self._events: list[JournalEvent] = []
         self.available = True
+        self._store = _C06SQLite(storage_path) if storage_path is not None else None
+        if self._store:
+            self._restore()
+
+    @classmethod
+    def _new_event(cls, *, occurred_at: datetime, actor: str, event_type: str,
+                   plan_id: str, lifecycle_id: str, details: dict[str, object] | None = None,
+                   received_at: datetime | None = None,
+                   correlation_id: str | None = None) -> JournalEvent:
+        received_at = received_at or occurred_at
+        correlation_id = lifecycle_id if correlation_id is None else correlation_id
+        if not isinstance(correlation_id, str) or correlation_id not in (plan_id, lifecycle_id):
+            raise ValueError("event correlation must be its plan ID or lifecycle ID")
+        ordered_details = tuple(sorted((str(k), str(v)) for k, v in (details or {}).items()))
+        draft = JournalEvent(event_id="", occurred_at=occurred_at, received_at=received_at,
+            actor=actor, event_type=event_type, plan_id=plan_id, lifecycle_id=lifecycle_id,
+            correlation_id=correlation_id, details=ordered_details)
+        body = draft.model_dump(mode="json")
+        body.pop("event_id")
+        return draft.model_copy(update={"event_id": cls._event_id(body)})
+
+    @staticmethod
+    def _event_id(body: dict[str, object]) -> str:
+        return stable_id("c06.machine_event.v2", body)
+
+    @staticmethod
+    def _record_hash(event: JournalEvent, previous_hash: str) -> str:
+        return sha256(_canonical({"event": event.model_dump(mode="json"),
+                                  "previous_hash": previous_hash}).encode()).hexdigest()
+
+    @classmethod
+    def _append_sqlite(cls, db: sqlite3.Connection, event: JournalEvent) -> bool:
+        serialized_details = _canonical(event.details)
+        existing = db.execute("SELECT event_id, occurred_at, received_at, actor, event_type, "
+            "plan_id, lifecycle_id, correlation_id, details_json FROM machine_events WHERE event_id=?",
+            (event.event_id,)).fetchone()
+        expected = (event.event_id, event.occurred_at.isoformat(), event.received_at.isoformat(),
+            event.actor, event.event_type, event.plan_id, event.lifecycle_id,
+            event.correlation_id, serialized_details)
+        if existing:
+            if existing != expected:
+                raise ValueError("event ID already exists with different content")
+            return False
+        plan = db.execute("SELECT lifecycle_id FROM paper_plans WHERE plan_id=?",
+                          (event.plan_id,)).fetchone()
+        if not plan or plan[0] != event.lifecycle_id:
+            raise ValueError("machine event must correlate to a persisted plan lifecycle")
+        last = db.execute("SELECT sequence, occurred_at, received_at, record_hash "
+                          "FROM machine_events ORDER BY sequence DESC LIMIT 1").fetchone()
+        if last and (event.occurred_at < datetime.fromisoformat(last[1])
+                     or event.received_at < datetime.fromisoformat(last[2])):
+            raise ValueError("journal timestamps must be monotonic")
+        sequence = last[0] + 1 if last else 1
+        previous_hash = last[3] if last else "0" * 64
+        db.execute("INSERT INTO machine_events VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (sequence, event.event_id, event.occurred_at.isoformat(), event.received_at.isoformat(),
+             event.actor, event.event_type, event.plan_id, event.lifecycle_id,
+             event.correlation_id, serialized_details, previous_hash,
+             cls._record_hash(event, previous_hash)))
+        return True
+
+    def _restore(self) -> None:
+        assert self._store
+        with closing(self._store.connect()) as db:
+            # Event rows are selected from a single committed snapshot while a
+            # separate process may append to the tail of the hash chain.
+            db.execute("BEGIN")
+            rows = db.execute("SELECT sequence, event_id, occurred_at, received_at, actor, event_type, "
+                "plan_id, lifecycle_id, correlation_id, details_json, previous_hash, record_hash "
+                "FROM machine_events ORDER BY sequence").fetchall()
+            previous_hash = "0" * 64
+            previous_occurred = previous_received = None
+            for expected_sequence, row in enumerate(rows, start=1):
+                (sequence, event_id, occurred_at, received_at, actor, event_type, plan_id,
+                 lifecycle_id, correlation_id, details_json, stored_previous, stored_hash) = row
+                if sequence != expected_sequence or stored_previous != previous_hash:
+                    raise ValueError("persisted C06 event journal has a sequence or hash-chain gap")
+                try:
+                    details = tuple(tuple(item) for item in json.loads(details_json))
+                    event = JournalEvent(event_id=event_id,
+                        occurred_at=datetime.fromisoformat(occurred_at),
+                        received_at=datetime.fromisoformat(received_at), actor=actor,
+                        event_type=event_type, plan_id=plan_id, lifecycle_id=lifecycle_id,
+                        correlation_id=correlation_id, details=details)
+                except Exception as exc:
+                    raise ValueError("corrupted persisted C06 machine event") from exc
+                body = event.model_dump(mode="json")
+                body.pop("event_id")
+                if event_id != self._event_id(body):
+                    raise ValueError("persisted C06 machine event ID mismatch")
+                if stored_hash != self._record_hash(event, previous_hash):
+                    raise ValueError("persisted C06 event journal hash mismatch")
+                if ((previous_occurred and event.occurred_at < previous_occurred)
+                    or (previous_received and event.received_at < previous_received)):
+                    raise ValueError("persisted C06 event journal timestamps are not monotonic")
+                plan = db.execute("SELECT lifecycle_id FROM paper_plans WHERE plan_id=?", (plan_id,)).fetchone()
+                if not plan or plan[0] != lifecycle_id or correlation_id not in {plan_id, lifecycle_id}:
+                    raise ValueError("persisted C06 event correlation does not match its plan")
+                self._events.append(event)
+                previous_hash = stored_hash
+                previous_occurred, previous_received = event.occurred_at, event.received_at
 
     @property
     def events(self) -> tuple[JournalEvent, ...]:
+        if self._store:
+            self._events = []
+            self._restore()
         return tuple(self._events)
 
     def append(self, *, occurred_at: datetime, actor: str, event_type: str,
-               plan_id: str, lifecycle_id: str, details: dict[str, object] | None = None) -> JournalEvent:
+               plan_id: str, lifecycle_id: str, details: dict[str, object] | None = None,
+               received_at: datetime | None = None, correlation_id: str | None = None) -> JournalEvent:
         if not self.available:
             raise RuntimeError("journal role unavailable")
-        received_at = occurred_at
+        received_at = received_at or occurred_at
+        ordered_details = tuple(sorted((str(k), str(v)) for k, v in (details or {}).items()))
+        correlation_id = lifecycle_id if correlation_id is None else correlation_id
+        if not isinstance(correlation_id, str) or correlation_id not in (plan_id, lifecycle_id):
+            raise ValueError("event correlation must be its plan ID or lifecycle ID")
+        event = self._new_event(occurred_at=occurred_at, received_at=received_at,
+            actor=actor, event_type=event_type, plan_id=plan_id, lifecycle_id=lifecycle_id,
+            correlation_id=correlation_id, details=dict(ordered_details))
+        if self._store:
+            with closing(self._store.connect()) as db, db:
+                db.execute("BEGIN IMMEDIATE")
+                inserted = self._append_sqlite(db, event)
+                if inserted:
+                    self._events.append(event)
+            return event
         if self._events and (occurred_at < self._events[-1].occurred_at
                              or received_at < self._events[-1].received_at):
             raise ValueError("journal timestamps must be monotonic")
-        ordered_details = tuple(sorted((str(k), str(v)) for k, v in (details or {}).items()))
-        event_body = {"occurred_at": occurred_at.isoformat(), "received_at": received_at.isoformat(),
-            "actor": actor, "event_type": event_type, "plan_id": plan_id,
-            "lifecycle_id": lifecycle_id, "details": ordered_details,
-            "sequence": len(self._events)}
-        event_id = stable_id("c06.machine_event.v1", event_body)
-        event = JournalEvent(event_id=event_id, occurred_at=occurred_at, received_at=received_at,
-            actor=actor, event_type=event_type, plan_id=plan_id, lifecycle_id=lifecycle_id,
-            details=ordered_details)
         self._events.append(event)
         return event
 
     def summary(self, lifecycle_id: str | None = None) -> OperationsSummaryOutput:
         if not self.available:
             raise RuntimeError("journal role unavailable")
-        selected = tuple(e for e in self._events if lifecycle_id is None or e.lifecycle_id == lifecycle_id)
+        selected = tuple(e for e in self.events if lifecycle_id is None or e.lifecycle_id == lifecycle_id)
         ids = tuple(e.event_id for e in selected)
         return OperationsSummaryOutput(lifecycle_id=lifecycle_id, event_count=len(selected),
             event_ids=ids, last_event_type=selected[-1].event_type if selected else None,
@@ -381,7 +684,7 @@ class C06ToolGateway:
         normalized_payload = PaperPlan.model_construct(**payload, immutable_hash="").hash_payload()
         canonical = json.dumps(normalized_payload, sort_keys=True, separators=(",", ":"))
         plan = PaperPlan(**payload, immutable_hash=sha256(canonical.encode()).hexdigest())
-        self._plans.add(plan)
+        self._plans.add(plan, occurred_at=self._as_of)
         return plan
 
     def get_plan_status(self, request: GetPlanStatusInput) -> PlanStatusOutput:

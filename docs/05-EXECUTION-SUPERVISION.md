@@ -98,3 +98,11 @@ Each position stores original immutable thesis: setup ID/version, context, struc
 ## 8. Definition of done for operational layer
 
 Fake exchange deterministic fault tests pass for approval exceptions, duplicate submissions, lost acknowledgements, missing stop, two target races, order replacement, restarts, 12h timer and entry/exit races. The exact selected Binance demo adapter passes the same **applicable** scenarios using redacted logs. A demo test proves wiring only, not market liquidity, historical edge or live safety in every market. Live access remains off pending documented owner promotion.
+
+## 9. C06-E/F offline fake runtime boundary
+
+C06-E/F persists the C06 proposal/status/event record in one SQLite file and reuses the C01 fake owner and fake venue in their existing, separate SQLite files. A marked synthetic-only state directory is opt-in at MCP server startup. The fixture-owner commands (approve, reject, expire, consume once) and the independent fake supervisor are local processes, clearly labeled as simulated identity, and absent from the six-tool MCP server. C01 remains the only risk validator and fake order owner.
+
+The three files do not share a transaction. On restart, the fake venue snapshot and C01 owner ledger decide whether an approval was consumed, an order exists, a fill occurred, protection is visible, and flat reconciliation is proven. C06 status is a recoverable mirror. A C01 persisted entry resumes only with strict pre-submit absence proof; `SUBMITTED` or ambiguous entry/management requests halt. A correlated terminal reduce plus remaining authoritative venue exposure permits a new reduce-only ID for that late remainder. The read-only Journal role validates the C06 event chain and compares owner quantity, protection, reservations, unresolved intents and fake venue truth. If the C06 journal role is unavailable, C01 can continue protection and reduction; the plan mirror catches up when journaling returns.
+
+The acceptance harness uses real MCP SDK stdio subprocesses, separate owner and supervisor CLI processes, concurrent consume attempts and the same SQLite files. Its synthetic fault behavior does not demonstrate authenticated human MFA, production single-host or multi-host fencing, SQLite backup/recovery, 24/7 watchdog operation, Binance Demo semantics or strategy economics.
