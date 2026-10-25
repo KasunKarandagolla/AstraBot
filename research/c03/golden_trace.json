@@ -1,0 +1,606 @@
+{
+  "chronology": [
+    {
+      "anchors": [
+        {
+          "anchor_id": "38de9c10b73c41d3974ef241c95d8e1dd9857a3a2104e285d84a1584a2f93919",
+          "available_at": "2025-02-01T08:00:00Z",
+          "price": "99.6",
+          "source_event_id": "446fa2f264d5e159057cabc5e3b4f45edea1fdecaec9ed4775e40044579bc041"
+        }
+      ],
+      "available_at": "2025-02-01T08:00:05Z",
+      "confirmed_at": null,
+      "confirmed_event_id": null,
+      "consumed_by": null,
+      "context_at_formation": "965016b461e9a87ac7161a831022733cab839ae89a04981499c559bf6bfa5e8a",
+      "expires_at": "2025-02-01T08:30:05Z",
+      "formed_at": "2025-02-01T07:59:59.999000Z",
+      "formed_event_id": "fixture:5m:2025-02-01T07:55:00+00:00",
+      "frozen_atr": "0.3990160349854274",
+      "invalidation_reason": null,
+      "original_risk_parameters_hash": "df95a97e591c2d0b25d18ab691c4385ced02fa9eb1f235a8a7a144bc8cd02763",
+      "schema_version": "setup_snapshot.v1.5",
+      "setup_id": "4fc2167145a45a5cb4de83e176a7ee979792b705e93e7c484a4a06647370dae0",
+      "side": "LONG",
+      "source_snapshot_id": "b8fa3c005f70a6b1782598a1f0461f2c2eb49a811ce7ca112ef20c7f5fe57a72",
+      "state": "ARMED",
+      "strategy_policy_hash": "df95a97e591c2d0b25d18ab691c4385ced02fa9eb1f235a8a7a144bc8cd02763",
+      "strategy_version": "T1.reclaim.v1",
+      "symbol": "ALTUSDT",
+      "tolerance": "0.500",
+      "venue": "BINANCE_USDM_USDT_PERPETUAL"
+    },
+    {
+      "anchors": [
+        {
+          "anchor_id": "38de9c10b73c41d3974ef241c95d8e1dd9857a3a2104e285d84a1584a2f93919",
+          "available_at": "2025-02-01T08:00:00Z",
+          "price": "99.6",
+          "source_event_id": "446fa2f264d5e159057cabc5e3b4f45edea1fdecaec9ed4775e40044579bc041"
+        }
+      ],
+      "available_at": "2025-02-01T08:00:05Z",
+      "confirmed_at": "2025-02-01T08:05:00Z",
+      "confirmed_event_id": "fixture:5m:2025-02-01T08:00:00+00:00",
+      "consumed_by": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+      "context_at_formation": "965016b461e9a87ac7161a831022733cab839ae89a04981499c559bf6bfa5e8a",
+      "expires_at": "2025-02-01T08:30:05Z",
+      "formed_at": "2025-02-01T07:59:59.999000Z",
+      "formed_event_id": "fixture:5m:2025-02-01T07:55:00+00:00",
+      "frozen_atr": "0.3990160349854274",
+      "invalidation_reason": null,
+      "original_risk_parameters_hash": "df95a97e591c2d0b25d18ab691c4385ced02fa9eb1f235a8a7a144bc8cd02763",
+      "schema_version": "setup_snapshot.v1.5",
+      "setup_id": "4fc2167145a45a5cb4de83e176a7ee979792b705e93e7c484a4a06647370dae0",
+      "side": "LONG",
+      "source_snapshot_id": "b8fa3c005f70a6b1782598a1f0461f2c2eb49a811ce7ca112ef20c7f5fe57a72",
+      "state": "CONSUMED",
+      "strategy_policy_hash": "df95a97e591c2d0b25d18ab691c4385ced02fa9eb1f235a8a7a144bc8cd02763",
+      "strategy_version": "T1.reclaim.v1",
+      "symbol": "ALTUSDT",
+      "tolerance": "0.500",
+      "venue": "BINANCE_USDM_USDT_PERPETUAL"
+    }
+  ],
+  "context": {
+    "adx_1h": "100.0",
+    "as_of": "2025-02-01T08:00:05Z",
+    "atr_15m": "2.0",
+    "atr_1h": "2.5979458274199265",
+    "atr_5m": "0.3990160349854274",
+    "atr_percentile": "0",
+    "bias": "BULLISH",
+    "classification": "TREND_UP",
+    "context_id": "965016b461e9a87ac7161a831022733cab839ae89a04981499c559bf6bfa5e8a",
+    "indicator_source": "TA-Lib-python:0.6.8;TA-Lib-C:0.6.4;compatibility:0;unstable:0",
+    "normalized_slope": "0.1924597482837278005767797628",
+    "rvol_15m": "1",
+    "threshold_status": "UNVALIDATED",
+    "version": "c03.context.v1"
+  },
+  "evidence_class": "SYNTHETIC_TEST_FIXTURE",
+  "input_manifest": {
+    "confirmation_bar": {
+      "as_of": "2025-02-01T08:05:00Z",
+      "available_at": "2025-02-01T08:05:00Z",
+      "base_volume": "100",
+      "close": "100.4",
+      "close_time": "2025-02-01T08:04:59.999000Z",
+      "config_hash": "c03.golden.v1",
+      "data_source": "C03_SYNTHETIC_FIXTURE",
+      "event_time": "2025-02-01T08:04:59.999000Z",
+      "fidelity": "SYNTHETIC_FIXTURE",
+      "high": "100.5",
+      "ingested_at": "2025-02-01T08:05:00Z",
+      "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+      "interval": "5m",
+      "is_closed": true,
+      "low": "99.8",
+      "observation_id": "bar:5m:2025-02-01T08:00:00+00:00",
+      "open": "99.9",
+      "open_time": "2025-02-01T08:00:00Z",
+      "quality": "VALID",
+      "quote_volume": "10040.0",
+      "readiness": "READY",
+      "source_record_id": "fixture:5m:2025-02-01T08:00:00+00:00",
+      "source_version": "c03.golden.v1",
+      "symbol": "ALTUSDT",
+      "trade_count": 10,
+      "units": "USDT_PER_BASE",
+      "venue": "BINANCE_USDM"
+    },
+    "confirmation_snapshot_sha256": "028e5ede8e294e544a52da3ad6b447eef26e4db6c706c89112d5e61c90259816",
+    "formation_bars": [
+      {
+        "as_of": "2025-02-01T07:50:00Z",
+        "available_at": "2025-02-01T07:50:00Z",
+        "base_volume": "100",
+        "close": "99.9",
+        "close_time": "2025-02-01T07:49:59.999000Z",
+        "config_hash": "c03.golden.v1",
+        "data_source": "C03_SYNTHETIC_FIXTURE",
+        "event_time": "2025-02-01T07:49:59.999000Z",
+        "fidelity": "SYNTHETIC_FIXTURE",
+        "high": "100.1",
+        "ingested_at": "2025-02-01T07:50:00Z",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+        "interval": "5m",
+        "is_closed": true,
+        "low": "99.6",
+        "observation_id": "bar:5m:2025-02-01T07:45:00+00:00",
+        "open": "100",
+        "open_time": "2025-02-01T07:45:00Z",
+        "quality": "VALID",
+        "quote_volume": "9990.0",
+        "readiness": "READY",
+        "source_record_id": "fixture:5m:2025-02-01T07:45:00+00:00",
+        "source_version": "c03.golden.v1",
+        "symbol": "ALTUSDT",
+        "trade_count": 10,
+        "units": "USDT_PER_BASE",
+        "venue": "BINANCE_USDM"
+      },
+      {
+        "as_of": "2025-02-01T07:55:00Z",
+        "available_at": "2025-02-01T07:55:00Z",
+        "base_volume": "100",
+        "close": "100",
+        "close_time": "2025-02-01T07:54:59.999000Z",
+        "config_hash": "c03.golden.v1",
+        "data_source": "C03_SYNTHETIC_FIXTURE",
+        "event_time": "2025-02-01T07:54:59.999000Z",
+        "fidelity": "SYNTHETIC_FIXTURE",
+        "high": "100.2",
+        "ingested_at": "2025-02-01T07:55:00Z",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+        "interval": "5m",
+        "is_closed": true,
+        "low": "99.8",
+        "observation_id": "bar:5m:2025-02-01T07:50:00+00:00",
+        "open": "100",
+        "open_time": "2025-02-01T07:50:00Z",
+        "quality": "VALID",
+        "quote_volume": "10000",
+        "readiness": "READY",
+        "source_record_id": "fixture:5m:2025-02-01T07:50:00+00:00",
+        "source_version": "c03.golden.v1",
+        "symbol": "ALTUSDT",
+        "trade_count": 10,
+        "units": "USDT_PER_BASE",
+        "venue": "BINANCE_USDM"
+      },
+      {
+        "as_of": "2025-02-01T08:00:00Z",
+        "available_at": "2025-02-01T08:00:00Z",
+        "base_volume": "100",
+        "close": "99.9",
+        "close_time": "2025-02-01T07:59:59.999000Z",
+        "config_hash": "c03.golden.v1",
+        "data_source": "C03_SYNTHETIC_FIXTURE",
+        "event_time": "2025-02-01T07:59:59.999000Z",
+        "fidelity": "SYNTHETIC_FIXTURE",
+        "high": "100.1",
+        "ingested_at": "2025-02-01T08:00:00Z",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+        "interval": "5m",
+        "is_closed": true,
+        "low": "99.8",
+        "observation_id": "bar:5m:2025-02-01T07:55:00+00:00",
+        "open": "100",
+        "open_time": "2025-02-01T07:55:00Z",
+        "quality": "VALID",
+        "quote_volume": "9990.0",
+        "readiness": "READY",
+        "source_record_id": "fixture:5m:2025-02-01T07:55:00+00:00",
+        "source_version": "c03.golden.v1",
+        "symbol": "ALTUSDT",
+        "trade_count": 10,
+        "units": "USDT_PER_BASE",
+        "venue": "BINANCE_USDM"
+      }
+    ],
+    "formation_snapshot_sha256": "70a5623407258d095d65799c745391906c812e447dcd79d42e4d2c342bb46bbb",
+    "generator": "astrabot.research.demo:c03.golden.v1",
+    "negative_cost_assumption": {
+      "entry_fee_rate": "0.05",
+      "evidence_ids": [
+        "SYNTHETIC_ASSUMPTION_NOT_VALIDATED"
+      ],
+      "funding_per_unit": "0.001",
+      "ordinary_exit_fee_rate": "0.0001",
+      "ordinary_exit_slippage_per_unit": "0.001",
+      "ordinary_exit_spread_per_unit": "0.001",
+      "status": "RESEARCH_ONLY",
+      "stop_exit_fee_rate": "0.0001",
+      "stop_slippage_per_unit": "0.002",
+      "stop_spread_per_unit": "0.002",
+      "version": "c03.synthetic-cost.v1"
+    },
+    "positive_cost_assumption": {
+      "entry_fee_rate": "0.0001",
+      "evidence_ids": [
+        "SYNTHETIC_ASSUMPTION_NOT_VALIDATED"
+      ],
+      "funding_per_unit": "0.001",
+      "ordinary_exit_fee_rate": "0.0001",
+      "ordinary_exit_slippage_per_unit": "0.001",
+      "ordinary_exit_spread_per_unit": "0.001",
+      "status": "RESEARCH_ONLY",
+      "stop_exit_fee_rate": "0.0001",
+      "stop_slippage_per_unit": "0.002",
+      "stop_spread_per_unit": "0.002",
+      "version": "c03.synthetic-cost.v1"
+    }
+  },
+  "negative": {
+    "adverse_bound": "BUY_MAX",
+    "as_of": "2025-02-01T08:05:05Z",
+    "context_id": "05cfce1a8e1745486c138f3198dc92b207cdd943fb19954b5353ead03eab4a19",
+    "cost_profile_hash": "0980610156e28655ea60450164565f179180c3a282d23070b3c1471231245623",
+    "decision": "NO_TRADE",
+    "decision_id": "350576659c30e61cdba2eae5b485f2ee33c7d8450f40909661631ec51cc7aa6c",
+    "dependencies": [
+      {
+        "name": "RESEARCH_ACCOUNT",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": [
+          "SYNTHETIC_ACCOUNT_ONLY"
+        ]
+      },
+      {
+        "name": "C02_UNIVERSE",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": []
+      },
+      {
+        "name": "CONTEXT",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": [
+          "05cfce1a8e1745486c138f3198dc92b207cdd943fb19954b5353ead03eab4a19"
+        ]
+      },
+      {
+        "name": "OI_VALIDATED_NOTIONAL",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": [
+          "OpenInterestObservation:2025-02-01T08:05:05+00:00"
+        ]
+      },
+      {
+        "name": "VERIFIED_EVENT_CLEARANCE",
+        "readiness": "READY",
+        "role": "VETO",
+        "source_ids": [
+          "SYNTHETIC_EVENT_CLEARANCE"
+        ]
+      },
+      {
+        "name": "A01",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A03",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A04",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A05",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A06",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A08",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      }
+    ],
+    "earliest_hypothetical_entry_at": "2025-02-01T08:05:05.000001Z",
+    "economics": {
+      "account_risk_ceiling_usdt": "25.0000",
+      "actual_filled_initial_modeled_risk_usdt": null,
+      "approved_max_risk_usdt": null,
+      "cost_r": "5.855762790697674418604651163",
+      "execution_economics": null,
+      "full_policy_expectancy": null,
+      "gross_price_r": "5.688372093023255813953488372",
+      "loss_cost_per_unit": "5.035956",
+      "midpoint_screen_net_rr": null,
+      "proposed_modeled_loss_usdt": "24.998853440",
+      "proposed_quantity": "4.240",
+      "realized_net_r": null,
+      "scenario_net_rr": "-0.02417440021601246685015966876",
+      "status": "RESEARCH_ONLY",
+      "target_quantities": [
+        "1.6960",
+        "2.5440"
+      ],
+      "win_cost_per_unit": "5.0345312"
+    },
+    "entry_max": "100.42",
+    "entry_method": "MARKETABLE_IOC_LIMIT_RESEARCH",
+    "entry_min": "100.38",
+    "executable": false,
+    "expires_at": "2025-02-01T08:05:05Z",
+    "feature_refs": [
+      "965016b461e9a87ac7161a831022733cab839ae89a04981499c559bf6bfa5e8a",
+      "992cbe1e7615f5afa7e1a8e4fe37c305c7f62bc591ce328037100f3ee833f824",
+      "0427489d5929625d45ce5a7a7a4d0d1d582aaa1b54eb7e3cd5cd223ee687e60f",
+      "88aa22d21ad74f041dacd578047dd26954380eff6fc6835d902bd153131e8185",
+      "b1509e940d09425e4c8c3b1f886a6530eff198d9bc5205f7dd1041779cb24921",
+      "f52346d1799f27851999ef5bb6a881d6346870d4804e59a009798c1611620a9d",
+      "83baa7166241ddd10a78a3a95c773654aa14fc1df5bd431d9eb4c61393d3cb94",
+      "35b4500399e057ed11bebc5c1232029f9b7c627c25db594eb1eb738ecaa830ca",
+      "fd4a6cdb0bb60af5338691453b9ddf037730f9b29793f54b1a50363afd38b27d"
+    ],
+    "flatten_objective": "PT11H55M",
+    "geometry": {
+      "kind": "FIXED",
+      "original_stop": "99.56",
+      "targets": [
+        {
+          "fraction": "0.4",
+          "price": "101.28"
+        },
+        {
+          "fraction": "0.6",
+          "price": "108"
+        }
+      ]
+    },
+    "holding_limit": "PT12H",
+    "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+    "management_policy_hash": "28a92fa926d4cc506a19ee60bff98fd87c27f08f8632c517ff47b9bb80f7089c",
+    "original_anchor_ids": [
+      "38de9c10b73c41d3974ef241c95d8e1dd9857a3a2104e285d84a1584a2f93919"
+    ],
+    "original_stop": "99.56",
+    "readiness": "READY",
+    "rejected_level_ids": [],
+    "rejection_reason_codes": [
+      "SCENARIO_NET_RR_BELOW_MINIMUM"
+    ],
+    "research_status": "RESEARCH_ONLY",
+    "scenario_net_rr": "-0.02417440021601246685015966876",
+    "schema_version": "research_decision.c03.v1",
+    "setup_id": "4fc2167145a45a5cb4de83e176a7ee979792b705e93e7c484a4a06647370dae0",
+    "side": "LONG",
+    "source_snapshot_id": "5f7f7bfb13205f6b28d7de57e994daad74289ae346cd50543fbddd7db04c277f",
+    "strategy_id": "T1",
+    "strategy_version": "T1.reclaim.v1",
+    "symbol": "ALTUSDT",
+    "target_level_ids": [
+      "668999e07ee8e460567b9561417b887dea484301a7447e628b3236d86f349917"
+    ],
+    "targets": [
+      {
+        "fraction": "0.4",
+        "price": "101.28"
+      },
+      {
+        "fraction": "0.6",
+        "price": "108"
+      }
+    ],
+    "trigger_event_id": "fixture:5m:2025-02-01T08:00:00+00:00",
+    "trigger_submit_deadline": "2025-02-01T08:05:09.999000Z"
+  },
+  "opposing_levels_at_formation": [
+    {
+      "available_at": "2025-01-30T20:00:00Z",
+      "event_time": "2025-01-30T16:59:59.999000Z",
+      "fidelity": "SYNTHETIC_FIXTURE",
+      "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+      "invalidated": false,
+      "invalidation_policy": "V15_CORRECT_SIDE_AT_SELECTION_NO_AUTOMATIC_BREAK_REMOVAL",
+      "kind": "SWING_HIGH",
+      "level_id": "668999e07ee8e460567b9561417b887dea484301a7447e628b3236d86f349917",
+      "price": "108",
+      "relevance": "RESISTANCE",
+      "source_ids": [
+        "fixture:1h:2025-01-30T13:00:00+00:00",
+        "fixture:1h:2025-01-30T14:00:00+00:00",
+        "fixture:1h:2025-01-30T15:00:00+00:00",
+        "fixture:1h:2025-01-30T16:00:00+00:00",
+        "fixture:1h:2025-01-30T17:00:00+00:00",
+        "fixture:1h:2025-01-30T18:00:00+00:00",
+        "fixture:1h:2025-01-30T19:00:00+00:00"
+      ],
+      "symbol": "ALTUSDT",
+      "timeframe": "1h",
+      "version": "c03.levels.v1"
+    }
+  ],
+  "positive": {
+    "adverse_bound": "BUY_MAX",
+    "as_of": "2025-02-01T08:05:05Z",
+    "context_id": "05cfce1a8e1745486c138f3198dc92b207cdd943fb19954b5353ead03eab4a19",
+    "cost_profile_hash": "08e1e31db192986bc66c58b6630972fb67ec2fff800311c6d3ef6f675303da1d",
+    "decision": "RESEARCH_CANDIDATE",
+    "decision_id": "e3d8470fd85e75816dddddeca531825dbc4301f9b92dbeaa790b8867b708940f",
+    "dependencies": [
+      {
+        "name": "RESEARCH_ACCOUNT",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": [
+          "SYNTHETIC_ACCOUNT_ONLY"
+        ]
+      },
+      {
+        "name": "C02_UNIVERSE",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": []
+      },
+      {
+        "name": "CONTEXT",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": [
+          "05cfce1a8e1745486c138f3198dc92b207cdd943fb19954b5353ead03eab4a19"
+        ]
+      },
+      {
+        "name": "OI_VALIDATED_NOTIONAL",
+        "readiness": "READY",
+        "role": "MANDATORY",
+        "source_ids": [
+          "OpenInterestObservation:2025-02-01T08:05:05+00:00"
+        ]
+      },
+      {
+        "name": "VERIFIED_EVENT_CLEARANCE",
+        "readiness": "READY",
+        "role": "VETO",
+        "source_ids": [
+          "SYNTHETIC_EVENT_CLEARANCE"
+        ]
+      },
+      {
+        "name": "A01",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A03",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A04",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A05",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A06",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      },
+      {
+        "name": "A08",
+        "readiness": "UNAVAILABLE",
+        "role": "RECORD_ONLY",
+        "source_ids": []
+      }
+    ],
+    "earliest_hypothetical_entry_at": "2025-02-01T08:05:05.000001Z",
+    "economics": {
+      "account_risk_ceiling_usdt": "25.0000",
+      "actual_filled_initial_modeled_risk_usdt": null,
+      "approved_max_risk_usdt": null,
+      "cost_r": "0.02906744186046511627906976744",
+      "execution_economics": null,
+      "full_policy_expectancy": null,
+      "gross_price_r": "5.688372093023255813953488372",
+      "loss_cost_per_unit": "0.024998",
+      "midpoint_screen_net_rr": null,
+      "proposed_modeled_loss_usdt": "8.849980",
+      "proposed_quantity": "10",
+      "realized_net_r": null,
+      "scenario_net_rr": "5.501059663411668726934976124",
+      "status": "RESEARCH_ONLY",
+      "target_quantities": [
+        "4.0",
+        "6.0"
+      ],
+      "win_cost_per_unit": "0.0235732"
+    },
+    "entry_max": "100.42",
+    "entry_method": "MARKETABLE_IOC_LIMIT_RESEARCH",
+    "entry_min": "100.38",
+    "executable": false,
+    "expires_at": "2025-02-01T08:06:35Z",
+    "feature_refs": [
+      "965016b461e9a87ac7161a831022733cab839ae89a04981499c559bf6bfa5e8a",
+      "992cbe1e7615f5afa7e1a8e4fe37c305c7f62bc591ce328037100f3ee833f824",
+      "0427489d5929625d45ce5a7a7a4d0d1d582aaa1b54eb7e3cd5cd223ee687e60f",
+      "88aa22d21ad74f041dacd578047dd26954380eff6fc6835d902bd153131e8185",
+      "b1509e940d09425e4c8c3b1f886a6530eff198d9bc5205f7dd1041779cb24921",
+      "f52346d1799f27851999ef5bb6a881d6346870d4804e59a009798c1611620a9d",
+      "83baa7166241ddd10a78a3a95c773654aa14fc1df5bd431d9eb4c61393d3cb94",
+      "35b4500399e057ed11bebc5c1232029f9b7c627c25db594eb1eb738ecaa830ca",
+      "fd4a6cdb0bb60af5338691453b9ddf037730f9b29793f54b1a50363afd38b27d"
+    ],
+    "flatten_objective": "PT11H55M",
+    "geometry": {
+      "kind": "FIXED",
+      "original_stop": "99.56",
+      "targets": [
+        {
+          "fraction": "0.4",
+          "price": "101.28"
+        },
+        {
+          "fraction": "0.6",
+          "price": "108"
+        }
+      ]
+    },
+    "holding_limit": "PT12H",
+    "instrument_id": "BINANCE_USDM:PERPETUAL:ALTUSDT:SETTLE:USDT",
+    "management_policy_hash": "28a92fa926d4cc506a19ee60bff98fd87c27f08f8632c517ff47b9bb80f7089c",
+    "original_anchor_ids": [
+      "38de9c10b73c41d3974ef241c95d8e1dd9857a3a2104e285d84a1584a2f93919"
+    ],
+    "original_stop": "99.56",
+    "readiness": "READY",
+    "rejected_level_ids": [],
+    "rejection_reason_codes": [],
+    "research_status": "RESEARCH_ONLY",
+    "scenario_net_rr": "5.501059663411668726934976124",
+    "schema_version": "research_decision.c03.v1",
+    "setup_id": "4fc2167145a45a5cb4de83e176a7ee979792b705e93e7c484a4a06647370dae0",
+    "side": "LONG",
+    "source_snapshot_id": "5f7f7bfb13205f6b28d7de57e994daad74289ae346cd50543fbddd7db04c277f",
+    "strategy_id": "T1",
+    "strategy_version": "T1.reclaim.v1",
+    "symbol": "ALTUSDT",
+    "target_level_ids": [
+      "668999e07ee8e460567b9561417b887dea484301a7447e628b3236d86f349917"
+    ],
+    "targets": [
+      {
+        "fraction": "0.4",
+        "price": "101.28"
+      },
+      {
+        "fraction": "0.6",
+        "price": "108"
+      }
+    ],
+    "trigger_event_id": "fixture:5m:2025-02-01T08:00:00+00:00",
+    "trigger_submit_deadline": "2025-02-01T08:05:09.999000Z"
+  }
+}

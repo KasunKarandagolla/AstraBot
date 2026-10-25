@@ -109,3 +109,18 @@ indicator implementation. The original v1.5 reference remains unchanged.
 The Binance [aggregate trades response](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List) defines `m` as whether the buyer was maker; C02 maps `true` to SELL aggression and tests that mapping with retained archive records. The C02 feature smoke suite uses local wrappers because the reviewed prebuilt
 options either do not provide required input continuity or fail causal
 qualification. No runtime dependency was added for C02.
+
+## 9. C03 causal policy components — ready for independent review
+
+Exact pins, inspected source/tests, practitioner cases and external verification
+are in [the evidence report](../research/c03/EXPERT_EVIDENCE.md) and
+[source lock](../research/c03/sources.lock.json). Source inspection is distinct
+from executed tests and from empirical market qualification.
+
+| Component | Decision and evidence | Integration / maintenance boundary |
+|---|---|---|
+| TA-Lib Python 0.6.8 (`cbd8921c340c8ad330257ad807c2809cb557f6c5`), C 0.6.4 (`43f9d5042ecc4bd367941846494ad907bf20ea50`), NumPy 2.2.6 | **WRAP / FIXTURE_TESTED** ATR14, ADX14 and SMA-seeded EMA50. Local numerical, warm-up and prefix tests exercise the installed wheel; unexpected library/global configuration fails closed. Upstream full suite NOT RUN. | Two runtime dependencies, exact test pins. Float64 calculations are converted to finite Decimal observations; money/geometry stay Decimal. Requalify on upgrades. ATR percentile needs 735 raw 1H bars for 720 preceding finite ATR observations. |
+| LEAN `f3d841e60dfd010ee5fc293ea893e56952484108` | Streaming strict-pivot, VWAP and Donchian source/tests inspected. **BUILD MINIMUM** explicit v1.5 strict 3-left/3-right swing; adopting the C# trading engine for this seven-bar rule is disproportionate. Pivot time is separate from third-right-bar availability. | Small removable `research/levels.py`, causal/equal-extrema/delayed-availability tests. No BOS/CHOCH/OB/FVG/ICT promotion. C02's rejected retrospective packages remain unavailable. LEAN runtime/NUnit NOT RUN. |
+| DriftVwapPullback `708235769c1cebc320abbdb3f064293d8b56bbec` | Ordered trend/pullback source inspected; **9 exact-source standalone selfchecks passed**. Not adopted: different market/session, no required T1 proximity/reclaim, fixed point risk/targets; platform mirror gate unpassed. | Source evidence for state/chronology, not a profitable or qualified T1 provider. Small sweep/retest comparators and their causal/test gaps are recorded in the evidence report; no framework fork added. |
+| C01/C02 accepted contracts and observations | **REUSE** `SetupSnapshotV15.advance`, `FixedGeometry`, B1 `BoundedGeometry.resolve`, `scenario_net_rr`, C02 candles/universe and historical session VWAP. `EconomicsV15` remains an empty compatibility slot until real execution evidence exists. | No C01 safety contract/reference edits. Research decisions cannot instantiate approval or signed transport. Current OI/event and broad A03 limitations remain visible. |
+| T1/R1/B1 composition | **BUILD** only the project-specific versioned chronological reducers, frozen evidence validation and research decision mapper: examined complete strategies do not meet the prescribed chronology, levels or ladder. | Pure functions and immutable records; no OMS/database/replay framework. R1 balance constants and all strategy/cost assumptions remain unvalidated. Replacement must pass the same causal, geometry and economic cases. |

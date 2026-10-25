@@ -154,3 +154,86 @@ For every replay publish: run/config/data manifest IDs; cohort/symbol breakdown;
 - Whole universe/chosen portfolio replay uses point-in-time contract eligibility and never reads the future-qualified registry.
 
 **Research stop/go:** If tested strategy economics fail, revise a *versioned hypothesis* or stop development of that policy. Do not let an unprofitable prototype justify building a complex platform first.
+
+## 9. C03 implemented research-policy boundary
+
+`src/astrabot/research/engine.py:evaluate` consumes C02 `SymbolData`, an explicit
+synthetic/reconciled account snapshot, a versioned research cost profile and the
+previous immutable `ResearchState`. It returns saved C01 setup lifecycles and
+`RESEARCH_CANDIDATE` / `NO_TRADE` records. Persist the returned JSON between scans;
+`CONSUMED` means one research candidate was emitted, not an order or approval.
+The engine has no network, trading authorization or signed writer. A01–A10
+remain in product scope; optional unavailable evidence is recorded without
+becoming agreement. OI, verified events, C02 eligibility, context and fresh
+post-confirmation quotes remain mandatory for these research candidates.
+
+The context wrapper uses pinned TA-Lib, all-closed available prefixes and the
+v1.5 thresholds. C02's 720 raw-hour scanner minimum is insufficient for the
+ATR-percentile calculation: C03 requires **735 1H bars**. C02's 200 4H history
+gate is retained by the integrated engine, although EMA50 plus three preceding
+values needs only 53. ADX 20–25 is unclassified. A breakout event saves its
+formation bias/ATR; the current label is not a setup-survival requirement.
+
+The missing R1 balance definition is now the **unvalidated hypothesis**
+`c03.stable-balance.hypothesis.v1`: prior 20 closed hours, excluding latest;
+at least two tests of each edge separated by three bars; edge tolerance
+0.15 ATR_1H; individual test-bar width at most 75% of range width; first-five
+versus last-five mean-close drift at most 20% of width; width 2–8 ATR_1H and
+at least ten current median absolute spreads. A latest 15M close beyond its
+preceding-20 range with RVOL≥1.5 disqualifies new balance even without B1 bias
+alignment. This is price geometry plus current cost width, not historical RVOL
+applied to hourly bars. Full fee/stop/target economics are checked separately.
+The range and qualification source references freeze before the sweep event.
+
+Policy versions are `T1.reclaim.v1`, `R1.sweep.v1` and
+`B1.original-ladder.v1`. T1 freezes the last three completed 5M pullback bars,
+requires a prior own-VWAP observation in that window, and qualifies the final
+bar's directional extreme within 0.25 saved ATR_15M of its own VWAP. Later
+confirmation cannot move the stop. At unresolved midnight rollover (including
+the 23:55 bar becoming available at 00:00), confirmation is suspended through
+original expiry; the reset alone does not invalidate the structure. R1 arms
+before a later closed sweep/reclaim and requires the next distinct close;
+edge touch, non-reclaimed breach and a two-sided full-range violation fail.
+B1 selects the first acceptable retest in six subsequent closes, enforces both
+wick and close failure bounds, and permits exactly the next confirmation after
+a bar-six retest. Ordinary label changes preserve saved R1/B1 setups; mandatory
+data/safety vetoes remain immediate.
+
+New T1/R1 setups expire after a **30-minute research formation window**. B1
+ends after its six-bar search plus the selected retest's one confirmation.
+Candidate proposals expire within 90 seconds, independently of the trigger
+submission deadline of confirmation event close +10 seconds. Entry chase is
+bounded by the minimum of two ticks, 0.10 frozen ATR_5M and 0.05 original
+reference price-R. These clock/chase choices are versioned engineering
+hypotheses, not measured operator/venue latency. BUY_MAX and SELL_MIN are the
+enforceable adverse IOC limits; the other bound is a research validity guard,
+not a guarantee of favorable fill price. No confirmation-candle entry is used.
+
+Targets retain the original ladders. T1 uses the nearest formation-confirmed
+opposing strict 1H swing; R1 retains its midpoint single-target screen **and**
+50/50 midpoint/opposite-edge ladder; B1 retains 40/60 at +1/+2 price-R, gross
+1.6. Every leg checks opposing structure known by the decision time, including
+newly confirmed nearer obstacles. Saved levels, ATR and interaction candles
+are checked against their source records before geometry is admitted.
+
+Economics uses worst permitted entry, quantity-weighted exit fees, separate
+ordinary/stop spread and slippage, and a conservative funding debit. Entry
+spread/slippage is embedded once in the assumed adverse price. Tick/lot/
+minimum filters and exact fractional leg feasibility can reduce or reject
+quantity. Stop-loss stress uses the adverse bound; short notional/margin stress
+uses the upper admitted price separately. Per-trade/aggregate risk, two slots,
+2× notional and isolated margin cap the requested quantity. Approved risk,
+actual-filled risk, realized net_R and expectancy remain absent. All profiles
+and all three strategies remain **RESEARCH_ONLY**. If candidates overlap for
+one symbol, the specified alphabetical strategy fallback emits only one;
+there is no qualified expectancy registry yet.
+
+Run `python scripts/c03_research.py --check --summary` for the committed
+[synthetic golden trace](../research/c03/golden_trace.json). It produces a T1
+candidate and a cost-stress NO_TRADE with identical geometry, not historical
+profitability. [Evidence and C04 inputs](../research/c03/EXPERT_EVIDENCE.md)
+separate source claims, observed smoke data, synthetic fixtures and missing
+empirical qualification. C02's 124 smoke rows do not constitute a strategy study.
+`python scripts/c03_research.py --c02-panel --check` also verifies the retained
+actual BTC archive checksum and produces T1/R1/B1 NO_TRADE records for its
+missing mandatory coverage, with an explicitly synthetic account/cost overlay.

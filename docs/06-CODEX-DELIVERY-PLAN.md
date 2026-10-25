@@ -15,7 +15,7 @@
 
 ## Current implementation checkpoint
 
-C01 is merged on `main` (PR #1, merge commit `fa7cdedda8c9ce32ae02f42efbd2bb82590beb4f`); its contracts and execution-owner decision remain unchanged. C02 / P1 is the current implementation and review boundary. The C02 PR's independent review decides whether its phase gate passes. C03 is the **proposed** next milestone only after that review records a passing verdict; this checkpoint does not approve or start C03.
+C01 and C02 are merged on `main`; C02 PR #2 and its reviewed head were verified before C03 branch creation. The resolved C03 base is `8105e610963e6e59f5a82d9c30460df3a997d471`. C01 safety contracts and execution-owner foundation remain unchanged. C03 / P2 now supplies working pure T1/R1/B1 chronologies, frozen geometry and research economics for independent project-lead review. The journal's official phase/NEXT_GATE/progress ledger remains unchanged pending that review; this checkpoint does not award gate credit or authorize C04/live promotion.
 
 ## Explicit MVP-first strategy (C02 review remains the active gate)
 
