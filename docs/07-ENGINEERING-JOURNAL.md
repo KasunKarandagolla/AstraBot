@@ -1,10 +1,10 @@
 # 07 — AstraBot Engineering Journal, ADR Index and Delivery Ledger
 
 **Type:** append-only factual handoff ledger, not a substitute for tests or code.  
-**Last editorial checkpoint:** 2026-10-25 · independent post-merge C01–C05 feasibility progress reconciliation.
+**Last editorial checkpoint:** 2026-10-25 · emergency recovery after PR #9 merge.
 **Current phase:** `P3 — RESEARCH EVIDENCE HOLD` (C04 engineering merged; complete-policy historical economic evidence not qualified).
-**NEXT_GATE:** `Owner decision on proposed prospective read-only observation and durable runtime/storage; then bounded C05 evidence plan. Do not start C06/C07 or claim C05 economic GO.`
-**Next assigned Codex profile:** `NONE assigned`. Prospective collector is a PROPOSAL pending owner decision; if approved, scope a small Luna implementation with persistence/retention evidence.
+**NEXT_GATE:** `Owner decision: A strict P3 hold, or B one offline-only C06 paper-MVP exception. Neither qualifies P3 or authorizes C07. No Codex until chosen.`
+**Next assigned Codex profile:** `NONE assigned`. If B approved, at most one bounded Luna C06 fake-only paper integration session.
 **Live funds enabled:** **NO**. **Any strategy economically qualified:** **NO**.
 
 ## Rules for updating this file
@@ -257,3 +257,11 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 
 - **Commit:** `09a119c28da5acebebd8d81d85512581a159843d` — `Docs: add Tardis historical data preflight`.
 - **Branch / PR / base:** `codex/c05-tardis-source-microcheck`; [PR #9](https://github.com/KasunKarandagolla/AstraBot/pull/9) opened against `main` at verified base `c75c3f99c49e6f71aa5bc7ade0716e2a551a5922`. PR is open and unmerged; no auto-merge was enabled.
+
+### 2026-10-25 — LEAD-RECOVERY-002 — Emergency project recovery after external access dead ends
+
+- **Merged:** PR #8 at `c75c3f99c49e6f71aa5bc7ade0716e2a551a5922`, offline observer, 212 CI tests, Binance `fapi` HTTP 451; PR #9 at `9963a7e5295a03f42726ee82c9d9a8c55cc55b86`, documentation-only Tardis egress block (CONNECT 403), 212 CI tests. No qualified market capture or strategy PnL followed.
+- **Lead external research, not Codex observation:** Tardis public documentation describes Binance USDT futures history and no-key first-day-of-month CSV samples. This does not verify 2024 SOL/DOGE original bytes, terms, completeness or C02 eligibility. Sources: https://docs.tardis.dev/historical-data-details/binance-futures and https://docs.tardis.dev/downloadable-csv-files . No download or purchase.
+- **Process correction approved by owner:** Lead may merge independently reviewed, CI-passing, nonbreaking routine PRs without requesting permission each time; Codex never auto-merges. Material strategy, risk, trading authority, financial, security and architecture changes still require explicit owner decision.
+- **Emergency Codex cost brake:** no additional inaccessible-provider tests, loops through websites, duplicated archive retrieval, infrastructure spending or premature C07 execution work. Preserve P3=`INSUFFICIENT_EVIDENCE`, T1/R1/B1 research-only, 45% credited / 55% unqualified, original OpenBot and risk scope.
+- **Sequencing mini-ADR PROPOSED:** A = strict P3 hold with no Codex; B (lead recommendation) = one offline OpenBot/fake-owner C06 paper-MVP only, explicitly separated from incomplete economics and without C07/demo/live promotion. B **not approved** merely by merging this note. NEXT_GATE owner selects A or B; then only one bounded next task.
