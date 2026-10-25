@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 and C05 source/observer reports through PR #9 are merged on `main`.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: merged through PR #15; P0–P2 credited, P3 economic evidence on hold, and C06 OpenBot/MCP read-only interoperability now tested.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,9 +39,9 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**P3 evidence hold — emergency recovery.** Reviewed PRs #1–#9 are merged; the authentic C04 price panel and offline observer do **not** qualify economic policy results. Binance public API returned HTTP 451 in the tested environment; Tardis docs GET was blocked by Codex CONNECT 403. Neither access error proves global data absence. C05 economic status is `INSUFFICIENT_EVIDENCE`, and original approval/risk controls remain unchanged.
+**P3 evidence hold — emergency recovery.** Reviewed implementation and corrective PRs through #15 are merged; the authentic C04 price panel and offline observer do **not** qualify economic policy results. Binance public API returned HTTP 451 in the tested environment; Tardis docs GET was blocked by Codex CONNECT 403. Neither access error proves global data absence. C05 economic status is `INSUFFICIENT_EVIDENCE`, and original approval/risk controls remain unchanged.
 
-**Phase credit remains 45% / 55% unqualified.** Owner-authorized offline C06 paper slice was independently reviewed and merged in [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11): six typed tools, research-only fixture, fake approval, protection/partial, first-fill timer and journal; 217 CI tests passed. **Real OpenBot runtime/tool integration, authenticated owner approval/MFA and durable journal remain NOT VERIFIED**, so P3 and full P4 gates remain unqualified; C07/demo/live blocked. **NEXT_GATE: establish a genuine OpenBot runtime/tool conformance target before any new Codex task; no blind network probes.**
+**Phase credit remains 45% / 55% unqualified.** C06-B tested six typed tools plus synthetic fake approval/protection/exit. C06-C added real SDK-based MCP stdio protocol; a Windows 11 OpenBot agent using the Codex provider subsequently **reported actual attached `evaluate_symbol` tool invocation** returning `NO_TRADE`, `executable=false`, `readiness=UNAVAILABLE` (owner-provided runtime evidence, not independent journal/video replay). PR #15 merged the Windows test fixes: 221 GitHub CI tests passed. The real model-to-tool read-only path is evidenced; **multi-step actual OpenBot coordination, production authenticated human approval/MFA, durable journal and legitimate economic qualification are NOT verified**. P3/C05 remains `INSUFFICIENT_EVIDENCE`, all T1/R1/B1 `RESEARCH_ONLY`; C07/demo/live blocked. **NEXT_GATE:** one short real-OpenBot positive/negative multi-tool workflow check **using existing fixtures and zero Codex development**; then decide whether P4 requires a concrete targeted fix or attention must return to P3 evidence. No new Codex coding task is assigned.
 
 ## Source authority and drift prevention
 
