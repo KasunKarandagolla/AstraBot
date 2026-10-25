@@ -15,7 +15,7 @@
 
 ## Current implementation checkpoint
 
-PRs #1–#16 are reviewed and merged through `8662a6c1f05bf4f714bc6b9f3e9b8fb6451d0583`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
+PRs #1–#21 are reviewed and merged through `0b6595cc130cdc29d5001265f30e5d40eab6f0cd`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
 
 ## Emergency recovery choices — owner-selected limited offline Option B completed
 
@@ -32,6 +32,10 @@ Under B, require positive AND rejected/expired/negative fake scenarios, human ap
 
 **NEXT_GATE (updated after C06-D):** owner-reported real OpenBot/Codex agent ran both negative and positive **multi-tool synthetic research** flows, with returned IDs, non-executable hashed research plan, unchanged status after rejected unauthorized `risk_override_usdt`; **C06-D READ-ONLY CONFORMANCE PASS (reported)**. Pause agent integration work. Return to P3 data/market-economic evidence feasibility; seek an explicit owner decision on narrowly bounded source access, observation horizon, runtime/storage, retention and costs **before persistent collection**. No unqualified P4 credit, C07/demo/trading permission or new Codex session follows from C06-D.
 
+### C06-E owner-authorized offline engineering sequencing exception (2026-10-25)
+
+The current owner-provided task brief explicitly authorizes one focused offline implementation PR while P3 remains open. It may add durable SQLite plan/event state and restart recovery around existing C01/C06 fixtures. It does not authorize C05 changes, persistent market-data collection, a new production topology, Binance endpoints, C07, demo qualification or changes to strategy/risk contracts. Preserve phase accounting at 45% credited / 55% unqualified. **After the C06-E PR review, return to P3 read-only economic/data feasibility.** No additional C06 implementation task is implied.
+
 ## Explicit MVP-first strategy (P3 evidence hold; C06-B limited offline slice reviewed)
 
 An MVP is an **end-to-end working capability**, not packages installed or ten basic signals. Prioritize the smallest credible vertical slice early, then expand after its evidence gate.
@@ -40,7 +44,7 @@ An MVP is an **end-to-end working capability**, not packages installed or ten ba
 |---|---|---|---|
 | **MVP-R0: first real-data slice** | C02–C04 | Public Binance USDⓈ-M bars and source/checksum manifests across the declared cohort; C02/C03 fail-closed eligibility and price diagnostics | Reproducible source coverage and missing-data/no-trade explanation; historical dynamic eligibility remains blocked until point-in-time evidence exists |
 | **MVP-R1: research MVP** | C03–C04, C05 review | End-to-end universe → candidate/setup or NO_TRADE → structural entry/stop/target → cost_R → causal replay/report, for at least one testable policy; source-backed trader-level case review | Same policy/timestamps reproduce positive and negative case; economic review says GO/REVISE/STOP without hindsight |
-| **MVP-A: agentic paper MVP** | C06 | OpenBot coordinator → typed analysis tool → bounded human-approval request → simulated execution/position supervision → concise machine-derived journal for a representative case | End-to-end test succeeds; model cannot submit orders or invent risk; expired/rejected proposals cannot trade |
+| **MVP-A: agentic paper MVP** | C06, bounded C06-E exception | Typed six-tool research gateway plus explicit fixture-only owner decision, fake lifecycle, durable plan/event state and restart recovery; real OpenBot and real owner authentication remain separate evidence requirements | Offline end-to-end and restart fault cases pass; model cannot submit orders or invent risk; expired/rejected proposals cannot trade |
 | **Demo-safe v1** | C07–C09 | One exchange order owner and protective/partial/12h/recovery tests, then integrated demo | Safety/economic promotion gates; later than MVP |
 
 Do **not** defer showing the first working vertical slice until the entire architecture is implemented. Equally, do **not** bypass P0 contracts, research quality or human approval to create a flashy demo. Preserve all A01–A10 as the product capability roadmap; the MVP uses whichever qualified analytical families a policy depends upon, without narrowing final scope. No new Codex task merely to label work MVP—reuse C02–C06 outputs. Record MVP gates separately in the journal and report remaining work to **demo-qualified v1**, not an invented completion claim.

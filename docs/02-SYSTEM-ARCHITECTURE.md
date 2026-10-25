@@ -145,3 +145,9 @@ not eligible-universe or strategy evidence.
 ## Acceptance for architecture phase
 
 A fake data snapshot can produce deterministic feature IDs and a NO_TRADE/proposal decision, without signed Binance access. A toy OpenBot coordinator can call the typed tools and cannot access trading keys. Services restart without losing recorded setup or approval state. Version pinning/fixture tests catch changed units or timestamps in adopted packages. No order-writing endpoint is accessible from the agent network.
+
+## C06-E offline durable paper implementation boundary
+
+The offline paper harness persists immutable C06 plan payloads, lifecycle IDs, expiry, current status and append-only machine events in one local SQLite file. Status transitions and their machine events commit together; event IDs are deterministic and the journal validates a hash chain when reopened. The six MCP tool names and their default in-memory fixture behavior remain unchanged. A separate fixture-only owner-decision interface is not exposed through MCP.
+
+C01's fake owner ledger and fake venue remain authoritative in their existing separate SQLite files. There is no transaction across those databases: a restart reconciles the C06 plan mirror against fake-owner approval/nonce consumption and fake-venue order/fill truth. Missing or contradictory evidence halts new claims; an unknown order is never blindly resent. These SQLite files and recovery code are test harnesses, not the production storage topology or an authenticated Binance adapter.

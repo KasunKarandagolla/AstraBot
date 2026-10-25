@@ -98,3 +98,9 @@ Each position stores original immutable thesis: setup ID/version, context, struc
 ## 8. Definition of done for operational layer
 
 Fake exchange deterministic fault tests pass for approval exceptions, duplicate submissions, lost acknowledgements, missing stop, two target races, order replacement, restarts, 12h timer and entry/exit races. The exact selected Binance demo adapter passes the same **applicable** scenarios using redacted logs. A demo test proves wiring only, not market liquidity, historical edge or live safety in every market. Live access remains off pending documented owner promotion.
+
+## 9. C06-E offline fake runtime boundary
+
+C06-E persists the C06 proposal/status/event record in one SQLite file and reuses the C01 fake owner and fake venue in their existing, separate SQLite files. The fixture owner decision (approve, reject, expire, consume once) is a local harness interface, is clearly labeled as simulated identity, and is absent from the six-tool MCP server. C01 remains the only risk validator and fake order owner.
+
+The three files do not share a transaction. On restart, the fake venue snapshot and C01 owner ledger decide whether an approval was consumed, an order exists, a fill occurred, protection is visible, and flat reconciliation is proven. C06 status is a recoverable mirror. If an order acknowledgment or terminal instruction cannot be correlated, the harness keeps the lifecycle unresolved and does not submit a replacement blindly. This test milestone does not demonstrate authenticated owner MFA, production uptime or Binance Demo behavior.
