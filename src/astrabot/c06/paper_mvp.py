@@ -275,7 +275,13 @@ class PlanRegistry:
 
     def _restore(self) -> None:
         assert self._store
+        self._plans = {}
+        self._states = {}
         with closing(self._store.connect()) as db:
+            # Read every related row from one SQLite snapshot. A concurrent
+            # status writer must not make the plan row and append-only
+            # transition history appear to disagree transiently.
+            db.execute("BEGIN")
             rows = db.execute("SELECT plan_id, lifecycle_id, immutable_hash, payload, expires_at, status "
                               "FROM paper_plans ORDER BY plan_id").fetchall()
             for plan_id, lifecycle_id, plan_hash, payload, expires_at, status in rows:
@@ -393,6 +399,8 @@ class PlanRegistry:
         self._states[plan_id] = status
 
     def get(self, plan_id: str, as_of: datetime) -> PlanStatusOutput:
+        if self._store:
+            self._restore()
         plan = self._plans[plan_id]
         status = self._states[plan_id]
         if as_of >= plan.expires_at and status in {"PROPOSED_RESEARCH_ONLY", "FAKE_OWNER_APPROVED"}:
@@ -419,10 +427,13 @@ class EventJournal:
                    received_at: datetime | None = None,
                    correlation_id: str | None = None) -> JournalEvent:
         received_at = received_at or occurred_at
+        correlation_id = lifecycle_id if correlation_id is None else correlation_id
+        if not isinstance(correlation_id, str) or correlation_id not in (plan_id, lifecycle_id):
+            raise ValueError("event correlation must be its plan ID or lifecycle ID")
         ordered_details = tuple(sorted((str(k), str(v)) for k, v in (details or {}).items()))
         draft = JournalEvent(event_id="", occurred_at=occurred_at, received_at=received_at,
             actor=actor, event_type=event_type, plan_id=plan_id, lifecycle_id=lifecycle_id,
-            correlation_id=correlation_id or lifecycle_id, details=ordered_details)
+            correlation_id=correlation_id, details=ordered_details)
         body = draft.model_dump(mode="json")
         body.pop("event_id")
         return draft.model_copy(update={"event_id": cls._event_id(body)})
@@ -470,6 +481,9 @@ class EventJournal:
     def _restore(self) -> None:
         assert self._store
         with closing(self._store.connect()) as db:
+            # Event rows are selected from a single committed snapshot while a
+            # separate process may append to the tail of the hash chain.
+            db.execute("BEGIN")
             rows = db.execute("SELECT sequence, event_id, occurred_at, received_at, actor, event_type, "
                 "plan_id, lifecycle_id, correlation_id, details_json, previous_hash, record_hash "
                 "FROM machine_events ORDER BY sequence").fetchall()
@@ -519,7 +533,9 @@ class EventJournal:
             raise RuntimeError("journal role unavailable")
         received_at = received_at or occurred_at
         ordered_details = tuple(sorted((str(k), str(v)) for k, v in (details or {}).items()))
-        correlation_id = correlation_id or lifecycle_id
+        correlation_id = lifecycle_id if correlation_id is None else correlation_id
+        if not isinstance(correlation_id, str) or correlation_id not in (plan_id, lifecycle_id):
+            raise ValueError("event correlation must be its plan ID or lifecycle ID")
         event = self._new_event(occurred_at=occurred_at, received_at=received_at,
             actor=actor, event_type=event_type, plan_id=plan_id, lifecycle_id=lifecycle_id,
             correlation_id=correlation_id, details=dict(ordered_details))

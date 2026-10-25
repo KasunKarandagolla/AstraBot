@@ -41,6 +41,7 @@ from astrabot.c06.paper_mvp import (
     ScanOpportunitiesOutput,
 )
 from c06_paper_demo import build_fixture
+from c06_fixture_paths import prepare_synthetic_state_dir
 
 
 TOOL_MODELS: dict[str, tuple[type[BaseModel], type[BaseModel], str]] = {
@@ -67,12 +68,12 @@ TOOL_MODELS: dict[str, tuple[type[BaseModel], type[BaseModel], str]] = {
     "get_plan_status": (
         GetPlanStatusInput,
         PlanStatusOutput,
-        "Read status from this process's in-memory research proposal registry; no approval or execution occurs.",
+        "Read verified fixture proposal status; no approval or execution occurs.",
     ),
     "get_operations_summary": (
         GetOperationsSummaryInput,
         OperationsSummaryOutput,
-        "Summarize the empty or fixture-only in-memory research journal; this is not a production audit log.",
+        "Summarize verified synthetic machine events; this is not a production audit log.",
     ),
 }
 
@@ -186,8 +187,15 @@ def main(argv: list[str] | None = None) -> None:
         default="positive",
         help="Select one deterministic offline fixture; never connects to an exchange.",
     )
+    parser.add_argument("--state-dir", type=Path,
+        help="opt in to a dedicated persistent synthetic-only fixture directory")
     args = parser.parse_args(argv)
-    fixture = build_fixture(event_evidence=args.fixture != "no-trade")
+    state_path = None
+    if args.state_dir is not None:
+        state_dir = prepare_synthetic_state_dir(args.state_dir)
+        state_path = state_dir / "c06_state.sqlite"
+    fixture = build_fixture(event_evidence=args.fixture != "no-trade",
+        storage_path=state_path)
     anyio.run(_serve, fixture["gateway"])
 
 

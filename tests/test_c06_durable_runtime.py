@@ -138,12 +138,13 @@ def _reopen_to(w, stage):
 
 
 @pytest.mark.parametrize("stage", [
-    "proposal", "approval", "unknown_entry", "partial_entry", "protection",
+    "proposal", "approval", "intent", "unknown_entry", "partial_entry", "protection",
     "partial_tp", "near_deadline", "exit_unknown", "terminal_unresolved",
 ])
 def test_fresh_objects_restore_and_reconcile_persistent_lifecycle(tmp_path, stage):
     w = _world(tmp_path)
     _reopen_to(w, stage)
+    intent_before = w["owner"].ledger.read()["intents"].get("intent-" + w["plan"].plan_id)
     prior_writes = len(w["venue"].state.read()["writes"])
     if stage == "proposal":
         # A proposal alone remains unapproved; only this explicit fake-owner call may approve it.
@@ -162,6 +163,18 @@ def test_fresh_objects_restore_and_reconcile_persistent_lifecycle(tmp_path, stag
     fresh_journal = EventJournal(tmp_path / "c06_state.sqlite")
     assert fresh_plans.get(w["plan"].plan_id, w["clock"].now).status == "CLOSED_RECONCILED"
     assert fresh_journal.summary(w["life"]).event_count >= 2
+    if stage == "intent":
+        owner_state = w["owner"].ledger.read()
+        restored_intent = owner_state["intents"]["intent-" + w["plan"].plan_id]
+        matching_entry_writes = [write for write in w["venue"].state.read()["writes"]
+            if write["client_id"] == intent_before["client_order_id"]]
+        assert restored_intent["client_order_id"] == intent_before["client_order_id"]
+        assert restored_intent["approved_hash"] == intent_before["approved_hash"]
+        assert restored_intent["reservation_id"] == intent_before["reservation_id"]
+        assert owner_state["consumed"].count(w["plan"].plan_id) == 1
+        assert owner_state["nonces"].count(w["plan"].approval_nonce) == 1
+        assert len(matching_entry_writes) == 1
+        assert owner_state["reservations"][intent_before["reservation_id"]]["status"] == "RELEASED"
 
 
 def test_absent_unknown_entry_ack_stays_halted_without_duplicate_submission(tmp_path):
@@ -197,6 +210,24 @@ def test_durable_registry_journal_reopen_hashes_idempotency_and_no_overwrite(tmp
     assert journal.summary(w["life"]) == first_summary
     with pytest.raises(FileExistsError, match="--resume"):
         run_demo(data_dir=tmp_path)
+
+
+def test_event_journal_correlation_contract_is_validated_and_round_trips(tmp_path):
+    w = _world(tmp_path)
+    path = tmp_path / "c06_state.sqlite"
+    journal = EventJournal(path)
+    accepted = journal.append(occurred_at=w["clock"].now + timedelta(seconds=1),
+        actor="fake_owner", event_type="CORRELATION_CONTRACT_CHECK",
+        plan_id=w["plan"].plan_id, lifecycle_id=w["life"],
+        correlation_id=w["plan"].plan_id)
+    with pytest.raises(ValueError, match="correlation must be its plan ID or lifecycle ID"):
+        journal.append(occurred_at=w["clock"].now + timedelta(seconds=2),
+            actor="fake_owner", event_type="INVALID_CORRELATION",
+            plan_id=w["plan"].plan_id, lifecycle_id=w["life"],
+            correlation_id="unrelated-correlation")
+    restored = EventJournal(path)
+    assert restored.events[-1] == accepted
+    assert restored.events[-1].correlation_id == w["plan"].plan_id
 
 
 @pytest.mark.parametrize("terminal_status", ["OWNER_REJECTED", "EXPIRED", "CONSUMED"])

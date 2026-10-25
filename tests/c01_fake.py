@@ -157,7 +157,8 @@ class FakeOwner:
         self.ledger = State(path, {"version": 0, "equity": str(equity), "baseline": str(equity),
             "utc_day": clock.now.date().isoformat(), "daily_halt": False, "fault_halt": False,
             "reconciled": False, "approvals": {}, "setups": {}, "consumed": [], "nonces": [],
-            "used_setups": [], "intents": {}, "reservations": {}, "positions": {}, "faults": [], "latencies": {}})
+            "used_setups": [], "intents": {}, "reservations": {}, "positions": {},
+            "exit_requests": {}, "faults": [], "latencies": {}})
         self.ready = False  # process-local restart barrier, always starts closed
         self.venue.io_hook = self.ledger.assert_no_transaction
 
@@ -304,6 +305,80 @@ class FakeOwner:
                 s["reservations"][intent.reservation_id]["status"] = "UNKNOWN"
         self.ledger.change(after)
 
+    def proves_unsubmitted_intent(self, intent_id, *, snapshot=None):
+        """Prove a PERSISTED intent has not crossed the fake venue boundary.
+
+        The proof combines C01's atomic pre-submit state with the authoritative
+        fake venue write/order/fill/position store. Any missing or contradictory
+        evidence fails closed. It is deliberately narrower than general retry.
+        """
+        state = self.ledger.read()
+        raw = state.get("intents", {}).get(intent_id)
+        if raw is None:
+            return False
+        try:
+            intent = OrderIntentV15.model_validate_json(json.dumps(raw))
+            auth_raw = state["approvals"][intent.approval_id]
+            auth = TradeAuthorizationV15.model_validate_json(json.dumps(auth_raw))
+            reservation_raw = state["reservations"][intent.reservation_id]
+            reservation = AccountReservationV15.model_validate_json(
+                json.dumps(reservation_raw["contract"]))
+            position = state["positions"][intent.lifecycle_id]
+            snapshot = snapshot if snapshot is not None else self.venue.snapshot()
+        except (ConnectionError, KeyError, TypeError, ValueError):
+            return False
+
+        expected_side = "BUY" if auth.side == "LONG" else "SELL"
+        expected_price = auth.entry_max if auth.side == "LONG" else auth.entry_min
+        expected_client_id = "entry-" + auth.plan_id
+        lifecycle_intents = [
+            item for item in state["intents"].values()
+            if item["lifecycle_id"] == intent.lifecycle_id
+        ]
+        lifecycle_orders = [
+            order for order in snapshot["orders"].values()
+            if order["lifecycle_id"] == intent.lifecycle_id
+        ]
+        lifecycle_fills = [
+            fill for fill in snapshot["fills"].values()
+            if fill["lifecycle_id"] == intent.lifecycle_id
+        ]
+        exact_unsubmitted_record = (
+            intent.intent_id == intent_id == "intent-" + auth.plan_id
+            and intent.state == "PERSISTED" and intent.submitted_at is None
+            and intent.client_order_id == expected_client_id
+            and intent.client_algo_id is None
+            and intent.lifecycle_id == auth.lifecycle_id
+            and intent.approval_id == auth.plan_id
+            and intent.reservation_id == "res-" + auth.plan_id
+            and intent.approved_hash == auth.approved_immutable_hash == auth.immutable_hash()
+            and auth.plan_id in state["consumed"]
+            and state["consumed"].count(auth.plan_id) == 1
+            and state["nonces"].count(auth.one_use_nonce) == 1
+            and state["used_setups"].count(auth.setup_id) == 1
+            and reservation.reservation_id == intent.reservation_id
+            and reservation.plan_id == auth.plan_id
+            and reservation.status == "PENDING"
+            and reservation_raw["status"] == "PENDING"
+            and intent.request.symbol == auth.symbol
+            and intent.request.side == expected_side
+            and intent.request.kind == "LIMIT"
+            and intent.request.time_in_force == "IOC"
+            and intent.request.price == expected_price
+            and intent.request.quantity == D(position["authorized_quantity"])
+            and D(position["authorized_quantity"]) <= auth.quantity_max
+            and position["plan_id"] == auth.plan_id
+            and position["entry_id"] == expected_client_id
+            and position["first_fill_at"] is None
+            and D(position["quantity"]) == 0
+            and len(lifecycle_intents) == 1
+            and not lifecycle_orders and not lifecycle_fills
+            and D(snapshot["positions"].get(intent.lifecycle_id, "0")) == 0
+            and not any(write.get("client_id") == expected_client_id
+                        for write in snapshot["writes"])
+        )
+        return bool(exact_unsubmitted_record)
+
     def reconnect(self, *, disagree=False):
         self.ready = False
         self.ledger.change(lambda s: s.update(reconciled=False))
@@ -316,21 +391,38 @@ class FakeOwner:
             return False
         self._apply_snapshot(snapshot)
         # Recover real exposure/protection before the entry barrier may reopen.
-        for life, p in self.ledger.read()["positions"].items():
-            if D(p["quantity"]) > 0 and not p["stop_ids"]:
-                if p["latch"]:
-                    self.reduce(life)
-                else:
+        recovered = self.ledger.read()
+        pending_exits = recovered.get("exit_requests", {})
+        for life, p in recovered["positions"].items():
+            if D(p["quantity"]) > 0:
+                request = pending_exits.get(life)
+                if p["latch"] or (request and request.get("status") != "FLAT_RECONCILED"):
+                    self.reduce(life, reason=(p["latch"] or {}).get("reason", "RECOVER_PENDING_EXIT"))
+                elif not p["stop_ids"]:
                     self.protect(life)
         snapshot = self.venue.snapshot()
+        proven_unsubmitted = {
+            intent_id for intent_id, intent in self.ledger.read()["intents"].items()
+            if intent["state"] == "PERSISTED"
+            and self.proves_unsubmitted_intent(intent_id, snapshot=snapshot)
+        }
         def consistent(s):
-            absent_intent = any(i["state"] in {"PERSISTED", "SUBMITTED", "UNKNOWN_SUBMISSION"}
-                for i in s["intents"].values())
+            absent_intent = any(
+                intent["state"] in {"SUBMITTED", "UNKNOWN_SUBMISSION"}
+                or (intent["state"] == "PERSISTED" and intent_id not in proven_unsubmitted)
+                for intent_id, intent in s["intents"].items())
+            unresolved_management = any(
+                item.get("status") in {"PERSISTED", "SUBMITTED", "UNKNOWN_SUBMISSION"}
+                and client_id not in snapshot["orders"]
+                for client_id, item in s.get("management", {}).items())
             unowned = any(D(q) != 0 and life not in s["positions"] for life, q in snapshot["positions"].items())
             missing_protection = any(D(p["quantity"]) > 0 and not p["stop_ids"]
                 for p in s["positions"].values())
-            breach = "LATE_FILL_AFTER_FINALIZATION" in s["faults"] or "APPROVED_RISK_EXCEEDED" in s["faults"]
-            s["reconciled"] = not (absent_intent or unowned or missing_protection or breach)
+            breach = any(reason in s["faults"] for reason in (
+                "LATE_FILL_AFTER_FINALIZATION", "APPROVED_RISK_EXCEEDED",
+                "MANAGEMENT_ORDER_CORRELATION_MISMATCH"))
+            s["reconciled"] = not (absent_intent or unresolved_management
+                or unowned or missing_protection or breach)
             if unowned:
                 s["faults"].append("UNOWNED_POSITION")
                 s["fault_halt"] = True
@@ -347,6 +439,18 @@ class FakeOwner:
                     i["state"] = "RECONCILED"
                     i["exchange_order_id"] = order["id"]
                     i["reconciliation_evidence"] = ["fake-correlated-boundary"]
+            for client_id, intent in s.get("management", {}).items():
+                order = snapshot["orders"].get(client_id)
+                if not order:
+                    continue
+                if (order["lifecycle_id"] != intent["lifecycle_id"]
+                    or order["params"] != intent["params"]):
+                    s["faults"].append("MANAGEMENT_ORDER_CORRELATION_MISMATCH")
+                    s["fault_halt"], s["reconciled"] = True, False
+                    continue
+                if intent.get("status") in {"PERSISTED", "SUBMITTED", "UNKNOWN_SUBMISSION"}:
+                    intent["status"] = "RECONCILED"
+                    intent["exchange_order_id"] = order["id"]
             for life, p in s["positions"].items():
                 entries = [(fid, f) for fid, f in snapshot["fills"].items() if f["lifecycle_id"] == life and f["entry"]]
                 new_fills = [fid for fid, _ in entries if fid not in p["fills"]]
@@ -407,27 +511,98 @@ class FakeOwner:
         params = OrderParameters(symbol=auth.symbol, side="SELL" if auth.side == "LONG" else "BUY",
             kind="STOP_MARKET", stop_price=D(p["geometry"]["original_stop"]), close_position=True, working_type="MARK_PRICE")
         detected = dt(s["latencies"][life]["detected_at"])
-        # Durable protection intent precedes external call as well.
-        self._management_intent(life, cid, params)
-        try:
-            oid = self.venue.submit(cid, params, result=result, lifecycle_id=life)
-            order = self.venue.snapshot()["orders"].get(cid)
-            verified = order and order["visible"] and order["status"] == "ACKNOWLEDGED"
-        except (TimeoutError, ConnectionError):
-            oid, verified = None, False
+        order, outcome = self._submit_management_order(life, cid, params, result=result)
+        verified = bool(order and order["visible"] and order["status"] == "ACKNOWLEDGED"
+            and outcome in {"ACKNOWLEDGED", "RECONCILED"})
         elapsed = self.clock.now - detected
         if verified and elapsed <= timedelta(seconds=2):
-            self.ledger.change(lambda s: (s["positions"][life]["stop_ids"].append(cid),
-                s["latencies"][life].update(stop_ack_at=iso(self.clock.now))))
+            def confirm_stop(s):
+                s["positions"][life]["stop_ids"].append(cid)
+                s["latencies"][life].update(stop_ack_at=iso(self.clock.now))
+                s["management"][cid].update(status=outcome,
+                    exchange_order_id=order["id"])
+            self.ledger.change(confirm_stop)
         else:
             self.fault(life, "PROTECTION_DEADLINE" if elapsed > timedelta(seconds=2) else "MISSING_PROTECTION")
 
     def _management_intent(self, life, cid, params):
         def action(s):
-            s.setdefault("management", {})[cid] = {"lifecycle_id": life,
-                "params": params.model_dump(mode="json"), "status": "PERSISTED"}
+            management = s.setdefault("management", {})
+            existing = management.get(cid)
+            expected_params = params.model_dump(mode="json")
+            if existing:
+                return (existing["lifecycle_id"] == life
+                    and existing["params"] == expected_params)
+            management[cid] = {"lifecycle_id": life,
+                "params": expected_params, "status": "PERSISTED"}
             s["positions"][life]["version"] += 1
-        self.ledger.change(action)
+            return True
+        return self.ledger.change(action)
+
+    def _submit_management_order(self, life, cid, params, *, result="ACKNOWLEDGED"):
+        """Persist, atomically claim and reconcile one existing client ID."""
+        if not self._management_intent(life, cid, params):
+            return None, "INCONSISTENT"
+        try:
+            snapshot = self.venue.snapshot()
+        except ConnectionError:
+            self.ledger.change(lambda state: state.update(reconciled=False))
+            return None, "UNAVAILABLE"
+
+        def correlated(order):
+            return bool(order and order["lifecycle_id"] == life
+                and order["params"] == params.model_dump(mode="json"))
+
+        existing = snapshot["orders"].get(cid)
+        if existing:
+            if not correlated(existing):
+                self.ledger.change(lambda state: (state.update(reconciled=False, fault_halt=True),
+                    state["faults"].append("MANAGEMENT_ORDER_CORRELATION_MISMATCH")))
+                return None, "INCONSISTENT"
+            outcome = "REJECTED" if existing["status"] == "REJECTED" else "RECONCILED"
+            self.ledger.change(lambda state: state["management"][cid].update(
+                status=outcome, exchange_order_id=existing["id"]))
+            return existing, outcome
+
+        if any(write.get("client_id") == cid for write in snapshot["writes"]):
+            self.ledger.change(lambda state: (state.update(reconciled=False),
+                state["management"][cid].update(status="UNKNOWN_SUBMISSION")))
+            return None, "UNKNOWN_SUBMISSION"
+
+        def claim(state):
+            intent = state["management"][cid]
+            if intent["status"] != "PERSISTED":
+                return False
+            intent["status"] = "SUBMITTED"
+            return True
+        if not self.ledger.change(claim):
+            return None, "UNRESOLVED"
+        try:
+            oid = self.venue.submit(cid, params, result=result, lifecycle_id=life)
+        except (TimeoutError, ConnectionError):
+            self.ledger.change(lambda state: (state.update(reconciled=False),
+                state["management"][cid].update(status="UNKNOWN_SUBMISSION")))
+            return None, "UNKNOWN_SUBMISSION"
+        try:
+            snapshot = self.venue.snapshot()
+        except ConnectionError:
+            self.ledger.change(lambda state: (state.update(reconciled=False),
+                state["management"][cid].update(status="UNKNOWN_SUBMISSION")))
+            return None, "UNKNOWN_SUBMISSION"
+        order = snapshot["orders"].get(cid)
+        if not correlated(order):
+            self.ledger.change(lambda state: (state.update(reconciled=False, fault_halt=True),
+                state["management"][cid].update(status="UNKNOWN_SUBMISSION"),
+                state["faults"].append("MANAGEMENT_ORDER_CORRELATION_MISMATCH")))
+            return None, "INCONSISTENT"
+        outcome = "REJECTED" if order["status"] == "REJECTED" else "ACKNOWLEDGED"
+        if order["status"] != "REJECTED" and not order["visible"]:
+            outcome = "UNKNOWN_SUBMISSION"
+        self.ledger.change(lambda state: state["management"][cid].update(
+            status=outcome, exchange_order_id=oid))
+        if outcome == "UNKNOWN_SUBMISSION":
+            self.ledger.change(lambda state: state.update(reconciled=False))
+        return order, outcome
 
     def fault(self, life, reason):
         self.ledger.change(lambda s: (s["faults"].append(reason), s.update(fault_halt=True)))
@@ -445,34 +620,147 @@ class FakeOwner:
             self.venue.cancel(entry, unknown=cancel_unknown)
         except (TimeoutError, ConnectionError):
             pass
-        self.reduce(life)  # cancellation uncertainty never stalls urgent reduction
+        self.reduce(life, reason=reason)  # cancellation uncertainty never stalls urgent reduction
 
-    def reduce(self, life):
+    def reduce(self, life, *, reason="REDUCE_ONLY"):
+        # Record the requested reduction before reading or writing the fake
+        # venue. A disconnect therefore cannot erase the supervisor's intent.
+        def persist_request(s):
+            requests = s.setdefault("exit_requests", {})
+            existing = requests.get(life)
+            if existing:
+                return existing
+            position = s["positions"][life]
+            prior_market = [
+                cid for cid, item in s.get("management", {}).items()
+                if item["lifecycle_id"] == life and item["params"]["kind"] == "MARKET"
+            ]
+            client_id = prior_market[-1] if prior_market else f"exit-{life}-{position['version']}"
+            request = {"lifecycle_id": life, "client_order_id": client_id,
+                "reason": reason, "requested_at": iso(self.clock.now),
+                "status": "PENDING_RECONCILIATION", "attempt": 0, "prior_requests": []}
+            requests[life] = request
+            return request
+
+        request = self.ledger.change(persist_request)
+        cid = request["client_order_id"]
         try:
             snap = self.venue.snapshot()
         except ConnectionError:
             self.ledger.change(lambda s: s.update(reconciled=False))
-            return None
+            return cid
         q_signed = D(snap["positions"].get(life, "0"))
         if not q_signed:
+            self.ledger.change(lambda s: s.setdefault("exit_requests", {}).get(life, {}).update(
+                status="FLAT_RECONCILED", resolved_at=iso(self.clock.now),
+                reconciliation_evidence="fake-authoritative-flat-position"))
             return None
         s = self.ledger.read()
         p = s["positions"][life]
         auth = s["approvals"][p["plan_id"]]
-        # Unknown exit intent: reconcile it, never speculative duplicate.
-        for cid, request in s.get("management", {}).items():
-            if request["lifecycle_id"] == life and request["params"]["kind"] == "MARKET":
-                existing = snap["orders"].get(cid)
-                if existing is None or existing["status"] not in TERMINAL:
-                    return cid
-        cid = "exit-" + life + "-" + str(p["version"])
+        existing = snap["orders"].get(cid)
+        if (q_signed and existing and existing["lifecycle_id"] == life
+            and existing["params"]["kind"] == "MARKET"
+            and existing["params"]["reduce_only"]
+            and existing["status"] in {"FILLED", "CANCELLED", "EXPIRED"}
+            and request.get("status") != "FLAT_RECONCILED"):
+            # A correlated terminal reduce-only order plus authoritative
+            # non-flat venue truth permits a new reduction identity. This is
+            # specifically how C01 handles a late entry fill after a prior
+            # reduce filled; unknown/absent acknowledgements never take this
+            # branch because they are not terminal correlated orders.
+            def advance_exit_request(state):
+                current = state.setdefault("exit_requests", {}).get(life)
+                if (not current or current.get("client_order_id") != cid
+                    or current.get("status") == "FLAT_RECONCILED"):
+                    return None
+                prior = {key: current.get(key) for key in (
+                    "client_order_id", "status", "exchange_order_id", "requested_at", "reason")}
+                history = list(current.get("prior_requests", []))
+                history.append(prior)
+                attempt = int(current.get("attempt", 0)) + 1
+                new_id = f"exit-{life}-{state['positions'][life]['version']}-{attempt}"
+                current.update(client_order_id=new_id, reason=reason,
+                    requested_at=iso(self.clock.now), status="PENDING_RECONCILIATION",
+                    exchange_order_id=None, attempt=attempt, prior_requests=history)
+                return current
+            request = self.ledger.change(advance_exit_request)
+            if request is None:
+                self.ledger.change(lambda state: state.update(reconciled=False))
+                return cid
+            cid = request["client_order_id"]
+            existing = None
+        if existing:
+            valid = (existing["lifecycle_id"] == life
+                and existing["params"]["kind"] == "MARKET"
+                and existing["params"]["reduce_only"]
+                and existing["params"]["side"] == ("SELL" if q_signed > 0 else "BUY"))
+            if not valid:
+                self.ledger.change(lambda state: state.update(reconciled=False))
+                return cid
+            status = "ORDER_OBSERVED" if existing["status"] not in TERMINAL else "ORDER_TERMINAL"
+            def reconcile_existing(state):
+                state.setdefault("exit_requests", {}).get(life, {}).update(
+                    status=status, exchange_order_id=existing["id"])
+                management = state.get("management", {}).get(cid)
+                if management and management.get("status") in {
+                    "PERSISTED", "SUBMITTED", "UNKNOWN_SUBMISSION"}:
+                    management.update(status="RECONCILED", exchange_order_id=existing["id"])
+            self.ledger.change(reconcile_existing)
+            return cid
+
+        # A write record without its correlated order is ambiguous. Do not
+        # create another client ID or repeat the external action.
+        if any(write.get("client_id") == cid for write in snap["writes"]):
+            self.ledger.change(lambda state: state.update(reconciled=False))
+            return cid
+
         params = OrderParameters(symbol=auth["symbol"], side="SELL" if q_signed > 0 else "BUY",
             kind="MARKET", quantity=abs(q_signed), reduce_only=True)
-        self._management_intent(life, cid, params)
+        def persist_order_intent(state):
+            management = state.setdefault("management", {})
+            existing_intent = management.get(cid)
+            if existing_intent:
+                if (existing_intent["lifecycle_id"] != life
+                    or existing_intent["params"] != params.model_dump(mode="json")
+                    or existing_intent["status"] != "PERSISTED"):
+                    return False
+            else:
+                management[cid] = {"lifecycle_id": life,
+                    "params": params.model_dump(mode="json"), "status": "PERSISTED"}
+                state["positions"][life]["version"] += 1
+            state.setdefault("exit_requests", {})[life].update(status="ORDER_INTENT_PERSISTED")
+            return True
+        if not self.ledger.change(persist_order_intent):
+            return cid
+        def claim_submission(state):
+            intent = state.get("management", {}).get(cid)
+            exit_request = state.setdefault("exit_requests", {}).get(life)
+            if (not intent or intent["status"] != "PERSISTED" or not exit_request
+                or exit_request["client_order_id"] != cid
+                or exit_request["status"] != "ORDER_INTENT_PERSISTED"):
+                return False
+            intent["status"] = "SUBMITTED"
+            exit_request["status"] = "SUBMITTED"
+            return True
+        if not self.ledger.change(claim_submission):
+            return cid
         try:
-            self.venue.submit(cid, params, lifecycle_id=life)
+            oid = self.venue.submit(cid, params, lifecycle_id=life)
         except (TimeoutError, ConnectionError):
-            pass
+            def unknown(state):
+                if state["management"].get(cid, {}).get("status") == "SUBMITTED":
+                    state["management"][cid]["status"] = "UNKNOWN_SUBMISSION"
+                    state.setdefault("exit_requests", {})[life].update(status="UNKNOWN_SUBMISSION")
+                state["reconciled"] = False
+            self.ledger.change(unknown)
+            return cid
+        def acknowledged(state):
+            if state["management"].get(cid, {}).get("status") == "SUBMITTED":
+                state["management"][cid]["status"] = "ACKNOWLEDGED"
+                state.setdefault("exit_requests", {})[life].update(
+                    status="ACKNOWLEDGED", exchange_order_id=oid)
+        self.ledger.change(acknowledged)
         return cid
 
     def add_targets(self, life):
@@ -487,8 +775,9 @@ class FakeOwner:
             cid = f"tp-{life}-{index}"
             params = OrderParameters(symbol=auth["symbol"], side="SELL" if auth["side"] == "LONG" else "BUY",
                 kind="LIMIT", quantity=q * D(target["fraction"]), price=D(target["price"]), time_in_force="GTC", reduce_only=True)
-            self._management_intent(life, cid, params)
-            self.venue.submit(cid, params, lifecycle_id=life)
+            order, outcome = self._submit_management_order(life, cid, params)
+            if not order or outcome not in {"ACKNOWLEDGED", "RECONCILED"}:
+                raise RuntimeError("target order submission is unresolved")
             ids.append(cid)
         self.ledger.change(lambda s: s["positions"][life].update(tp_ids=ids))
         return ids
@@ -506,13 +795,9 @@ class FakeOwner:
             return False
         cid = "replacement-" + life + "-" + str(p["version"])
         params = OrderParameters.model_validate_json(json.dumps({**old_order["params"], "stop_price": str(price)}))
-        self._management_intent(life, cid, params)
-        try:
-            self.venue.submit(cid, params, result=result, lifecycle_id=life)
-            replacement = self.venue.snapshot()["orders"][cid]
-            if replacement["status"] != "ACKNOWLEDGED" or not replacement["visible"]:
-                return False
-        except (TimeoutError, ConnectionError):
+        replacement, outcome = self._submit_management_order(life, cid, params, result=result)
+        if (not replacement or outcome not in {"ACKNOWLEDGED", "RECONCILED"}
+            or replacement["status"] != "ACKNOWLEDGED" or not replacement["visible"]):
             return False
         self.ledger.change(lambda s: s["positions"][life]["stop_ids"].append(cid))
         self.venue.cancel(old)
@@ -566,9 +851,19 @@ class FakeOwner:
                 pending.append(i)
         management_missing = [cid for cid, i in s.get("management", {}).items()
             if i["lifecycle_id"] == life and cid not in snapshot["orders"]]
+        exit_request = s.get("exit_requests", {}).get(life)
+        if (exit_request and D(snapshot["positions"].get(life, "0")) == 0
+            and not management_missing and all(o["status"] in TERMINAL for o in orders)):
+            self.ledger.change(lambda state: state.setdefault("exit_requests", {}).get(life, {}).update(
+                status="FLAT_RECONCILED", resolved_at=iso(self.clock.now),
+                reconciliation_evidence="fake-correlated-flat-and-orders-terminal"))
+            s = self.ledger.read()
+            exit_request = s.get("exit_requests", {}).get(life)
+        exit_request_unresolved = bool(exit_request and exit_request.get("status") != "FLAT_RECONCILED")
         complete = (correlated and s["positions"][life]["state"] != "RECONCILING"
             and D(snapshot["positions"].get(life, "0")) == 0 and not pending
-            and not management_missing and orders and all(o["status"] in TERMINAL for o in orders))
+            and not management_missing and not exit_request_unresolved
+            and orders and all(o["status"] in TERMINAL for o in orders))
         if complete:
             def action(s):
                 p = s["positions"][life]

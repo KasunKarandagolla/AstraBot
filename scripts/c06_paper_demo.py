@@ -617,7 +617,6 @@ def _continue_after_restart(*, fixture, plan, auth, owner, venue, clock, journal
     owner_state = owner.ledger.read()
     intent_id = "intent-" + plan.plan_id
     intent_payload = owner_state["intents"].get(intent_id)
-    newly_claimed = intent_payload is None
     if intent_payload is None:
         decision = FixtureOwnerDecision(plan=plan, candidate=fixture["candidate"],
             setup=fixture["setup"], owner=owner, clock=clock, plans=plans,
@@ -628,7 +627,9 @@ def _continue_after_restart(*, fixture, plan, auth, owner, venue, clock, journal
         owner_state = owner.ledger.read()
         intent_payload = owner_state["intents"][intent_id]
 
-    if intent_payload["state"] == "PERSISTED" and newly_claimed:
+    if intent_payload["state"] == "PERSISTED":
+        if not owner.proves_unsubmitted_intent(intent_id):
+            raise RuntimeError("persisted entry intent lacks proof of no fake-venue submission")
         owner.submit(intent_id, quote=plan.entry_max)
         intent_payload = owner.ledger.read()["intents"][intent_id]
     if intent_payload["state"] in {"PERSISTED", "SUBMITTED", "UNKNOWN_SUBMISSION"}:
