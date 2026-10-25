@@ -41,7 +41,7 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 **P3 evidence hold — emergency recovery.** Reviewed PRs #1–#9 are merged; the authentic C04 price panel and offline observer do **not** qualify economic policy results. Binance public API returned HTTP 451 in the tested environment; Tardis docs GET was blocked by Codex CONNECT 403. Neither access error proves global data absence. C05 economic status is `INSUFFICIENT_EVIDENCE`, and original approval/risk controls remain unchanged.
 
-**Phase credit remains 45% / 55% unqualified.** Stop further Codex tasks that merely check inaccessible providers or repeat candles. No new collector, hosting, subscription or demo/exchange writer. [Delivery plan emergency recovery decision](docs/06-CODEX-DELIVERY-PLAN.md) compares **A: strict P3 hold** with **B: one isolated offline C06 OpenBot/fake-owner paper MVP**. B is recommended but **requires explicit owner approval** because it would be a narrow sequencing exception, not P3 economic promotion. **NEXT_GATE: owner chooses A or B; no Codex session assigned yet.**
+**Phase credit remains 45% / 55% unqualified.** Owner approved Option B for one isolated offline C06 paper-MVP session. That fixture-driven slice is implemented and tested for independent review; it does not verify a real OpenBot runtime, qualify P3 economics, award P4 credit, or authorize C07, demo, or live execution. No new collector, hosting, subscription, or exchange writer. **NEXT_GATE: independent review of the C06-B report and PR.**
 
 ## Source authority and drift prevention
 
