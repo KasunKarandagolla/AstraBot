@@ -103,6 +103,12 @@ Commands and results in the pinned disposable Cloud environment:
 
 The test environment was an isolated venv populated from the repository's pinned `requirements-test.txt`. No OpenBot or speculative agent framework was installed.
 
+## Delivery
+
+- Implementation commit: `20373d9705922061b45d340fecfe7a6f29b6ff73`.
+- [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11) is open against `main` at the verified base SHA above; it has not been merged.
+- The GitHub compare result is one commit ahead and zero behind. The PR creation response reported `mergeable: false`; no merge was attempted.
+
 ## Limits and remaining blockers
 
 - Real OpenBot runtime/version, tool registration compatibility, model tool-call behavior, and process/OS isolation are **not verified**. Minimum remedy: make a genuine OpenBot runtime/version available, wire these six schemas through its supported adapter, and run permission and tool-call conformance checks there.

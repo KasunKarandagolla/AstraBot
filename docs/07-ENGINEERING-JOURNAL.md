@@ -273,4 +273,10 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Evidence:** offline orchestration tested; `REAL_OPENBOT_INTEGRATION_VERIFIED: NOT_VERIFIED` because no OpenBot runtime/adapter was available in the project or targeted Cloud search. Fake approval consumed one immutable hash/nonce once; simulated entry was protected, partially reduced, time-exited from first fill at 11h55m during coordinator+journal outage, and closed by fake flat reconciliation. Owner reject, expiry, replay, missing event/market evidence, and risk tampering failed closed.
 - **Tests:** `/workspace/work/c06-venv/bin/python -m pytest -q tests/test_c06_offline_openbot.py` — **5 passed**; `/workspace/work/c06-venv/bin/python -m pytest -q` — **217 passed**; `git diff --check` passed. Runtime demo command and transcript are in the report.
 - **Status / accounting:** P3 remains `INSUFFICIENT_EVIDENCE`; T1/R1/B1 remain `RESEARCH_ONLY`. Preserve 45% credited / 55% unqualified. No P3 economic credit or P4 weighted credit is awarded; independent lead review remains the next gate. The journal is per-run memory, fake auth is not MFA, and real OpenBot compatibility is unverified.
-- **Delivery:** commit and PR details are appended after publication. No merge performed.
+- **Delivery:** see C06-B delivery addendum below. No merge performed.
+
+#### C06-B delivery addendum — 2026-10-25
+
+- **Implementation commit:** `20373d9705922061b45d340fecfe7a6f29b6ff73` — `C06-B: add offline paper MVP workflow`.
+- **Branch / PR / verified base:** `codex/c06-b-offline-openbot-paper-mvp`; [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11) opened against `main` at `4a16e96f1229974af8cbc8b28e0e57acccb4ec2e`. The PR remains open and unmerged.
+- **GitHub compare:** one commit ahead, zero behind. The PR creation response reported `mergeable: false`; no merge was attempted. Independent review remains the next gate.
