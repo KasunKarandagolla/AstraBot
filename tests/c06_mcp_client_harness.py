@@ -11,6 +11,8 @@ import tempfile
 import anyio
 from mcp import Client, StdioServerParameters
 
+from c06_subprocess_env import isolated_child_environment
+
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / "scripts" / "c06_mcp_server.py"
 EXPECTED_TOOLS = (
@@ -59,11 +61,11 @@ def _server_parameters(directory: Path, fixture: str) -> StdioServerParameters:
         command=sys.executable,
         args=[str(SERVER), "--fixture", fixture],
         cwd=str(ROOT),
-        env={
-            "PYTHONPATH": str(directory),
-            "PYTHONDONTWRITEBYTECODE": "1",
-            "ASTRABOT_NETWORK_ATTEMPTS": str(attempt_path),
-        },
+        env=isolated_child_environment(
+            PYTHONPATH=str(directory),
+            PYTHONDONTWRITEBYTECODE="1",
+            ASTRABOT_NETWORK_ATTEMPTS=str(attempt_path),
+        ),
     )
 
 
