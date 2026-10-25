@@ -1,0 +1,444 @@
+{
+  "schema_version": "astrabot.c05.source-feasibility.v1",
+  "classification_scope_note": "Classifications describe what is or is not established in the retained C04 panel and the explicitly listed probes; they do not assert that every possible historical archive, third-party provider or private record source is absent. A HEAD 200 confirms candidate object availability only, not inspected feed contents.",
+  "created_date_utc": "2026-10-25",
+  "repository_base": "64994394b1c318ba996d1ba779a3f52f424ff6da",
+  "branch": "codex/c05-feed-feasibility-preflight",
+  "study_window": {
+    "frozen_evaluation_start_utc": "2024-09-01T00:00:00Z",
+    "frozen_evaluation_end_exclusive_utc": "2024-11-01T00:00:00Z",
+    "development": ["2024-09-01T00:00:00Z", "2024-10-01T00:00:00Z"],
+    "validation": ["2024-10-01T00:00:00Z", "2024-10-15T00:00:00Z"],
+    "untouched_evaluation": ["2024-10-15T00:00:00Z", "2024-11-01T00:00:00Z"],
+    "requested_probe_dates_utc": ["2024-09-02", "2024-10-16"],
+    "probe_symbols": ["SOLUSDT", "DOGEUSDT"]
+  },
+  "c04_evidence": {
+    "source_manifest": "research/c04/historical_manifest.json",
+    "summary": "research/c04/pilot_summary.json",
+    "archive_count": 112,
+    "compressed_bytes": 15417887,
+    "normalized_rows": 356454,
+    "symbols": ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT", "ADAUSDT", "DOGEUSDT"],
+    "feeds": ["klines:5m", "klines:15m", "klines:1h", "klines:4h"],
+    "archive_http_statuses": {"200": 112},
+    "continuity_findings": "No gaps, duplicate opens, or out-of-order opens in the committed manifest.",
+    "strict_policy_replay": "BLOCKED_BY_DATA; 0 shortlist windows, 0 strict candidates, 0 strict historical outcomes.",
+    "raw_data_location_claim": "C04 documents raw archives outside Git under ASTRABOT_DATA_ROOT.",
+    "raw_data_available_in_this_execution": false,
+    "raw_data_check": "ASTRABOT_DATA_ROOT was not configured; no ZIP archives exist under the checked-in research/c04 or research/c02_panel directories.",
+    "redownloaded_or_replayed": false
+  },
+  "probe_summary": {
+    "public_source_http_requests": 12,
+    "http_get_requests": 1,
+    "http_head_requests": 11,
+    "new_response_body_bytes": 5282,
+    "head_response_body_bytes": 0,
+    "new_zip_download_bytes": 0,
+    "existing_c04_kline_archive_requests": 0,
+    "limit": 12,
+    "limitations": "The source probe count includes one GET of Binance's official public-data README and eleven HEAD probes to data.binance.vision. Repository git fetch/delivery operations are not source-feasibility probes. No Binance API documentation page was fetched because developers.binance.com was absent from the current effective egress host list."
+  },
+  "probe_log": [
+    {
+      "id": 1,
+      "method": "GET",
+      "url": "https://raw.githubusercontent.com/binance/binance-public-data/master/README.md",
+      "http_status": 200,
+      "response_body_bytes": 5282,
+      "result": "Official Binance public-data README downloaded and inspected."
+    },
+    {
+      "id": 2,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/metrics/SOLUSDT/metrics-SOLUSDT-2024-09.zip",
+      "http_status": 404,
+      "response_body_bytes": 0,
+      "result": "Candidate monthly metrics path did not resolve."
+    },
+    {
+      "id": 3,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/metrics/DOGEUSDT/metrics-DOGEUSDT-2024-10.zip",
+      "http_status": 404,
+      "response_body_bytes": 0,
+      "result": "Candidate monthly metrics path did not resolve."
+    },
+    {
+      "id": 4,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip",
+      "http_status": 200,
+      "response_body_bytes": 0,
+      "result": "SOLUSDT September 2024 monthly funding object responds. Payload not downloaded."
+    },
+    {
+      "id": 5,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/DOGEUSDT/DOGEUSDT-fundingRate-2024-10.zip",
+      "http_status": 200,
+      "response_body_bytes": 0,
+      "result": "DOGEUSDT October 2024 monthly funding object responds. Payload not downloaded."
+    },
+    {
+      "id": 6,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/aggTrades/SOLUSDT/SOLUSDT-aggTrades-2024-09.zip",
+      "http_status": 200,
+      "response_body_bytes": 0,
+      "result": "SOLUSDT September 2024 monthly aggregate-trade object responds. Payload not downloaded."
+    },
+    {
+      "id": 7,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/aggTrades/DOGEUSDT/DOGEUSDT-aggTrades-2024-10.zip",
+      "http_status": 200,
+      "response_body_bytes": 0,
+      "result": "DOGEUSDT October 2024 monthly aggregate-trade object responds. Payload not downloaded."
+    },
+    {
+      "id": 8,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/monthly/trades/SOLUSDT/SOLUSDT-trades-2024-09.zip",
+      "http_status": 200,
+      "response_body_bytes": 0,
+      "result": "SOLUSDT September 2024 raw-trade object responds. Payload not downloaded."
+    },
+    {
+      "id": 9,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/daily/bookTicker/SOLUSDT/SOLUSDT-bookTicker-2024-09-02.zip",
+      "http_status": 404,
+      "response_body_bytes": 0,
+      "result": "Candidate best-bid/ask archive object did not resolve."
+    },
+    {
+      "id": 10,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/daily/metrics/SOLUSDT/metrics-SOLUSDT-2024-09-02.zip",
+      "http_status": 404,
+      "response_body_bytes": 0,
+      "result": "Candidate SOLUSDT daily metrics path did not resolve."
+    },
+    {
+      "id": 11,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/daily/metrics/DOGEUSDT/metrics-DOGEUSDT-2024-10-16.zip",
+      "http_status": 404,
+      "response_body_bytes": 0,
+      "result": "Candidate DOGEUSDT daily metrics path did not resolve."
+    },
+    {
+      "id": 12,
+      "method": "HEAD",
+      "url": "https://data.binance.vision/data/futures/um/daily/bookDepth/SOLUSDT/SOLUSDT-bookDepth-2024-09-02.zip",
+      "http_status": 200,
+      "response_body_bytes": 0,
+      "result": "SOLUSDT September 2, 2024 bookDepth object responds. Payload and schema not inspected."
+    }
+  ],
+  "documentation_access": {
+    "fetched_and_inspected": [
+      {
+        "url": "https://github.com/binance/binance-public-data/blob/master/README.md",
+        "retrieved_from": "https://raw.githubusercontent.com/binance/binance-public-data/master/README.md",
+        "http_status": 200,
+        "bytes": 5282,
+        "observed_claims": [
+          "Public market data is published in daily or monthly files.",
+          "New daily files are available the next day and monthly files on the first Monday of the month.",
+          "USD-M futures aggregate trades contain aggregate IDs, component trade IDs, price, quantity, timestamp and buyer-maker side.",
+          "USD-M futures raw trades contain trade ID, price, quantity, quote quantity, timestamp and buyer-maker side.",
+          "Archive files may be updated later to correct discovered issues."
+        ]
+      }
+    ],
+    "cited_but_not_fetched": [
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest-Statistics",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Recent-Trades-List",
+      "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Get-Funding-Rate-History",
+      "https://www.binance.com/en/fee/futureFee",
+      "https://www.binance.com/en/support/announcement"
+    ],
+    "access_note": "The API and Binance web documentation hosts were not in the current effective egress allowlist; source URLs are cited but not represented as fetched bytes. C02 local source notes describe the OI history unit ambiguity and current observation schemas."
+  },
+  "inventory": [
+    {
+      "data_requirement": "Historical contract listing/status, tick size, quantity step, minimum notional and lifecycle",
+      "candidate_primary_source": "Current USDⓈ-M exchangeInfo and dated official listing/delisting notices",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information",
+        "https://www.binance.com/en/support/announcement"
+      ],
+      "source_date_coverage_claim": "Current exchangeInfo is a current-state response; C04 has no dated metadata snapshots. No dated filter snapshot was found in retained C04 evidence; the bounded review did not search every archive path or provider.",
+      "small_probe_url": null,
+      "http_status": null,
+      "original_units": "price_tick=USDT per base/contract; quantity_step and minimum_quantity=contract/base units; minimum_notional=USDT",
+      "timestamp_and_availability_meaning": "Current response time and capture time do not establish prior effective filters or when a 2024 system could know them.",
+      "relevance_to_2024_window": "Required at every historical eligibility and sizing decision; current metadata cannot substitute.",
+      "completeness_and_fidelity_limitations": "Point-in-time status/filter changes, inactive symbols and complete historical universe were not established from retained/probed sources. Individual dated announcements or other providers may recover selected facts; the search was not exhaustive.",
+      "c02_readiness_accept_unchanged": false,
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Exact historical rolling 24-hour ticker; OHLCV-derived turnover approximation",
+      "candidate_primary_source": "USDⓈ-M 24hr ticker endpoint; Binance USDⓈ-M klines for quote-volume approximation",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics",
+        "https://github.com/binance/binance-public-data/blob/master/README.md"
+      ],
+      "source_date_coverage_claim": "Current ticker endpoint is a current rolling observation. Binance kline archives include quote asset volume; C04 holds 5m/15m/1h/4h July-October 2024 bars for seven declared symbols.",
+      "small_probe_url": null,
+      "http_status": null,
+      "original_units": "quote_volume=USDT; base_volume=base asset; price=USDT per base asset",
+      "timestamp_and_availability_meaning": "Historical sum is available at the latest completed bar close only as a proxy; five-minute bins cannot reproduce arbitrary intrabar rolling ticker windows.",
+      "relevance_to_2024_window": "Can approximate a turnover screen at bar boundaries from existing authentic candles.",
+      "completeness_and_fidelity_limitations": "Not an exact venue ticker observation and no original archive publication/ingestion timestamps. Does not imply a spread or executable liquidity.",
+      "c02_readiness_accept_unchanged": true,
+      "c02_acceptance_condition": "Only as Ticker24h with fidelity BAR_DERIVED_APPROX, declared proxy availability and complete components; not as venue-reported exact ticker.",
+      "classification": "OBSERVED_WITH_AVAILABILITY_PROXY"
+    },
+    {
+      "data_requirement": "Historical open interest with qualified units and USDT notional",
+      "candidate_primary_source": "USDⓈ-M openInterestHist endpoint; candidate data.binance.vision metrics archives",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest",
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest-Statistics"
+      ],
+      "source_date_coverage_claim": "The official endpoint documentation states only the most recent 30 days are retained; that page was not fetched in this run. C04 has no OI archive. Four candidate monthly/daily paths for SOLUSDT and DOGEUSDT returned 404.",
+      "small_probe_url": "https://data.binance.vision/data/futures/um/daily/metrics/SOLUSDT/metrics-SOLUSDT-2024-09-02.zip",
+      "http_status": 404,
+      "probe_urls_and_statuses": [
+        {"url": "https://data.binance.vision/data/futures/um/monthly/metrics/SOLUSDT/metrics-SOLUSDT-2024-09.zip", "http_status": 404},
+        {"url": "https://data.binance.vision/data/futures/um/monthly/metrics/DOGEUSDT/metrics-DOGEUSDT-2024-10.zip", "http_status": 404},
+        {"url": "https://data.binance.vision/data/futures/um/daily/metrics/SOLUSDT/metrics-SOLUSDT-2024-09-02.zip", "http_status": 404},
+        {"url": "https://data.binance.vision/data/futures/um/daily/metrics/DOGEUSDT/metrics-DOGEUSDT-2024-10-16.zip", "http_status": 404}
+      ],
+      "original_units": "openInterest and sumOpenInterest are exchange-native quantity; sumOpenInterestValue has unspecified units in existing C02 documentation. Do not infer USDT notional.",
+      "timestamp_and_availability_meaning": "History rows carry a timestamp and requested sampling period; archive payload timestamp and availability were not inspected. API capture time is not the original 2024 availability time.",
+      "relevance_to_2024_window": "Mandatory C02 gate and strategy context. The documented API retention cannot serve the frozen window in 2026.",
+      "completeness_and_fidelity_limitations": "404s apply only to candidate paths. No raw archive, verified unit, sampling semantics or historical receive timestamp was recovered.",
+      "c02_readiness_accept_unchanged": false,
+      "c02_rejection_reason": "Existing scanner fails closed unless unit_validated is true and open_interest_notional_usdt is populated.",
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Historical best bid/ask and 60 one-minute spread samples",
+      "candidate_primary_source": "USDⓈ-M bookTicker endpoint and possible data.binance.vision bookTicker archive",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker"
+      ],
+      "source_date_coverage_claim": "Current endpoint gives the best bid/ask at request time. No C04 quote observations were retained; one tested 2024 candidate URL returned 404.",
+      "small_probe_url": "https://data.binance.vision/data/futures/um/daily/bookTicker/SOLUSDT/SOLUSDT-bookTicker-2024-09-02.zip",
+      "http_status": 404,
+      "original_units": "bid/ask=USDT per base asset; quoted quantity=base/contract units; spread=fraction of midpoint",
+      "timestamp_and_availability_meaning": "Current capture time is known only for a live request. No historical quote event or ingestion timestamp was recovered.",
+      "relevance_to_2024_window": "C02 requires 60 consecutive fresh one-minute samples; this feed would qualify spread only if historical snapshots existed.",
+      "completeness_and_fidelity_limitations": "The tested candidate URL does not establish archive or provider-wide absence. OHLCV cannot reconstruct bid/ask quotes.",
+      "c02_readiness_accept_unchanged": false,
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Historical depth and executable liquidity",
+      "candidate_primary_source": "USDⓈ-M order-book endpoint and candidate bookDepth archive",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book",
+        "https://data.binance.vision/data/futures/um/daily/bookDepth/SOLUSDT/SOLUSDT-bookDepth-2024-09-02.zip"
+      ],
+      "source_date_coverage_claim": "A candidate SOLUSDT 2024-09-02 bookDepth URL returned HTTP 200 to HEAD only. No archive bytes or rows were inspected, and C04 retains no depth rows.",
+      "small_probe_url": "https://data.binance.vision/data/futures/um/daily/bookDepth/SOLUSDT/SOLUSDT-bookDepth-2024-09-02.zip",
+      "http_status": 200,
+      "original_units": "Not inspected; expected order-book quantities and prices, but whether full levels or aggregated depth bands is unverified.",
+      "timestamp_and_availability_meaning": "Archive payload time convention and original 2024 availability are unverified; retrieval now supplies no historical ingestion time.",
+      "relevance_to_2024_window": "Potential sampled liquidity evidence only if the archive schema and cadence match the decision points.",
+      "completeness_and_fidelity_limitations": "HEAD only: object availability, not inspected feed contents. Payload schema, levels, units and timing remain unverified. Aggregated depth bands are not full order-book snapshots; neither proves queue priority or executable IOC fill.",
+      "c02_readiness_accept_unchanged": false,
+      "c02_acceptance_condition": "Would require verified ordered bid/ask levels and timestamp/availability semantics compatible with DepthSnapshot.",
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Historical USDⓈ-M trade chronology and aggressor side",
+      "candidate_primary_source": "Binance public-data aggTrades/trades archives",
+      "official_documentation_source_urls": [
+        "https://github.com/binance/binance-public-data/blob/master/README.md",
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List",
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Recent-Trades-List"
+      ],
+      "source_date_coverage_claim": "Binance README documents USD-M aggregate/raw trade fields and archive publication cadence. Monthly SOLUSDT Sep and DOGEUSDT Oct aggTrades and SOLUSDT Sep trades candidate URLs returned HTTP 200 to HEAD only; no ZIP bytes or rows were inspected.",
+      "small_probe_url": "https://data.binance.vision/data/futures/um/monthly/aggTrades/SOLUSDT/SOLUSDT-aggTrades-2024-09.zip",
+      "http_status": 200,
+      "probe_urls_and_statuses": [
+        {"url": "https://data.binance.vision/data/futures/um/monthly/aggTrades/SOLUSDT/SOLUSDT-aggTrades-2024-09.zip", "http_status": 200},
+        {"url": "https://data.binance.vision/data/futures/um/monthly/aggTrades/DOGEUSDT/DOGEUSDT-aggTrades-2024-10.zip", "http_status": 200},
+        {"url": "https://data.binance.vision/data/futures/um/monthly/trades/SOLUSDT/SOLUSDT-trades-2024-09.zip", "http_status": 200}
+      ],
+      "original_units": "price=USDT per base; quantity=base; aggregate/raw trade IDs; buyer-maker boolean; quote quantity where raw trades provide it",
+      "timestamp_and_availability_meaning": "Exchange transaction time in milliseconds is event time. Binance README says monthly archives appear on the first Monday of the month; actual 2024 live ingestion time is absent.",
+      "relevance_to_2024_window": "Could support retrospective A01 chronology only if archive contents, fields, coverage and continuity are later verified.",
+      "completeness_and_fidelity_limitations": "HEAD only; body size, checksum, row coverage and corrected archive version not inspected. Aggregate trades coalesce executions and do not reveal queue/fill probability.",
+      "c02_readiness_accept_unchanged": false,
+      "potential_c02_schema_mapping": "If the downloaded payload confirms the documented fields, records may map to Trade with TRADE_AGG fidelity; continuity and availability still require verification.",
+      "c02_acceptance_condition": "Not currently accepted; validate payload, coverage, continuity, units and availability first.",
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Historical funding rates and settled funding cash flow",
+      "candidate_primary_source": "Binance USDⓈ-M fundingRate monthly archives and Get Funding Rate History endpoint",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Get-Funding-Rate-History",
+        "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip",
+        "https://data.binance.vision/data/futures/um/monthly/fundingRate/DOGEUSDT/DOGEUSDT-fundingRate-2024-10.zip"
+      ],
+      "source_date_coverage_claim": "Monthly archive candidate URLs for SOL Sep and DOGE Oct returned HTTP 200 to HEAD only. No ZIP bytes, rows or timestamp fields were inspected.",
+      "small_probe_url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip",
+      "http_status": 200,
+      "probe_urls_and_statuses": [
+        {"url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip", "http_status": 200},
+        {"url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/DOGEUSDT/DOGEUSDT-fundingRate-2024-10.zip", "http_status": 200}
+      ],
+      "original_units": "fundingRate=fraction of settlement notional; exact settlement cash flow also requires position quantity/contract multiplier and mark-price notional",
+      "timestamp_and_availability_meaning": "C02 maps fundingTime to event/settlement time and treats rate as settled. Use settlement time only as an availability proxy for realized cash flow; it is not a rate known at an earlier entry.",
+      "relevance_to_2024_window": "Could support outcome-side funding accounting only if payload fields and row coverage are later verified and matching position exposure/settlement price are available.",
+      "completeness_and_fidelity_limitations": "No archive bytes, source ingestion time, mark-price alignment or actual account funding ledger. The rate alone is not a full cash-flow record.",
+      "c02_readiness_accept_unchanged": false,
+      "potential_c02_schema_mapping": "If archive rows match the local API mapping, they may map to settled FundingObservation records; verify fraction units and fundingTime before use.",
+      "c02_acceptance_condition": "Not currently accepted; verify archive payload, settlement timestamps and availability before use.",
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Historical account-specific maker/taker fees and actual paid fees",
+      "candidate_primary_source": "Binance account trade/commission records; public Futures fee schedule for declared assumptions only",
+      "official_documentation_source_urls": [
+        "https://www.binance.com/en/fee/futureFee"
+      ],
+      "source_date_coverage_claim": "No account fee ledger is retained in C04; a current public schedule does not establish 2024 paid fees. External account records/providers were not searched.",
+      "small_probe_url": null,
+      "http_status": null,
+      "original_units": "fee amount in settlement currency; maker/taker rate in fraction of executed notional",
+      "timestamp_and_availability_meaning": "Requires each actual fill/fee event time and the account tier/discount then in effect; none was retained.",
+      "relevance_to_2024_window": "Mandatory net economics input; fixed assumed rates are sensitivity parameters, not paid-fee evidence.",
+      "completeness_and_fidelity_limitations": "Actual 2024 account fees were not established from C04; no exhaustive account-record/provider search was performed. No private access or credentials used.",
+      "c02_readiness_accept_unchanged": false,
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Authoritative point-in-time event/news clearance",
+      "candidate_primary_source": "Official Binance notices, original token/project/security notices, time-stamped macro schedule and reputable news feeds",
+      "official_documentation_source_urls": [
+        "https://www.binance.com/en/support/announcement",
+        "https://github.com/KasunKarandagolla/AstraBot/blob/main/docs/reference/AGENTIC_SPEC_v1.5.md#44-news-and-scheduled-event-intelligence"
+      ],
+      "source_date_coverage_claim": "C04 retains no verified event records. The project specification requires original publication and fetch times; no historical event-source search was exhaustive in this preflight.",
+      "small_probe_url": null,
+      "http_status": null,
+      "original_units": "Event timestamps with timezone/date precision; canonical symbols and event types; no scalar unit.",
+      "timestamp_and_availability_meaning": "published_at and fetched_at are both required. Later news cannot establish earlier awareness or clearance.",
+      "relevance_to_2024_window": "Missing verified event clearance blocks the C02 historical universe at every sampled window.",
+      "completeness_and_fidelity_limitations": "Complete negative event coverage was not established from retained/probed sources; other event archives/providers were not exhaustively searched. Absence of articles is not clearance.",
+      "c02_readiness_accept_unchanged": false,
+      "classification": "UNVERIFIED"
+    },
+    {
+      "data_requirement": "Actual order latency, IOC/partial-fill probability, queue position, stop slippage and realized execution costs",
+      "candidate_primary_source": "AstraBot timestamped order/fill/OMS records and exchange execution updates; public book/trades are contextual only",
+      "official_documentation_source_urls": [
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api"
+      ],
+      "source_date_coverage_claim": "C04 contains no actual submissions or fills; the one-second IOC is unresolved from its 5m candles. Other account/execution records were not searched.",
+      "small_probe_url": null,
+      "http_status": null,
+      "original_units": "order/fill quantity in contract units; prices in USDT per contract/base; latency in milliseconds; realized fee/slippage in USDT",
+      "timestamp_and_availability_meaning": "Requires local submit/receive timestamps and exchange acknowledgments/fill event times; public trades do not expose AstraBot's queue or account fill.",
+      "relevance_to_2024_window": "Needed to evaluate entry attrition, partials, stop tails and realized net_R for a full policy.",
+      "completeness_and_fidelity_limitations": "No historical account/OMS log is retained in C04. Market archives cannot synthesize hidden queue state or actual order outcomes; other record sources were not ruled out.",
+      "c02_readiness_accept_unchanged": false,
+      "classification": "UNVERIFIED"
+    }
+  ],
+  "research_paths": [
+    {
+      "path": "A",
+      "name": "Recover frozen 2024 study",
+      "evidence_quality": "Complete OHLCV; trade, funding and depth archive objects respond to HEAD, but their ZIP contents and historical availability are unverified.",
+      "missing_mandatory_feeds": [
+        "not established from retained/probed sources: point-in-time metadata",
+        "not established from retained/probed sources: exact ticker/quotes",
+        "not established from retained/probed sources: validated OI notional",
+        "not established from retained/probed sources: event clearance",
+        "not established from retained/probed sources: account fees",
+        "not established from retained/probed sources: actual fills"
+      ],
+      "implementation_complexity": "medium-high",
+      "storage_burden": "C04 OHLCV is 15.4 MB compressed; supplementary sizes not downloaded; trade/depth retention grows with cadence.",
+      "invalid_conclusion_risk": "high if source event times are mistaken for ingestion times or proxies are promoted to exact observations",
+      "can_eventually_answer_economics_with_identified_sources": false
+    },
+    {
+      "path": "B",
+      "name": "Alternative historical period",
+      "evidence_quality": "No material improvement demonstrated; alternate period not selected from outcomes.",
+      "missing_mandatory_feeds": [
+        "same source-family gaps as A; not established from retained/probed sources"
+      ],
+      "implementation_complexity": "high due new predeclaration, data audit, holdout and replay",
+      "storage_burden": "similar to A plus new period partitions",
+      "invalid_conclusion_risk": "very high if chosen after seeing results; otherwise still limited by missing PIT feeds",
+      "can_eventually_answer_economics_with_identified_sources": false
+    },
+    {
+      "path": "C",
+      "name": "Prospective public-market observation",
+      "evidence_quality": "Potentially strongest: authentic observations with contemporaneous local receive timestamps and feed-gap logs.",
+      "missing_mandatory_feeds": [
+        "complete event-source coverage",
+        "validated OI units",
+        "actual account execution evidence for fill probability"
+      ],
+      "implementation_complexity": "medium-high for a bounded two-symbol read-only collector",
+      "storage_burden": "trade/depth data grows by cadence and observation horizon; choose retention explicitly",
+      "invalid_conclusion_risk": "moderate and measurable if gaps fail closed and later evaluation is untouched",
+      "can_eventually_answer_economics": true
+    },
+    {
+      "path": "D",
+      "name": "Research-only synthetic/paper mechanics",
+      "evidence_quality": "Mechanics/accounting only; no empirical market evidence.",
+      "missing_mandatory_feeds": [
+        "all empirical market, event and execution evidence"
+      ],
+      "implementation_complexity": "low; C04 already exercises core synthetic paths",
+      "storage_burden": "low",
+      "invalid_conclusion_risk": "high if synthetic outcomes are presented as strategy performance",
+      "can_eventually_answer_economics": false
+    }
+  ],
+  "recommendation": {
+    "route": "C",
+    "reason": "C04 OHLCV does not contain original quote, OI, event, metadata or fill histories, and the retained/probed sources did not establish them. Prospective capture is the preferred identified path for fresh availability timestamps and a later untouched economic evaluation; other historical providers were not exhaustively searched.",
+    "next_task": "Implement an unauthenticated read-only prospective collector for SOLUSDT and DOGEUSDT only; persist raw metadata snapshots, trades, bookTicker, bounded depth, mark/funding and OI with source and ingestion timestamps, units, checksums and gaps. Add no account, signing, tuning or order code; declare a later observation horizon before replay.",
+    "owner_help_needed": "NONE for this preflight; a durable read-only runtime and retention horizon must be confirmed before observations begin.",
+    "historical_2024_feasibility": "BLOCKED",
+    "c05_economic_qualification": "INSUFFICIENT_EVIDENCE"
+  },
+  "verification": {
+    "json_parse_and_structure": "PASS; parsed with Python standard library and checked required top-level keys, all 10 inventory rows, required row fields, allowed classifications, 12 probe records, response-body byte total and recommended route.",
+    "source_links": "The official public-data README and all 11 archive objects were checked. API documentation links were cited but not fetched due egress policy.",
+    "tests_run": 0,
+    "production_code_changed": false,
+    "full_c04_replay_run": false,
+    "model_usage": "Recommended profile was GPT-6 Luna; actual model identifier is not exposed to this task.",
+    "subagents_used": 0,
+    "environment_limitations": [
+      "ASTRABOT_DATA_ROOT was unset, so raw C04 ZIPs were not available in this execution.",
+      "developers.binance.com was not listed in effective HTTP egress, so API documentation pages could not be fetched within the 12-request cap."
+    ]
+  },
+  "handoff": "C05_FEASIBILITY_HANDOFF_READY_FOR_INDEPENDENT_REVIEW"
+}
