@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 and the narrow C05 source-feasibility preflight are merged on `main`.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 and C05 source/observer reports through PR #9 are merged on `main`.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,9 +39,9 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**P3 — Research evidence hold; not P4 implementation.** Reviewed and owner-merged [C04 replay PR #4](https://github.com/KasunKarandagolla/AstraBot/pull/4), [authentic archive pilot PR #5](https://github.com/KasunKarandagolla/AstraBot/pull/5), and [C05 feed feasibility preflight PR #6](https://github.com/KasunKarandagolla/AstraBot/pull/6). The last is **a source-feasibility decision**, not the original C05 complete-policy economic GO/STOP qualification. The bounded prospective read-only data route (SOLUSDT/DOGEUSDT) is a **recommendation pending an explicit owner deployment/storage decision**, not an active collector. See [source-feasibility report](research/c05/DATA_FEASIBILITY.md) and [journal](docs/07-ENGINEERING-JOURNAL.md).
+**P3 evidence hold — emergency recovery.** Reviewed PRs #1–#9 are merged; the authentic C04 price panel and offline observer do **not** qualify economic policy results. Binance public API returned HTTP 451 in the tested environment; Tardis docs GET was blocked by Codex CONNECT 403. Neither access error proves global data absence. C05 economic status is `INSUFFICIENT_EVIDENCE`, and original approval/risk controls remain unchanged.
 
-**Latest whole-project phase-gate accounting:** verified 45% / remaining unqualified 55% toward demo-safe development scope: P0 10%, P1 foundation 15%, P2 20% passed; P3 25% empirical gate unpassed, P4 10% / P5 15% / P6 5% not started. This measures milestone gate credit, not profitability, time spent or live readiness. **NEXT_GATE:** ask owner whether to authorize a durable, bounded, unauthenticated prospective market-data observation plan; do not begin continuous collection or proceed to execution before that decision and an evidence plan.
+**Phase credit remains 45% / 55% unqualified.** Stop further Codex tasks that merely check inaccessible providers or repeat candles. No new collector, hosting, subscription or demo/exchange writer. [Delivery plan emergency recovery decision](docs/06-CODEX-DELIVERY-PLAN.md) compares **A: strict P3 hold** with **B: one isolated offline C06 OpenBot/fake-owner paper MVP**. B is recommended but **requires explicit owner approval** because it would be a narrow sequencing exception, not P3 economic promotion. **NEXT_GATE: owner chooses A or B; no Codex session assigned yet.**
 
 ## Source authority and drift prevention
 
