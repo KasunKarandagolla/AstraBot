@@ -41,7 +41,7 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 **P3 evidence hold — emergency recovery.** Reviewed PRs #1–#9 are merged; the authentic C04 price panel and offline observer do **not** qualify economic policy results. Binance public API returned HTTP 451 in the tested environment; Tardis docs GET was blocked by Codex CONNECT 403. Neither access error proves global data absence. C05 economic status is `INSUFFICIENT_EVIDENCE`, and original approval/risk controls remain unchanged.
 
-**Phase credit remains 45% / 55% unqualified.** Owner approved Option B for one isolated offline C06 paper-MVP session. That fixture-driven slice is implemented and tested for independent review; it does not verify a real OpenBot runtime, qualify P3 economics, award P4 credit, or authorize C07, demo, or live execution. No new collector, hosting, subscription, or exchange writer. **NEXT_GATE: independent review of the C06-B report and PR.**
+**Phase credit remains 45% / 55% unqualified.** Owner-authorized offline C06 paper slice was independently reviewed and merged in [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11): six typed tools, research-only fixture, fake approval, protection/partial, first-fill timer and journal; 217 CI tests passed. **Real OpenBot runtime/tool integration, authenticated owner approval/MFA and durable journal remain NOT VERIFIED**, so P3 and full P4 gates remain unqualified; C07/demo/live blocked. **NEXT_GATE: establish a genuine OpenBot runtime/tool conformance target before any new Codex task; no blind network probes.**
 
 ## Source authority and drift prevention
 

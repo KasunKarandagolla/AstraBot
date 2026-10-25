@@ -17,7 +17,7 @@
 
 PRs #1–#9 are reviewed and merged through `9963a7e5295a03f42726ee82c9d9a8c55cc55b86`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
 
-## Emergency recovery choices — PROPOSED, not an approved phase change
+## Emergency recovery choices — owner-selected limited offline Option B completed
 
 **Immediately effective process brake:** no more Codex network-probe-only tasks, proxy/region bypass, historical candle duplication, provider purchases, persistent collection or execution development based on unqualified economics. Lead may research accessible official/provider documentation outside Codex; distinguish a documentation claim from inspected original bytes and legal entitlement. Public Tardis docs advertise first-of-month no-key CSV samples, but PR #9 verified no original SOL/DOGE data, rights, units or coverage.
 
@@ -28,9 +28,11 @@ PRs #1–#9 are reviewed and merged through `9963a7e5295a03f42726ee82c9d9a8c55cc
 
 Under B, require positive AND rejected/expired/negative fake scenarios, human approval security checks, reproducible journal and strict stop conditions. Never claim a fake trade is a real market candidate. **No phase change is authorized by merging this proposed plan.**
 
-**NEXT_GATE:** owner chooses A or B; no Codex task until decision.
+**Owner decision and result (2026-10-25):** B was expressly approved for **one offline-only Codex session**. Independently reviewed/merged [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11), merge `c19758e27fbfc2eae46c2bed591ca151681f75f9`, demonstrated six typed tools, fake one-use approval and protection/exit with **217 passing CI tests**. Real OpenBot integration, MFA and durable journal remain unverified. No additional Codex session, P3 economic GO, full P4 gate or C07 authority follows from this decision.
 
-## Explicit MVP-first strategy (C04 historical-data review is the active gate)
+**NEXT_GATE:** establish availability and conformance plan for a genuine OpenBot runtime without another blind provider/network-probe Codex session. If unavailable, do not claim a mock is OpenBot.
+
+## Explicit MVP-first strategy (P3 evidence hold; C06-B limited offline slice reviewed)
 
 An MVP is an **end-to-end working capability**, not packages installed or ten basic signals. Prioritize the smallest credible vertical slice early, then expand after its evidence gate.
 
