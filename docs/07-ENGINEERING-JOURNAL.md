@@ -1,10 +1,10 @@
 # 07 — AstraBot Engineering Journal, ADR Index and Delivery Ledger
 
 **Type:** append-only factual handoff ledger, not a substitute for tests or code.  
-**Last editorial checkpoint:** 2026-10-25 · owner-authorized offline C06-B paper MVP implementation.
+**Last editorial checkpoint:** 2026-10-25 · independent C06-B PR #11 review and merge.
 **Current phase:** `P3 — RESEARCH EVIDENCE HOLD` (C04 engineering merged; complete-policy historical economic evidence not qualified).
-**NEXT_GATE:** `Independent review of the C06-B offline paper MVP report and PR. P3 remains on hold; no P3 economic credit, P4 credit, or C07 authorization.`
-**Next assigned Codex profile:** `NONE assigned. Owner authorized one offline-only C06-B implementation session; no follow-on Codex task is assigned.`
+**NEXT_GATE:** `Genuine OpenBot runtime/tool conformance feasibility, without blind Codex web probes. Offline C06-B accepted; P3/P4 full gates unqualified; no C07.`
+**Next assigned Codex profile:** `NONE assigned. C06-B one-session owner exception consumed; genuine OpenBot integration prerequisite unresolved.`
 **Live funds enabled:** **NO**. **Any strategy economically qualified:** **NO**.
 
 ## Rules for updating this file
@@ -28,7 +28,7 @@ After each reviewed session, add a **short durable memory capsule**: what change
 |---|---|---|---|
 | MVP-R0 read-only market slice | PARTIAL / NOT COMPLETE | C04 authentic seven-symbol July–October 2024 OHLCV pilot has 356,454 verified-manifest rows and adequate price warm-up, but a dynamic point-in-time eligible altcoin shortlist is still blocked by missing quote/OI/metadata/event feeds | PR #5; research evidence hold |
 | MVP-R1 research vertical slice | ENGINEERING IMPLEMENTED / EMPIRICAL BLOCKED | C03 synthetic positive/negative policy trace, C04 causal replay and 1,464 hourly authentic-panel snapshots; still zero strict candidates/outcomes, NOT_TESTABLE economics. PR #6 C05 feasibility is a source investigation, not an economic qualification | C03–C05 gate open / research hold |
-| MVP-A agentic paper vertical slice | OFFLINE FIXTURE SLICE IMPLEMENTED; INDEPENDENT REVIEW PENDING | Typed six-tool adapter, C03 `RESEARCH_ONLY` candidate, fake C01 owner/venue, deterministic supervision, event journal and negative cases; real OpenBot compatibility remains unverified | C06-B offline exception; no C07 |
+| MVP-A agentic paper vertical slice | OFFLINE FIXTURE SLICE INDEPENDENTLY REVIEWED; GENUINE OPENBOT UNVERIFIED | Typed six-tool adapter, C03 `RESEARCH_ONLY` candidate, fake C01 owner/venue, deterministic supervision, event journal and negative cases; real OpenBot compatibility remains unverified | C06-B offline exception; no C07 |
 | Demo-safe v1 | NOT STARTED | Single-writer demo/recovery/supervision tests | C07–C09 |
 
 MVP milestones are **outcomes of already planned sessions**, not separate tasks. Passing an MVP gate does not authorize live trading. Keep existing P0–P6 percentage weighting; report MVP state separately from progress toward demo-qualified v1.
@@ -47,7 +47,7 @@ MVP milestones are **outcomes of already planned sessions**, not separate tasks.
 | P1 data / coin discovery / feature readiness | PASS FOR FOUNDATION; MVP-R0 INCOMPLETE | Independent review on PR #2; GET-only adapter, causal observation models and empty real-data shortlist | C04 historical panel expansion |
 | P2 T1/R1/B1 deterministic policies | PASS WITH DEFERRED NONBLOCKERS | Independent review on PR #3; pure policies and synthetic trace; all policies remain RESEARCH_ONLY | C04 complete-policy replay |
 | P3 friction and full-policy research | C04 ENGINEERING REVIEWED AND MERGED; EMPIRICAL HOLD | PRs #4–#5: strict C02/C03→E0/E1/E2 synthetic path verified, seven-symbol authentic OHLCV replay (1,464 hourly snapshots); zero strict real candidates/outcomes, BLOCKED_BY_DATA / NOT_TESTABLE. PR #6 accepted a bounded C05 source feasibility preflight only: 2024 retrospective strict economics unsupported by checked sources; C05 economic GO NOT granted | Owner decision on prospective evidence and durable collection plan |
-| P4 OpenBot approval and agent tools | OFFLINE FIXTURE SLICE IMPLEMENTED; GATE NOT PASSED | Five focused C06 tests and full 217-test repository suite pass. Offline orchestration tested; real OpenBot integration `NOT_VERIFIED`. No weighted P4 credit awarded pending independent review | Independent review; real OpenBot integration remains future work |
+| P4 OpenBot approval and agent tools | OFFLINE FIXTURE SLICE REVIEWED; GATE NOT PASSED | PR #11 independently reviewed; 217 CI tests, fake bounded approval/protection/partial/time exit and journal. Real OpenBot runtime/MFA/durable journal remain `NOT_VERIFIED`; no full P4 weighted credit | Genuine OpenBot conformance prerequisite; no extra Codex assigned |
 | P5 Binance demo protected execution | NOT STARTED | none | C07 |
 | P6 full demo and independent review | NOT STARTED | none | C08–C09 |
 | Live pilot | BLOCKED BY DESIGN | no owner authorization; not a Codex task by default | separate owner decision |
@@ -280,3 +280,10 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Implementation commit:** `20373d9705922061b45d340fecfe7a6f29b6ff73` — `C06-B: add offline paper MVP workflow`.
 - **Branch / PR / verified base:** `codex/c06-b-offline-openbot-paper-mvp`; [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11) opened against `main` at `4a16e96f1229974af8cbc8b28e0e57acccb4ec2e`. The PR remains open and unmerged.
 - **GitHub compare:** immediately after PR creation, one commit ahead and zero behind; after the delivery-record commit, two ahead and zero behind. The PR creation response reported `mergeable: false`; no merge was attempted. Independent review remains the next gate.
+
+### 2026-10-25 — LEAD-C06B-REVIEW-001 — PR #11 independent review and merge
+
+- **Reviewed and merged:** [PR #11](https://github.com/KasunKarandagolla/AstraBot/pull/11) head `cf708f8aa6021ebb74a892825f6a2d742fa7f09f`, review `5642451911` **PASS WITH DEFERRED NONBLOCKERS**; owner-standing-permission merge `c19758e27fbfc2eae46c2bed591ca151681f75f9`, verified on `main` with all C06 files.
+- **Independent checks:** 217 GitHub offline CI tests passed in 22.44s; existing C04 check invoked. Reused C01 fake owner/venue/timer, C02/C03 deterministic research and C04 synthetic fixture; typed six-tool adapter demonstrated immutable research-only fake proposal, one-use authorization, stop/partial and first-fill +11h55m exit despite coordinator and journal outage, fake final flat reconciliation and fail-closed negatives.
+- **Limitations:** OpenBot executable/real LLM tool registration/OS isolation `NOT_VERIFIED`, fake authentication/MFA only, transient in-memory journal, owner-reject negative case shows rejected registry/empty venue rather than denied fake-owner claim attempt. Do not promote any research-only policy, claim profitability or start C07.
+- **Status and next gate:** P3 `INSUFFICIENT_EVIDENCE`; full P4 unpassed; overall 45% credited / 55% unqualified. Owner's bounded Option B session completed, not recurring permission. Next: establish genuine OpenBot integration conformance target without blind Codex egress trials, then evaluate a bounded task. No Codex currently assigned.
