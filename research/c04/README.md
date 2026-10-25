@@ -2,6 +2,8 @@
 
 `REPORT.md` is the human handoff; `run.json` is the machine-readable event/decision ledger; `source_inventory.json` records partition hashes, source availability, limits and the bounded retrieval plan. Historical observations and synthetic fixtures stay in distinct evidence classes.
 
+The original C04 artifacts describe the data available at PR #4 review time. The post-merge archive recovery is documented separately in [`historical_pilot.md`](historical_pilot.md), [`pilot_summary.json`](pilot_summary.json), and the checksum manifests [`historical_manifest.json`](historical_manifest.json) and [`smoke_manifest.json`](smoke_manifest.json). Raw archives remain outside Git under `ASTRABOT_DATA_ROOT`.
+
 ## Reproduce the retained panel
 
 From the repository root, with the pinned test environment installed:
@@ -23,15 +25,15 @@ The run computes a stable `run_id`, decision/funnel ledger hashes, counters, and
 
 The verified inputs are BTCUSDT 1H bars for 2024-10-28 and the first 100 contiguous APEUSDT aggregate trades for 2024-10-18. Their source archive IDs, GitHub mirror pins, raw archive checksums, retained checksums, units, actual coverage, and availability proxies are in `../c02_panel/manifest.json` and the generated `source_inventory.json`.
 
-The previous C02 retrieval attempt to `data.binance.vision` received a CONNECT 403; this executor's current restricted egress allowlist does not include that hostname. C04 did not repeat the denied download or try an unapproved route. GitHub mirror fixtures were already retained and checksum-verified. There are no point-in-time exchangeInfo snapshots, trustworthy historical inactive/delisted-symbol flags, verified event/news coverage, validated historical OI units, historical quotes/depth, or historical funding in the retained panel. Do not populate these fields from modern exchange status or fabricated values.
+The original C02 retrieval attempt received a CONNECT 403, and that C04 run stopped without bypassing the restriction. For this follow-up, the enforced network policy explicitly allows `data.binance.vision`; the configured proxy returned HTTP 200 for every bounded public archive. The older GitHub mirror fixtures remain separate from this new official-archive pilot. There are still no point-in-time exchangeInfo snapshots, trustworthy historical inactive/delisted-symbol flags, verified event/news coverage, validated historical OI units, historical quotes/depth, or historical funding. Do not populate these fields from modern exchange status or fabricated values.
 
 ## Predeclared next pilot
 
-The bounded target study window is **2024-08-01 through 2024-11-01 UTC**, chosen to allow a 735-hour history warm-up and two months after warm-up. The split is frozen before any replay result: warm-up 2024-08-01–2024-08-31, development 2024-09-01–2024-09-30, validation 2024-10-01–2024-10-14, untouched evaluation 2024-10-15–2024-10-31, with a 12-hour outcome purge/embargo at boundaries. Existing records cover only isolated feeds within this date range and satisfy none of the splits.
+The bounded target study window is **2024-07-01 through 2024-11-01 UTC**. The source-only warm-up is extended into July: C02 requires 200 contiguous closed 4H bars, while August alone contains only 186. The split is frozen: source-only warm-up 2024-07-01–2024-08-31, development 2024-09-01–2024-09-30, validation 2024-10-01–2024-10-14, untouched evaluation 2024-10-15–2024-10-31, with a 12-hour outcome purge/embargo at boundaries.
 
-Use BTC and ETH for context. Select altcoin study symbols without looking at strategy returns: require evidence of point-in-time Binance USDⓈ-M contract validity, then stratify on the prior 30-day quote turnover and realized volatility. Keep every in-scope symbol's source gaps and ineligibility. Include later-inactive symbols only where dated metadata/archive evidence supports their historical identity. If reliable historical contract metadata is unavailable, preserve that as an explicit universe-coverage blocker.
+The bounded follow-up pilot declares BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT, XRPUSDT, ADAUSDT, and DOGEUSDT before replay. This is a fixed research cohort, not a reconstructed point-in-time or dynamic historical universe. Contract-validity history, inactive-symbol coverage, turnover ranking, and realized-volatility cohort selection remain unverified; preserve that as an explicit universe-coverage blocker.
 
-On an executor whose approved egress allows the archive host, fetch bounded monthly public files and record the exact response bytes and hashes before parsing. Example only; this command was **not** run in C04:
+The following URL illustrates the public archive layout; the follow-up used the bounded Python client below rather than `curl`:
 
 ```sh
 curl --fail --location \
@@ -41,7 +43,15 @@ sha256sum work/BTCUSDT-1h-2024-08.zip
 unzip -Z1 work/BTCUSDT-1h-2024-08.zip
 ```
 
-Repeat only for the predeclared symbol/feed list and exact months in the study window. Store larger raw partitions outside Git and keep a versioned manifest in the repository. The current loader accepts C02 manifest partitions such as `klines:1h`, `klines:4h`, `klines:15m`, `klines:5m`, and bounded `aggTrades` CSVs. `derive_4h_from_1h()` is available for complete contiguous UTC groups and records `BAR_DERIVED_APPROX`, component IDs, aggregation semantics and latest-component `available_at`; missing groups are skipped, never interpolated.
+The executed plan uses 112 monthly archives: the seven declared symbols × four required intervals (`5m`, `15m`, `1h`, `4h`) × July–October 2024. It avoids a full 1-minute study history; the only 1-minute files are the seven one-day ingestion smoke archives. Acquisition is sequential in 7-file batches, uses HTTPS via the approved proxy, stops on HTTP, storage, integrity, schema, or continuity errors, and writes per-archive source/size/SHA256/coverage evidence. Reproduce acquisition with:
+
+```sh
+ASTRABOT_DATA_ROOT=/path/outside/the/repository \
+  work/c04-venv/bin/python scripts/c04_acquire_binance_um.py \
+  --phase smoke --manifest research/c04/smoke_manifest.json
+```
+
+For the historical phase, rerun the command with `--phase pilot --manifest research/c04/historical_manifest.json` until all 16 bounded batches are complete. The offline `load_public_um_archive_panel()` verifies each committed checksum manifest and uses C02 kline normalization. `scripts/c04_historical_pilot.py` runs the existing C04 C02/C03 replay at hourly availability snapshots while retaining all four source intervals in each as-of context; this can miss setup changes between hourly evaluations and is not a full 15-minute or 5-minute execution replay.
 
 Do not derive spread, depth, OI units, event clearance, or executable IOC/stop fills from OHLCV. Classify every feed as observed point-in-time usable, observed with an availability proxy, retrospective-only, unverified, or unavailable. If the approved source does not exist, STRICT remains NO_TRADE and the report remains `BLOCKED_BY_DATA`.
 

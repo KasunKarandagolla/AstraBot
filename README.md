@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C03 merged and independently reviewed; C04 replay implementation is on a review branch with empirical qualification blocked by data.** The public adapter has not been verified against a live Binance endpoint. No market edge or live safety qualification has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 are merged on `main`; the bounded C04 public-archive pilot is on a review branch. Authentic OHLCV warm-up and price diagnostics are now available, while STRICT_POLICY_REPLAY remains blocked by missing historical metadata, market evidence and event clearance.** No market edge or live safety qualification has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,7 +39,7 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**C04 / P3: causal full-policy replay and economic evidence.** C03 PR #3 passed independent review and merged at `c052bcd60e441ed1f72de18abefa733c1b271729`. C04 wraps actual C02 eligibility and C03 policy functions, persists per-symbol research state, and replays the retained panel. The run returns `BLOCKED_BY_DATA`: 24 BTC 1H rows and 100 APE aggregate trades cannot meet the C02/C03 gates. See [C04 report](research/c04/REPORT.md) and [source inventory](research/c04/source_inventory.json). The engineering implementation is ready for independent review; C05 empirical economics is not testable from this panel.
+**C04 / P3: bounded historical data recovery and causal diagnostics.** PR #4 merged at `2df822cd691dfcef3723e025d3071625e6b31294`. The follow-up branch acquires a fixed seven-symbol, July–October 2024 USDⓈ-M pilot across 5m/15m/1h/4h, keeps archives outside Git, and extends source-only warm-up into July. The current replay remains `BLOCKED_BY_DATA`: OHLCV alone cannot satisfy point-in-time contract, spread/depth/OI/event gates or establish fills. See [historical pilot](research/c04/historical_pilot.md), [checksum manifest](research/c04/historical_manifest.json), [C04 source inventory](research/c04/source_inventory.json), and [review handoff](docs/07-ENGINEERING-JOURNAL.md). C05 economics remains `INSUFFICIENT_EVIDENCE`.
 
 ## Source authority and drift prevention
 

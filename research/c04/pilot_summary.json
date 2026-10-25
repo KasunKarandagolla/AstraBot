@@ -1,0 +1,1822 @@
+{
+  "archive_bytes": 15417887,
+  "archive_count": 112,
+  "archives_by_interval": {
+    "15m": {
+      "archive_bytes": 3716571,
+      "archive_count": 28,
+      "coverage_end": "2024-10-31T23:59:59.999Z",
+      "coverage_start": "2024-07-01T00:00:00.000Z",
+      "duplicate_open_times": 0,
+      "missing_intervals": 0,
+      "normalized_rows": 82656,
+      "out_of_order_open_times": 0
+    },
+    "1h": {
+      "archive_bytes": 998704,
+      "archive_count": 28,
+      "coverage_end": "2024-10-31T23:59:59.999Z",
+      "coverage_start": "2024-07-01T00:00:00.000Z",
+      "duplicate_open_times": 0,
+      "missing_intervals": 0,
+      "normalized_rows": 20664,
+      "out_of_order_open_times": 0
+    },
+    "4h": {
+      "archive_bytes": 276075,
+      "archive_count": 28,
+      "coverage_end": "2024-10-31T23:59:59.999Z",
+      "coverage_start": "2024-07-01T00:00:00.000Z",
+      "duplicate_open_times": 0,
+      "missing_intervals": 0,
+      "normalized_rows": 5166,
+      "out_of_order_open_times": 0
+    },
+    "5m": {
+      "archive_bytes": 10426537,
+      "archive_count": 28,
+      "coverage_end": "2024-10-31T23:59:59.999Z",
+      "coverage_start": "2024-07-01T00:00:00.000Z",
+      "duplicate_open_times": 0,
+      "missing_intervals": 0,
+      "normalized_rows": 247968,
+      "out_of_order_open_times": 0
+    }
+  },
+  "c04_config_sha256": "2d76daafe165b4edbec21a15d5dd5476290877351902a525fd96d9fde9d65760",
+  "c04_run_id": "812138b819227821eaa9a2f48f53665c2a647c40dbc5be92a09528c10d548a4f",
+  "cohort_limit": "Declared pilot cohort; not a reconstructed historical dynamic universe.",
+  "data_quality": {
+    "archive_http_statuses": {
+      "200": 112
+    },
+    "archive_integrity_fail_count": 0,
+    "archive_integrity_pass_count": 112,
+    "cross_archive_continuity": {
+      "ADAUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ADAUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ADAUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ADAUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BNBUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BNBUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BNBUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BNBUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BTCUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BTCUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BTCUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "BTCUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "DOGEUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "DOGEUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "DOGEUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "DOGEUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ETHUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ETHUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ETHUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "ETHUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "SOLUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "SOLUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "SOLUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "SOLUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "XRPUSDT:15m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "XRPUSDT:1h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "XRPUSDT:4h": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      },
+      "XRPUSDT:5m": {
+        "DUPLICATE": 0,
+        "MISSING_INTERVAL": 0,
+        "OUT_OF_ORDER": 0
+      }
+    }
+  },
+  "decision_ledger_sha256": "4369946850f06afbcc1d72d7117b2ebd19797d00ad2a92cf955b8448c32390b7",
+  "declared_cohort": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "ADAUSDT",
+    "DOGEUSDT"
+  ],
+  "evidence_class": "OBSERVED_HISTORICAL_ARCHIVE_DATA_WITH_CLOSE_TIME_AVAILABILITY_PROXY",
+  "execution_limitations": [
+    "STRICT_POLICY_REPLAY remains fail-closed because point-in-time contract metadata and exchange filters, fresh ticker, spread samples, depth, validated OI notional, and verified event clearance are absent.",
+    "Historical funding settlements, bid/ask depth, market impact, original archive publication latency, and observed IOC fills are unavailable and are not inferred from OHLCV.",
+    "Any E1/E2 OHLC execution is a counterfactual bar model, not a historical fill. The model's one-second IOC cannot be resolved from 5m OHLCV; no execution scenarios were eligible in this pilot.",
+    "1h diagnostic snapshots can miss transient setup changes between hourly evaluations; they are not a full 15m or 5m setup/execution replay. C03 outputs remain strict NO_TRADE diagnostics."
+  ],
+  "funnel_ledger_sha256": "790d79355055b772ced456b7181d0eb5e375e531ab12454f65dc87cc25be5dc0",
+  "market": "USD\u24c8-M perpetual; USDT-settled; public archives only",
+  "measurements": {
+    "peak_traced_memory_bytes": 30240305,
+    "runtime_seconds": 1481.0692117239996
+  },
+  "normalized_rows": 356454,
+  "replay": {
+    "causal_price_samples": {
+      "development": {
+        "as_of": "2024-09-01T00:15:00+00:00",
+        "symbols": {
+          "BTCUSDT": {
+            "15m": {
+              "available_at": "2024-09-01T00:15:00+00:00",
+              "close": "59008.90",
+              "event_time": "2024-09-01T00:14:59.999000+00:00",
+              "source_record_id": "1725148800000"
+            },
+            "1h": {
+              "available_at": "2024-09-01T00:00:00+00:00",
+              "close": "58941.90",
+              "event_time": "2024-08-31T23:59:59.999000+00:00",
+              "source_record_id": "1725145200000"
+            },
+            "4h": {
+              "available_at": "2024-09-01T00:00:00+00:00",
+              "close": "58941.90",
+              "event_time": "2024-08-31T23:59:59.999000+00:00",
+              "source_record_id": "1725134400000"
+            },
+            "5m": {
+              "available_at": "2024-09-01T00:15:00+00:00",
+              "close": "59008.90",
+              "event_time": "2024-09-01T00:14:59.999000+00:00",
+              "source_record_id": "1725149400000"
+            }
+          },
+          "ETHUSDT": {
+            "15m": {
+              "available_at": "2024-09-01T00:15:00+00:00",
+              "close": "2513.96",
+              "event_time": "2024-09-01T00:14:59.999000+00:00",
+              "source_record_id": "1725148800000"
+            },
+            "1h": {
+              "available_at": "2024-09-01T00:00:00+00:00",
+              "close": "2511.91",
+              "event_time": "2024-08-31T23:59:59.999000+00:00",
+              "source_record_id": "1725145200000"
+            },
+            "4h": {
+              "available_at": "2024-09-01T00:00:00+00:00",
+              "close": "2511.91",
+              "event_time": "2024-08-31T23:59:59.999000+00:00",
+              "source_record_id": "1725134400000"
+            },
+            "5m": {
+              "available_at": "2024-09-01T00:15:00+00:00",
+              "close": "2513.96",
+              "event_time": "2024-09-01T00:14:59.999000+00:00",
+              "source_record_id": "1725149400000"
+            }
+          },
+          "SOLUSDT": {
+            "15m": {
+              "available_at": "2024-09-01T00:15:00+00:00",
+              "close": "135.4590",
+              "event_time": "2024-09-01T00:14:59.999000+00:00",
+              "source_record_id": "1725148800000"
+            },
+            "1h": {
+              "available_at": "2024-09-01T00:00:00+00:00",
+              "close": "135.2660",
+              "event_time": "2024-08-31T23:59:59.999000+00:00",
+              "source_record_id": "1725145200000"
+            },
+            "4h": {
+              "available_at": "2024-09-01T00:00:00+00:00",
+              "close": "135.2660",
+              "event_time": "2024-08-31T23:59:59.999000+00:00",
+              "source_record_id": "1725134400000"
+            },
+            "5m": {
+              "available_at": "2024-09-01T00:15:00+00:00",
+              "close": "135.4590",
+              "event_time": "2024-09-01T00:14:59.999000+00:00",
+              "source_record_id": "1725149400000"
+            }
+          }
+        }
+      },
+      "untouched_evaluation": {
+        "as_of": "2024-10-15T00:15:00+00:00",
+        "symbols": {
+          "BTCUSDT": {
+            "15m": {
+              "available_at": "2024-10-15T00:15:00+00:00",
+              "close": "65938.50",
+              "event_time": "2024-10-15T00:14:59.999000+00:00",
+              "source_record_id": "1728950400000"
+            },
+            "1h": {
+              "available_at": "2024-10-15T00:00:00+00:00",
+              "close": "66064.90",
+              "event_time": "2024-10-14T23:59:59.999000+00:00",
+              "source_record_id": "1728946800000"
+            },
+            "4h": {
+              "available_at": "2024-10-15T00:00:00+00:00",
+              "close": "66064.90",
+              "event_time": "2024-10-14T23:59:59.999000+00:00",
+              "source_record_id": "1728936000000"
+            },
+            "5m": {
+              "available_at": "2024-10-15T00:15:00+00:00",
+              "close": "65938.50",
+              "event_time": "2024-10-15T00:14:59.999000+00:00",
+              "source_record_id": "1728951000000"
+            }
+          },
+          "ETHUSDT": {
+            "15m": {
+              "available_at": "2024-10-15T00:15:00+00:00",
+              "close": "2624.77",
+              "event_time": "2024-10-15T00:14:59.999000+00:00",
+              "source_record_id": "1728950400000"
+            },
+            "1h": {
+              "available_at": "2024-10-15T00:00:00+00:00",
+              "close": "2628.88",
+              "event_time": "2024-10-14T23:59:59.999000+00:00",
+              "source_record_id": "1728946800000"
+            },
+            "4h": {
+              "available_at": "2024-10-15T00:00:00+00:00",
+              "close": "2628.88",
+              "event_time": "2024-10-14T23:59:59.999000+00:00",
+              "source_record_id": "1728936000000"
+            },
+            "5m": {
+              "available_at": "2024-10-15T00:15:00+00:00",
+              "close": "2624.77",
+              "event_time": "2024-10-15T00:14:59.999000+00:00",
+              "source_record_id": "1728951000000"
+            }
+          },
+          "SOLUSDT": {
+            "15m": {
+              "available_at": "2024-10-15T00:15:00+00:00",
+              "close": "156.9100",
+              "event_time": "2024-10-15T00:14:59.999000+00:00",
+              "source_record_id": "1728950400000"
+            },
+            "1h": {
+              "available_at": "2024-10-15T00:00:00+00:00",
+              "close": "157.5200",
+              "event_time": "2024-10-14T23:59:59.999000+00:00",
+              "source_record_id": "1728946800000"
+            },
+            "4h": {
+              "available_at": "2024-10-15T00:00:00+00:00",
+              "close": "157.5200",
+              "event_time": "2024-10-14T23:59:59.999000+00:00",
+              "source_record_id": "1728936000000"
+            },
+            "5m": {
+              "available_at": "2024-10-15T00:15:00+00:00",
+              "close": "156.9100",
+              "event_time": "2024-10-15T00:14:59.999000+00:00",
+              "source_record_id": "1728951000000"
+            }
+          }
+        }
+      },
+      "validation": {
+        "as_of": "2024-10-01T00:15:00+00:00",
+        "symbols": {
+          "BTCUSDT": {
+            "15m": {
+              "available_at": "2024-10-01T00:15:00+00:00",
+              "close": "63193.50",
+              "event_time": "2024-10-01T00:14:59.999000+00:00",
+              "source_record_id": "1727740800000"
+            },
+            "1h": {
+              "available_at": "2024-10-01T00:00:00+00:00",
+              "close": "63309.10",
+              "event_time": "2024-09-30T23:59:59.999000+00:00",
+              "source_record_id": "1727737200000"
+            },
+            "4h": {
+              "available_at": "2024-10-01T00:00:00+00:00",
+              "close": "63309.10",
+              "event_time": "2024-09-30T23:59:59.999000+00:00",
+              "source_record_id": "1727726400000"
+            },
+            "5m": {
+              "available_at": "2024-10-01T00:15:00+00:00",
+              "close": "63193.50",
+              "event_time": "2024-10-01T00:14:59.999000+00:00",
+              "source_record_id": "1727741400000"
+            }
+          },
+          "ETHUSDT": {
+            "15m": {
+              "available_at": "2024-10-01T00:15:00+00:00",
+              "close": "2605.77",
+              "event_time": "2024-10-01T00:14:59.999000+00:00",
+              "source_record_id": "1727740800000"
+            },
+            "1h": {
+              "available_at": "2024-10-01T00:00:00+00:00",
+              "close": "2601.49",
+              "event_time": "2024-09-30T23:59:59.999000+00:00",
+              "source_record_id": "1727737200000"
+            },
+            "4h": {
+              "available_at": "2024-10-01T00:00:00+00:00",
+              "close": "2601.49",
+              "event_time": "2024-09-30T23:59:59.999000+00:00",
+              "source_record_id": "1727726400000"
+            },
+            "5m": {
+              "available_at": "2024-10-01T00:15:00+00:00",
+              "close": "2605.77",
+              "event_time": "2024-10-01T00:14:59.999000+00:00",
+              "source_record_id": "1727741400000"
+            }
+          },
+          "SOLUSDT": {
+            "15m": {
+              "available_at": "2024-10-01T00:15:00+00:00",
+              "close": "152.4880",
+              "event_time": "2024-10-01T00:14:59.999000+00:00",
+              "source_record_id": "1727740800000"
+            },
+            "1h": {
+              "available_at": "2024-10-01T00:00:00+00:00",
+              "close": "152.4280",
+              "event_time": "2024-09-30T23:59:59.999000+00:00",
+              "source_record_id": "1727737200000"
+            },
+            "4h": {
+              "available_at": "2024-10-01T00:00:00+00:00",
+              "close": "152.4280",
+              "event_time": "2024-09-30T23:59:59.999000+00:00",
+              "source_record_id": "1727726400000"
+            },
+            "5m": {
+              "available_at": "2024-10-01T00:15:00+00:00",
+              "close": "152.4880",
+              "event_time": "2024-10-01T00:14:59.999000+00:00",
+              "source_record_id": "1727741400000"
+            }
+          }
+        }
+      }
+    },
+    "diagnostic_context_readiness_counts": {
+      "READY": 61488
+    },
+    "diagnostic_decision_counts": {
+      "NO_TRADE": 61488
+    },
+    "diagnostic_reason_counts": {
+      "C02_UNIVERSE_NOT_READY": 61488,
+      "DEPTH_MISSING": 61488,
+      "EVENT_CLEARANCE_MISSING_OR_FUTURE": 61488,
+      "EXTREME_VOLATILITY_OR_LIQUIDITY_VETO": 2874,
+      "METADATA_MISSING": 61488,
+      "OPEN_INTEREST_MISSING": 61488,
+      "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 61488,
+      "TICKER_24H_MISSING": 61488
+    },
+    "history_limits_by_interval": {
+      "15m": 21,
+      "1h": 735,
+      "4h": 200,
+      "5m": 288
+    },
+    "holdout_outcomes_used_for_selection": false,
+    "mandatory_gates_bypassed": [],
+    "per_window": {
+      "development": {
+        "diagnostic_context_readiness": {
+          "READY": 30240
+        },
+        "diagnostic_decisions": {
+          "NO_TRADE": 30240
+        },
+        "diagnostic_no_trade_reasons": {
+          "C02_UNIVERSE_NOT_READY": 30240,
+          "DEPTH_MISSING": 30240,
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE": 30240,
+          "EXTREME_VOLATILITY_OR_LIQUIDITY_VETO": 684,
+          "METADATA_MISSING": 30240,
+          "OPEN_INTEREST_MISSING": 30240,
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 30240,
+          "TICKER_24H_MISSING": 30240
+        },
+        "diagnostic_snapshots": 5040,
+        "eligibility_states": {
+          "WARMING": 5040
+        },
+        "eligibility_windows": 5040,
+        "strict_no_trade_reasons": {
+          "DEPTH_MISSING": 5040,
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE": 5040,
+          "METADATA_MISSING": 5040,
+          "OPEN_INTEREST_MISSING": 5040,
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 5040,
+          "TICKER_24H_MISSING": 5040
+        }
+      },
+      "untouched_evaluation": {
+        "diagnostic_context_readiness": {
+          "READY": 17136
+        },
+        "diagnostic_decisions": {
+          "NO_TRADE": 17136
+        },
+        "diagnostic_no_trade_reasons": {
+          "C02_UNIVERSE_NOT_READY": 17136,
+          "DEPTH_MISSING": 17136,
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE": 17136,
+          "EXTREME_VOLATILITY_OR_LIQUIDITY_VETO": 798,
+          "METADATA_MISSING": 17136,
+          "OPEN_INTEREST_MISSING": 17136,
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 17136,
+          "TICKER_24H_MISSING": 17136
+        },
+        "diagnostic_snapshots": 2856,
+        "eligibility_states": {
+          "WARMING": 2856
+        },
+        "eligibility_windows": 2856,
+        "strict_no_trade_reasons": {
+          "DEPTH_MISSING": 2856,
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE": 2856,
+          "METADATA_MISSING": 2856,
+          "OPEN_INTEREST_MISSING": 2856,
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 2856,
+          "TICKER_24H_MISSING": 2856
+        }
+      },
+      "validation": {
+        "diagnostic_context_readiness": {
+          "READY": 14112
+        },
+        "diagnostic_decisions": {
+          "NO_TRADE": 14112
+        },
+        "diagnostic_no_trade_reasons": {
+          "C02_UNIVERSE_NOT_READY": 14112,
+          "DEPTH_MISSING": 14112,
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE": 14112,
+          "EXTREME_VOLATILITY_OR_LIQUIDITY_VETO": 1392,
+          "METADATA_MISSING": 14112,
+          "OPEN_INTEREST_MISSING": 14112,
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 14112,
+          "TICKER_24H_MISSING": 14112
+        },
+        "diagnostic_snapshots": 2352,
+        "eligibility_states": {
+          "WARMING": 2352
+        },
+        "eligibility_windows": 2352,
+        "strict_no_trade_reasons": {
+          "DEPTH_MISSING": 2352,
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE": 2352,
+          "METADATA_MISSING": 2352,
+          "OPEN_INTEREST_MISSING": 2352,
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 2352,
+          "TICKER_24H_MISSING": 2352
+        }
+      }
+    },
+    "replay_end_available_at_inclusive": "2024-11-01T00:00:00+00:00",
+    "replay_interval": "1h",
+    "replay_start_available_at_inclusive": "2024-09-01T01:00:00+00:00",
+    "sample_decisions": [
+      {
+        "as_of": "2024-09-01T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "0593264806b5a76050e57bade7a8429e91f95966232dbd80e8f04c997f1b7f83"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "BTCUSDT"
+      },
+      {
+        "as_of": "2024-09-01T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "ac912ca4f59816b3241205e1d6578e12eca2ba00fd6f8e69b5eca0acc7987054"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "as_of": "2024-09-01T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "927fd8b8c011ea2cff04232ffc1cf8dc6b4d99f2f17daca9bdb2ea2c52319c3a"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "SOLUSDT"
+      },
+      {
+        "as_of": "2024-10-01T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "96e428d0aed87fd5bdd24f767868b2655c4536c39aad139593d7efbe315992fd"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "BTCUSDT"
+      },
+      {
+        "as_of": "2024-10-01T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "382985668279a8bdd2e1200afe333aabedfa90a95283bf3d5409ed56a04a9c44"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "as_of": "2024-10-01T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "047d78b559281cbea33ed5ab3378e64d45d93c9c55d7a94bfd567081b0160a45"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "SOLUSDT"
+      },
+      {
+        "as_of": "2024-10-15T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "6d8b6a1cbe49232e941820aeb1f9218fc0253cd85e3522ca9d273732bd8d4a53"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "BTCUSDT"
+      },
+      {
+        "as_of": "2024-10-15T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "d9c953995a7a9e01fba286136732089bae7fd07c3c9cbbd34b2340a3f91cc916"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "as_of": "2024-10-15T01:00:00Z",
+        "decision": "NO_TRADE",
+        "dependencies": [
+          {
+            "name": "RESEARCH_ACCOUNT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "C04_SYNTHETIC_ACCOUNT_NOT_BINANCE"
+            ]
+          },
+          {
+            "name": "C02_UNIVERSE",
+            "readiness": "WARMING",
+            "role": "MANDATORY",
+            "source_ids": [
+              "METADATA_MISSING",
+              "TICKER_24H_MISSING",
+              "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+              "DEPTH_MISSING",
+              "OPEN_INTEREST_MISSING",
+              "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+            ]
+          },
+          {
+            "name": "CONTEXT",
+            "readiness": "READY",
+            "role": "MANDATORY",
+            "source_ids": [
+              "f48f94d02e6d1e37ec414c33b3394d6eb962cf3c7f78719c531b92de6f4f943a"
+            ]
+          },
+          {
+            "name": "OI_VALIDATED_NOTIONAL",
+            "readiness": "UNAVAILABLE",
+            "role": "MANDATORY",
+            "source_ids": []
+          },
+          {
+            "name": "VERIFIED_EVENT_CLEARANCE",
+            "readiness": "UNAVAILABLE",
+            "role": "VETO",
+            "source_ids": []
+          },
+          {
+            "name": "A01",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A03",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A04",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A05",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A06",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          },
+          {
+            "name": "A08",
+            "readiness": "UNAVAILABLE",
+            "role": "RECORD_ONLY",
+            "source_ids": []
+          }
+        ],
+        "readiness": "UNAVAILABLE",
+        "rejection_reason_codes": [
+          "C02_UNIVERSE_NOT_READY",
+          "METADATA_MISSING",
+          "TICKER_24H_MISSING",
+          "SPREAD_WARMUP_LT_60_VALID_SAMPLES",
+          "DEPTH_MISSING",
+          "OPEN_INTEREST_MISSING",
+          "EVENT_CLEARANCE_MISSING_OR_FUTURE"
+        ],
+        "setup_id": null,
+        "side": "LONG",
+        "strategy_id": "T1",
+        "symbol": "SOLUSDT"
+      }
+    ],
+    "shortlisted_symbol_windows": 0,
+    "snapshot_count": 1464,
+    "source_files_keep_full_coverage": true,
+    "status": "BLOCKED_BY_DATA",
+    "strict_candidate_count": 0,
+    "strict_eligibility_latest": {
+      "WARMING": 7
+    },
+    "strict_reasons_latest": {
+      "C02_UNIVERSE_NOT_READY": 61488,
+      "DEPTH_MISSING": 61495,
+      "EVENT_CLEARANCE_MISSING_OR_FUTURE": 61495,
+      "EXTREME_VOLATILITY_OR_LIQUIDITY_VETO": 2874,
+      "METADATA_MISSING": 61495,
+      "OPEN_INTEREST_MISSING": 61495,
+      "SPREAD_WARMUP_LT_60_VALID_SAMPLES": 61495,
+      "TICKER_24H_MISSING": 61495
+    }
+  },
+  "schema_version": "astrabot.c04.historical-pilot-summary.v1",
+  "smoke_manifest_sha256": "84cc3f8f584e06982ecb644673ee88471939a11d80c0097bcf5957e34d4d9087",
+  "smoke_verification": {
+    "archive_bytes": 414954,
+    "archive_count": 7,
+    "date_utc": "2025-10-23",
+    "duplicate_open_times": 0,
+    "files": [
+      {
+        "actual_bytes": 51540,
+        "archive_id": "ADAUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "ADAUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "514df192a0b340c759ebfad5bd776ec396d7fe1a501396307032f1cf2f6690eb",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "actual_bytes": 59261,
+        "archive_id": "BNBUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "BNBUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "48f0f8cd1a4c2504c0fcdce29eeb6388f4bb110ce36e7762a3d21b8962251b21",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "actual_bytes": 62579,
+        "archive_id": "BTCUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "BTCUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "41e5b20e94e21c87339dee9cafbab9442bcf846a655aa51978e47331190f5b57",
+        "symbol": "BTCUSDT"
+      },
+      {
+        "actual_bytes": 58863,
+        "archive_id": "DOGEUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "DOGEUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "ebb7761d7db68ef027d85b712191ee5525c7adc38f5d647bb7da90c9a4580c06",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "actual_bytes": 64851,
+        "archive_id": "ETHUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "ETHUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "700e4a10a8e423979d07d7f86878dac0fc3b30be14c3c507e2cdf17554dbfcfd",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "actual_bytes": 60051,
+        "archive_id": "SOLUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "SOLUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "c9d29d9e46267b6eea0d102743323c5a45393ac2af8442d1ddfff0f49aa0910e",
+        "symbol": "SOLUSDT"
+      },
+      {
+        "actual_bytes": 57809,
+        "archive_id": "XRPUSDT-1m-2025-10-23.zip",
+        "first_open_time": "2025-10-23T00:00:00.000Z",
+        "http_status": 200,
+        "last_open_time": "2025-10-23T23:59:00.000Z",
+        "member": "XRPUSDT-1m-2025-10-23.csv",
+        "quality_status": "PASS",
+        "rows": 1440,
+        "sha256": "86f36a20d489eedefdd870056318df8f7c2126552b9442ae0fb6e3edc4254d21",
+        "symbol": "XRPUSDT"
+      }
+    ],
+    "http_statuses": {
+      "200": 7
+    },
+    "integrity_pass_count": 7,
+    "missing_intervals": 0,
+    "out_of_order_open_times": 0,
+    "rows": 10080
+  },
+  "source_manifest_sha256": "6a34aae6b37ec9b48aa166dda52cd578a86776ef8b36be05aaaa5bf42f51058a",
+  "statistics": {
+    "market_time_block_ci95": null,
+    "profitability_claim": false,
+    "status": "NOT_TESTABLE",
+    "strict_historical_outcomes": 0
+  },
+  "study_windows": {
+    "development": {
+      "end_exclusive": "2024-10-01T00:00:00Z",
+      "start": "2024-09-01T00:00:00Z"
+    },
+    "outcome_purge_embargo_hours": 12,
+    "source_only_warmup": {
+      "end_exclusive": "2024-09-01T00:00:00Z",
+      "start": "2024-07-01T00:00:00Z"
+    },
+    "untouched_evaluation": {
+      "end_exclusive": "2024-11-01T00:00:00Z",
+      "start": "2024-10-15T00:00:00Z"
+    },
+    "validation": {
+      "end_exclusive": "2024-10-15T00:00:00Z",
+      "start": "2024-10-01T00:00:00Z"
+    }
+  },
+  "warmup": {
+    "august_only_4h_rows_per_symbol": 186,
+    "august_only_is_insufficient_for_c02_4h_gate": true,
+    "c02": {
+      "at_development_open": {
+        "ADAUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "BNBUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "BTCUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "DOGEUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "ETHUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "SOLUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "XRPUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        }
+      },
+      "earliest_ohlcv_history_ready_at_utc": "2024-08-03T08:00:00+00:00",
+      "note": "OHLCV history readiness only; missing mandatory C02 evidence still blocks STRICT_POLICY_REPLAY.",
+      "per_symbol_threshold_arrivals_utc": {
+        "ADAUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        },
+        "BNBUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        },
+        "BTCUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        },
+        "DOGEUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        },
+        "ETHUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        },
+        "SOLUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        },
+        "XRPUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T00:00:00+00:00",
+          "4h": "2024-08-03T08:00:00+00:00",
+          "5m": "2024-07-01T01:40:00+00:00"
+        }
+      },
+      "required_closed_contiguous_bars": {
+        "15m": 21,
+        "1h": 720,
+        "4h": 200,
+        "5m": 20
+      }
+    },
+    "c02_4h_gate_rows": 200,
+    "c03": {
+      "at_development_open": {
+        "ADAUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "BNBUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "BTCUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "DOGEUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "ETHUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "SOLUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        },
+        "XRPUSDT": {
+          "15m": 5952,
+          "1h": 1488,
+          "4h": 372,
+          "5m": 17856
+        }
+      },
+      "earliest_ohlcv_history_ready_at_utc": "2024-07-31T15:00:00+00:00",
+      "note": "OHLCV history readiness only; missing mandatory C02 evidence still blocks STRICT_POLICY_REPLAY.",
+      "per_symbol_threshold_arrivals_utc": {
+        "ADAUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        },
+        "BNBUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        },
+        "BTCUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        },
+        "DOGEUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        },
+        "ETHUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        },
+        "SOLUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        },
+        "XRPUSDT": {
+          "15m": "2024-07-01T05:15:00+00:00",
+          "1h": "2024-07-31T15:00:00+00:00",
+          "4h": "2024-07-09T20:00:00+00:00",
+          "5m": "2024-07-01T01:15:00+00:00"
+        }
+      },
+      "required_closed_contiguous_bars": {
+        "15m": 21,
+        "1h": 735,
+        "4h": 53,
+        "5m": 15
+      }
+    },
+    "source_only_warmup": {
+      "end_exclusive": "2024-09-01T00:00:00+00:00",
+      "start": "2024-07-01T00:00:00+00:00"
+    }
+  }
+}

@@ -1,5 +1,7 @@
 # C04 historical replay and execution economics — research handoff
 
+> This report records the original pre-recovery C04 panel at PR #4 review time. The follow-up authentic Binance archive pilot is documented in [`historical_pilot.md`](historical_pilot.md), with exact per-archive hashes in [`historical_manifest.json`](historical_manifest.json). The new pilot still fails closed and does not qualify economic performance.
+
 **Run:** `9344c555fe642298adf91a0ec5c17a7172734c062bd0d5f528ad85d917dc7d4b`
 **Configuration hash:** `8b3b4b56ef7221227f1d7b77ad943eb020468ac7e0e68d122c04678e7a6fa799`
 **Verdict:** `BLOCKED_BY_DATA`

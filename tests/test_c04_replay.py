@@ -73,6 +73,21 @@ def test_c04_full_funnel_is_capped_reproducible_and_fail_closed():
     assert first["statistics"]["market_time_block_bootstrap"]["ci95"] is None
 
 
+def test_c04_bounded_replay_selects_only_requested_causal_snapshots_and_history():
+    panel = load_c02_panel(ROOT / "research/c02_panel")
+    run = replay_panel(panel, evaluation_interval="1h",
+        replay_start=datetime(2024, 10, 28, 6, tzinfo=START.tzinfo),
+        replay_end=datetime(2024, 10, 28, 12, tzinfo=START.tzinfo),
+        history_limits={"1h": 10})
+    assert run["time_range"]["evaluation_windows"] == 6
+    assert run["time_range"]["first_available_at"] == "2024-10-28T06:00:00+00:00"
+    assert run["time_range"]["last_available_at"] == "2024-10-28T11:00:00+00:00"
+    assert run["config"]["bounded_replay_scope"]["evaluation_interval"] == "1h"
+    assert run["config"]["bounded_replay_scope"]["history_limits_by_interval"] == {"1h": 10}
+    assert run["modes"]["STRICT_POLICY_REPLAY"]["candidate_count"] == 0
+    assert run["modes"]["STRICT_POLICY_REPLAY"]["shortlisted_symbol_windows"] == 0
+
+
 def test_c04_synthetic_fully_eligible_panel_runs_strict_candidate_through_e0_e1_e2_and_portfolios():
     panel = synthetic_eligible_panel()
     run = replay_panel(panel)
