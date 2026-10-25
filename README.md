@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 are merged on `main`; the bounded C04 public-archive pilot is on a review branch. Authentic OHLCV warm-up and price diagnostics are now available, while STRICT_POLICY_REPLAY remains blocked by missing historical metadata, market evidence and event clearance.** No market edge or live safety qualification has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026). **Current status: C01–C04 and the narrow C05 source-feasibility preflight are merged on `main`.** Authentic seven-symbol OHLCV price diagnostics are available; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,7 +39,9 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**C04 / P3: bounded historical data recovery and causal diagnostics.** PR #4 merged at `2df822cd691dfcef3723e025d3071625e6b31294`. The follow-up branch acquires a fixed seven-symbol, July–October 2024 USDⓈ-M pilot across 5m/15m/1h/4h, keeps archives outside Git, and extends source-only warm-up into July. The current replay remains `BLOCKED_BY_DATA`: OHLCV alone cannot satisfy point-in-time contract, spread/depth/OI/event gates or establish fills. See [historical pilot](research/c04/historical_pilot.md), [checksum manifest](research/c04/historical_manifest.json), [C04 source inventory](research/c04/source_inventory.json), and [review handoff](docs/07-ENGINEERING-JOURNAL.md). C05 economics remains `INSUFFICIENT_EVIDENCE`.
+**P3 — Research evidence hold; not P4 implementation.** Reviewed and owner-merged [C04 replay PR #4](https://github.com/KasunKarandagolla/AstraBot/pull/4), [authentic archive pilot PR #5](https://github.com/KasunKarandagolla/AstraBot/pull/5), and [C05 feed feasibility preflight PR #6](https://github.com/KasunKarandagolla/AstraBot/pull/6). The last is **a source-feasibility decision**, not the original C05 complete-policy economic GO/STOP qualification. The bounded prospective read-only data route (SOLUSDT/DOGEUSDT) is a **recommendation pending an explicit owner deployment/storage decision**, not an active collector. See [source-feasibility report](research/c05/DATA_FEASIBILITY.md) and [journal](docs/07-ENGINEERING-JOURNAL.md).
+
+**Latest whole-project phase-gate accounting:** verified 45% / remaining unqualified 55% toward demo-safe development scope: P0 10%, P1 foundation 15%, P2 20% passed; P3 25% empirical gate unpassed, P4 10% / P5 15% / P6 5% not started. This measures milestone gate credit, not profitability, time spent or live readiness. **NEXT_GATE:** ask owner whether to authorize a durable, bounded, unauthenticated prospective market-data observation plan; do not begin continuous collection or proceed to execution before that decision and an evidence plan.
 
 ## Source authority and drift prevention
 
