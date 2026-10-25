@@ -238,3 +238,9 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Runtime/storage decision boundary:** the report compares local owner-controlled hosting with a small always-on remote host and recommends a remote-host plus separate versioned external object-storage candidate for owner review only. Provider cost and storage growth are unknown; no service was purchased, provisioned, configured, or deployed. The prior NEXT_GATE is unchanged: owner must choose runtime, horizon, retention and monitoring before continuous collection.
 - **Session/resources:** one Codex session, no subagents, no historical downloads, no C04 replay, one live API GET (224 response bytes) plus one blocked documentation GET (0 bytes). Exact model identifier, quota, elapsed task time and compute use are not exposed; no estimates are claimed.
 - **Review / delivery:** implementation and report are ready for independent review. This entry does not claim a C05 or P3 pass; PR/commit delivery details are appended after publication.
+
+#### C05-C0 GitHub delivery addendum — 2026-10-25
+
+- **Implementation commit:** `4b39523c49d44b06c033366d3e92021e6050c63f` — `C05-C0: add one-shot public observer smoke prototype`.
+- **Branch / PR / verified base:** `codex/c05-c0-public-observer-smoke`; [PR #8](https://github.com/KasunKarandagolla/AstraBot/pull/8) opened against `main` at `d736eb6dc67725498d24bdd2a6b053fe7193b02f`. PR is open and not merged; no auto-merge was enabled.
+- **Independent review requested:** review the endpoint allowlist, request/byte caps, immutable raw provenance, fail-closed quality output, and environment limitations before any continuous collection is considered. Owner runtime/storage/horizon decision and existing NEXT_GATE remain required.
