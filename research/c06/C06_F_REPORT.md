@@ -91,11 +91,21 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 work/c06-f-venv/bin/python -m pytest -q
 244 passed in 181.26s
 ~~~
 
-The focused C01/C06 regression command completed with **95 passed in 31.73s**. The dedicated official-MCP-SDK, fresh-process acceptance test completed with **1 passed in 112.10s**. It verifies exactly six MCP tools, two concurrent consume processes with one winning one-use claim, network attempts blocked at zero, disconnected exit with zero venue-write delta, unknown entry halted without resubmission, unknown exit management intent reconciled to its exact correlated fake venue order, a concurrent read-only Journal summary during supervisor recovery, final MCP reopen at CLOSED_RECONCILED, and final fake venue state FLAT_RECONCILED. Separate NO_TRADE, rejected and expired proposals all retain zero fake venue writes. Missing/rejected protection and late-fill fault cases remain fail-closed or use the already correlated reduce-only emergency close.
+The focused and dedicated process-boundary commands were:
+
+~~~text
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 work/c06-f-venv/bin/python -m pytest -q tests/test_c01_acceptance.py tests/test_c06_durable_runtime.py tests/test_c06_offline_openbot.py tests/test_c06_role_summaries.py
+95 passed in 31.73s
+
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 work/c06-f-venv/bin/python -m pytest -q tests/test_c06_process_acceptance.py
+1 passed in 112.10s
+~~~
+
+The dedicated test uses the official MCP SDK and fresh processes. It verifies exactly six MCP tools, two concurrent consume processes with one winning one-use claim, network attempts blocked at zero, disconnected exit with zero venue-write delta, unknown entry halted without resubmission, unknown exit management intent reconciled to its exact correlated fake venue order, a concurrent read-only Journal summary during supervisor recovery, final MCP reopen at CLOSED_RECONCILED, and final fake venue state FLAT_RECONCILED. Separate NO_TRADE, rejected and expired proposals all retain zero fake venue writes. Missing/rejected protection and late-fill fault cases remain fail-closed or use the already correlated reduce-only emergency close.
 
 Compilation, pinned-environment dependency checks and whitespace validation also passed: compileall, pip check reported no broken requirements, and git diff --check was clean. The acceptance harness instruments its parent and subprocesses to reject outbound non-loopback networking and reports zero attempts. Its persistent stores are disposable synthetic fixtures only.
 
-The final implementation commit and final-head GitHub Actions result are recorded in the delivery addendum below and in PR #23. Local checks do not prove owner-run OpenBot acceptance; that remains OWNER_OPENBOT_ACCEPTANCE_PENDING.
+Implementation commit: 21aa2709e9b98e54d28d94672b50f0ad0b6e2d02. GitHub Actions must pass on the final pushed PR head; its observed result is linked from PR #23 and is reported separately from local verification. Local checks do not prove owner-run OpenBot acceptance; that remains OWNER_OPENBOT_ACCEPTANCE_PENDING.
 
 ## Remaining limits
 
