@@ -40,6 +40,6 @@ def test_mcp_child_environment_keeps_windows_systemroot_without_unrelated_secret
     monkeypatch.setenv("SystemRoot", r"C:\\Windows")
     monkeypatch.setenv("ASTRABOT_UNRELATED_TEST_SECRET", "fake-not-a-real-secret")
     env = isolated_child_environment(PYTHONPATH="test-src")
-    assert env["SystemRoot"] == r"C:\\Windows"
+    assert env.get("SystemRoot", env.get("SYSTEMROOT")) == r"C:\\Windows"
     assert env["PYTHONPATH"] == "test-src"
     assert "ASTRABOT_UNRELATED_TEST_SECRET" not in env
