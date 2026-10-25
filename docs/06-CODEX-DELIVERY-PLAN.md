@@ -15,15 +15,15 @@
 
 ## Current implementation checkpoint
 
-C01, C02 and C03 are merged on `main`; the verified C04 base is `c052bcd60e441ed1f72de18abefa733c1b271729`. Independent project-lead reviews accepted C01/P0, C02/P1 foundation and C03/P2 with deferred data/economic nonblockers. C04 implements the P3 replay/evidence pipeline on `codex/c04-causal-market-replay`. Its retained-source run is `BLOCKED_BY_DATA`, not a C05 economic decision; the C04 engineering diff and blocker evidence are ready for independent review. No P3 completion weight or C05 approval is awarded here.
+C01–C04 are merged on `main`; C04 merge commit is `2df822cd691dfcef3723e025d3071625e6b31294`. The follow-up branch `codex/c04-authentic-data-pilot` contains a checksum-backed seven-symbol, four-timeframe public Binance USDⓈ-M pilot for July–October 2024, extends source-only warm-up into July, and runs the existing C02/C03/C04 pipeline on bounded hourly snapshots while retaining all source intervals in each as-of context. This cadence can miss transient setup changes between snapshots. STRICT_POLICY_REPLAY remains `BLOCKED_BY_DATA` because OHLCV does not supply point-in-time contract metadata, spreads/depth, validated OI, event clearance or observed fills. The current gate is independent project-lead review of the authentic pilot and its fail-closed evidence; no P3 empirical credit or C05 economic approval is awarded.
 
-## Explicit MVP-first strategy (C04 engineering review is the active gate)
+## Explicit MVP-first strategy (C04 historical-data review is the active gate)
 
 An MVP is an **end-to-end working capability**, not packages installed or ten basic signals. Prioritize the smallest credible vertical slice early, then expand after its evidence gate.
 
 | Deliverable | Existing task(s) | Demonstrable minimum | Exit gate |
 |---|---|---|---|
-| **MVP-R0: first real-data slice** | C02 | Public Binance futures altcoin screening, timestamps/readiness, at least one qualified prebuilt analytics adapter, persisted sample evidence | Reproducible shortlist plus missing-data/no-trade explanation; no fake alpha claims |
+| **MVP-R0: first real-data slice** | C02–C04 | Public Binance USDⓈ-M bars and source/checksum manifests across the declared cohort; C02/C03 fail-closed eligibility and price diagnostics | Reproducible source coverage and missing-data/no-trade explanation; historical dynamic eligibility remains blocked until point-in-time evidence exists |
 | **MVP-R1: research MVP** | C03–C04, C05 review | End-to-end universe → candidate/setup or NO_TRADE → structural entry/stop/target → cost_R → causal replay/report, for at least one testable policy; source-backed trader-level case review | Same policy/timestamps reproduce positive and negative case; economic review says GO/REVISE/STOP without hindsight |
 | **MVP-A: agentic paper MVP** | C06 | OpenBot coordinator → typed analysis tool → bounded human-approval request → simulated execution/position supervision → concise machine-derived journal for a representative case | End-to-end test succeeds; model cannot submit orders or invent risk; expired/rejected proposals cannot trade |
 | **Demo-safe v1** | C07–C09 | One exchange order owner and protective/partial/12h/recovery tests, then integrated demo | Safety/economic promotion gates; later than MVP |

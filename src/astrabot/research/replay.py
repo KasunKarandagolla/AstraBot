@@ -8,9 +8,12 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import io
 import json
 import time
 import tracemalloc
+import zipfile
+from bisect import bisect_right
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -19,8 +22,8 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from astrabot.data.models import Candle, binance_usdm_instrument_id, config_hash, stable_id
-from astrabot.data.replay import normalize_agg_trades, normalize_klines, trade_quality
-from astrabot.research.engine import evaluate, point_in_time
+from astrabot.data.replay import candle_quality, normalize_agg_trades, normalize_klines, trade_quality
+from astrabot.research.engine import evaluate
 from astrabot.research.models import CostProfile, ResearchAccount, ResearchDecision, ResearchState
 from astrabot.research.simulation import (
     ExecutionScenario, PortfolioLedger, ScenarioOutcome, simulate_decision,
@@ -140,6 +143,153 @@ def load_c02_panel(panel_dir: str | Path) -> HistoricalPanel:
     for record in manifest["records"]:
         symbols.setdefault(record["symbol"], SymbolData())
     return HistoricalPanel(symbols=symbols, partitions=tuple(partitions), source_manifest=manifest)
+
+
+def load_public_um_archive_panel(manifest_path: str | Path, data_root: str | Path) -> HistoricalPanel:
+    """Load a fully verified external archive manifest through the C02 normalizer."""
+    from astrabot.data.public_archive import planned_archives, validate_archive_bytes
+
+    manifest_file = Path(manifest_path).resolve()
+    root = Path(data_root).resolve()
+    if len(manifest_file.parents) < 3:
+        raise ValueError("pilot manifest path does not identify a repository root")
+    repo_root = manifest_file.parents[2]
+    if root == repo_root or repo_root in root.parents:
+        raise ValueError("raw archive data root must remain outside the Git repository")
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    if (manifest.get("schema_version") != "astrabot.binance-um-archives.v1"
+            or manifest.get("phase") != "pilot"
+            or manifest.get("archive_host") != "data.binance.vision"):
+        raise ValueError("expected the verified public Binance USDⓈ-M pilot manifest")
+    plan = planned_archives("pilot")
+    expected_symbols = list(dict.fromkeys(spec.symbol for spec in plan))
+    expected_window = {
+        "source_only_warmup": {"start": "2024-07-01T00:00:00Z", "end_exclusive": "2024-09-01T00:00:00Z"},
+        "development": {"start": "2024-09-01T00:00:00Z", "end_exclusive": "2024-10-01T00:00:00Z"},
+        "validation": {"start": "2024-10-01T00:00:00Z", "end_exclusive": "2024-10-15T00:00:00Z"},
+        "untouched_evaluation": {"start": "2024-10-15T00:00:00Z", "end_exclusive": "2024-11-01T00:00:00Z"},
+        "outcome_purge_embargo_hours": 12,
+    }
+    if (manifest.get("symbols") != expected_symbols
+            or manifest.get("cadence") != "monthly"
+            or manifest.get("intervals") != ["5m", "15m", "1h", "4h"]
+            or manifest.get("window") != expected_window):
+        raise ValueError("pilot manifest cohort, intervals, cadence, or frozen study windows mismatch")
+    by_id = {spec.filename: spec for spec in plan}
+    records = manifest.get("archives", [])
+    if (manifest.get("archive_count_planned") != len(plan)
+            or manifest.get("archive_count_completed") != len(plan)
+            or len(records) != len(plan)
+            or manifest.get("total_actual_bytes") != sum(
+                int(record.get("actual_bytes", -1)) for record in records)
+            or {record.get("archive_id") for record in records} != set(by_id)):
+        raise ValueError("pilot manifest is incomplete or exceeds the declared fixed plan")
+    manifest_digest = _sha256(manifest_file)
+    symbols: dict[str, dict[str, list[Candle]]] = {}
+    partitions: list[dict[str, Any]] = []
+    step_ms = {"5m": 300_000, "15m": 900_000, "1h": 3_600_000, "4h": 14_400_000}
+    for record in records:
+        spec = by_id[record["archive_id"]]
+        if (record.get("symbol") != spec.symbol
+                or record.get("interval") != spec.interval
+                or record.get("cadence") != spec.cadence
+                or record.get("period_utc") != spec.period
+                or record.get("source_url") != spec.url
+                or record.get("data_root_relative_path") != spec.relative_path
+                or record.get("http_status") != 200):
+            raise ValueError(f"source plan/status mismatch for {spec.filename}")
+        relative = Path(record["data_root_relative_path"])
+        archive_path = (root / relative).resolve()
+        if root not in archive_path.parents:
+            raise ValueError(f"archive path escapes external data root: {spec.filename}")
+        if not archive_path.is_file() or archive_path.stat().st_size != record.get("actual_bytes"):
+            raise ValueError(f"archive missing or size mismatch: {spec.filename}")
+        if _sha256(archive_path) != record.get("sha256"):
+            raise ValueError(f"archive SHA256 mismatch: {spec.filename}")
+        blob = archive_path.read_bytes()
+        validation = validate_archive_bytes(blob, spec)
+        if (validation["quality"]["status"] != "PASS"
+                or validation["csv_schema"] != record.get("csv_schema")
+                or validation["csv_member_bytes"] != record.get("csv_member_bytes")
+                or validation["csv_member_sha256"] != record.get("csv_member_sha256")
+                or validation["members"] != record.get("members")
+                or validation["coverage_start"] != record.get("coverage_start")
+                or validation["coverage_end"] != record.get("coverage_end")
+                or validation["quality"] != record.get("quality")):
+            raise ValueError(f"archive/manifest content validation mismatch: {spec.filename}")
+        with zipfile.ZipFile(io.BytesIO(blob)) as archive:
+            csv_bytes = archive.read(spec.member)
+        text = csv_bytes.decode("utf-8-sig", errors="strict")
+        rows = list(csv.DictReader(io.StringIO(text, newline="")))
+        interval = spec.interval
+        latest_close = max(int(row["close_time"]) for row in rows)
+        cutoff = datetime.fromtimestamp((latest_close + 1) / 1000, timezone.utc)
+        normalized = _parse_klines(rows, spec.symbol, interval, cutoff)
+        if len(normalized) != record["quality"]["actual_rows"]:
+            raise ValueError(f"C02 normalizer row count mismatch: {spec.filename}")
+        symbols.setdefault(spec.symbol, {}).setdefault(interval, []).extend(normalized)
+        bars = sorted(normalized, key=lambda candle: candle.open_time)
+        instrument_id = binance_usdm_instrument_id(spec.symbol)
+        partitions.append({
+            "feed": f"klines:{interval}", "symbol": spec.symbol, "instrument_id": instrument_id,
+            "contract_type": "PERPETUAL", "settlement_asset": "USDT",
+            "source": "Binance public historical archive (data.binance.vision)",
+            "source_url": spec.url, "archive_id": spec.filename,
+            "retrieved_at": record["retrieved_at_utc"], "raw_archive_sha256": record["sha256"],
+            "retained_input_sha256": validation["csv_member_sha256"],
+            "archive_bytes": record["actual_bytes"], "retained_bytes": validation["csv_member_bytes"],
+            "coverage_start": validation["coverage_start"], "coverage_end": validation["coverage_end"],
+            "first_event_time": min(c.close_time for c in bars).isoformat(),
+            "last_event_time": max(c.close_time for c in bars).isoformat(),
+            "actual_row_count": len(rows), "normalized_row_count": len(normalized),
+            "source_event_time": "Binance kline inclusive close_time in epoch milliseconds UTC",
+            "known_available_at": "close_time + 1 millisecond proxy; archive publication/ingestion latency unavailable",
+            "ingested_at_observed": False,
+            "replay_ingested_at": max(c.available_at for c in bars).isoformat(),
+            "interval": interval,
+            "original_units": "OHLC in USDT per base asset; base volume in base; quote volume in USDT",
+            "known_missing_intervals": [], "duplicates": 0, "corrections": [],
+            "historical_listing_metadata": "UNAVAILABLE; the declared cohort is not a historical dynamic universe",
+            "fidelity": "VENUE_REPORTED",
+            "could_be_known_at_replay_time": "UNVERIFIED; archive close-time proxy only",
+            "availability_status": "OBSERVED_WITH_EXPLICIT_AVAILABILITY_PROXY",
+            "used_for_policy": True, "quality_findings": record["quality"],
+            "http_status": record["http_status"], "row_step_ms": step_ms[interval],
+        })
+    symbol_data: dict[str, SymbolData] = {}
+    cross_archive_quality: dict[str, dict[str, int]] = {}
+    for symbol, intervals in symbols.items():
+        for interval, rows in intervals.items():
+            findings = candle_quality(sorted(rows, key=lambda candle: candle.open_time))
+            counts = {reason: sum(gap.reason == reason for gap in findings)
+                      for reason in ("DUPLICATE", "OUT_OF_ORDER", "MISSING_INTERVAL")}
+            cross_archive_quality[f"{symbol}:{interval}"] = counts
+            if any(counts.values()):
+                raise ValueError(f"cross-archive {interval} continuity failure for {symbol}: {counts}")
+        fields = {f"candles_{interval}": tuple(sorted(rows,
+            key=lambda candle: (candle.open_time, candle.source_record_id)))
+            for interval, rows in intervals.items()}
+        symbol_data[symbol] = SymbolData.model_validate(fields)
+    for symbol in manifest["symbols"]:
+        symbol_data.setdefault(symbol, SymbolData())
+    source_manifest = {
+        "evidence_class": manifest["evidence_class"],
+        "manifest_path": "research/c04/historical_manifest.json",
+        "archive_manifest_sha256": manifest_digest,
+        "archive_count": len(records), "total_archive_bytes": manifest["total_actual_bytes"],
+        "symbols": list(manifest["symbols"]), "cohort_limit": manifest["cohort_limit"],
+        "study_windows": manifest["window"],
+        "cross_archive_continuity": cross_archive_quality,
+        "historical_contract_metadata": "UNAVAILABLE; no point-in-time exchangeInfo snapshot",
+        "validated_open_interest": "UNAVAILABLE; no OI archive included",
+        "verified_event_clearance": "UNAVAILABLE; no historical event/news source included",
+        "quotes_or_depth": "UNAVAILABLE; not derivable from OHLCV",
+        "funding_settlements": "UNAVAILABLE; no funding archive included",
+        "observed_ioc_fills": "UNAVAILABLE; bars do not establish orders or fills",
+    }
+    return HistoricalPanel(symbols=symbol_data, partitions=tuple(sorted(partitions,
+        key=lambda row: (row["symbol"], row["interval"], row["coverage_start"]))),
+        source_manifest=source_manifest)
 
 
 def derive_4h_from_1h(candles: tuple[Candle, ...]) -> tuple[Candle, ...]:
@@ -300,7 +450,8 @@ def _funnel_event(kind: str, at: datetime, symbol: str, details: dict[str, Any],
             "processing_time": at.isoformat(), "symbol": symbol, "details": details}
 
 
-def _panel_point_in_time(panel: HistoricalPanel, symbol: str, as_of: datetime) -> SymbolData:
+def _panel_point_in_time(panel: HistoricalPanel, symbol: str, as_of: datetime,
+                         history_limits: dict[str, int] | None = None) -> SymbolData:
     data = panel.symbols[symbol]
     history = panel.observation_history.get(symbol, {})
     updates: dict[str, Any] = {}
@@ -317,7 +468,23 @@ def _panel_point_in_time(panel: HistoricalPanel, symbol: str, as_of: datetime) -
     if "spread_samples" in history:
         updates["spread_samples"] = tuple(sorted((row for row in history["spread_samples"]
             if row.available_at <= as_of and row.event_time <= as_of), key=lambda row: row.event_time))
-    return point_in_time(data.model_copy(update=updates), as_of)
+    for interval in ("5m", "15m", "1h", "4h"):
+        name = f"candles_{interval}"
+        rows = getattr(data, name)
+        if not rows:
+            continue
+        # Candle partitions are sorted by open time and archive availability
+        # is monotonic. Binary search avoids rescanning months of history at
+        # every bounded replay timestamp.
+        end = bisect_right(rows, as_of, key=lambda candle: candle.available_at)
+        visible = rows[:end]
+        limit = history_limits.get(interval) if history_limits else None
+        if limit is not None:
+            if limit <= 0:
+                raise ValueError(f"history limit for {interval} must be positive")
+            visible = visible[-limit:]
+        updates[name] = visible
+    return data.model_copy(update=updates)
 
 
 def _panel_availability_times(panel: HistoricalPanel) -> list[datetime]:
@@ -561,7 +728,13 @@ def _execution_replay(
     return outcome_by_scenario, execution_events, metrics
 
 
-def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[str, Any]:
+def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15,
+                 replay_start: datetime | None = None,
+                 replay_end: datetime | None = None,
+                 evaluation_interval: str | None = None,
+                 history_limits: dict[str, int] | None = None,
+                 compact_diagnostics: bool = False,
+                 diagnostic_sample_times: Sequence[datetime] = ()) -> dict[str, Any]:
     """Replay event snapshots through point-in-time C02 and persistent C03.
 
     The policy ledger uses only C02-selected symbols. A separate diagnostics
@@ -570,7 +743,26 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
     """
     if not 1 <= shortlist_limit <= 15:
         raise ValueError("shortlist limit must be between 1 and 15")
-    times = _panel_availability_times(panel)
+    if evaluation_interval is not None and evaluation_interval not in ("5m", "15m", "1h", "4h"):
+        raise ValueError("evaluation_interval must be 5m, 15m, 1h, or 4h")
+    if replay_start is not None and replay_start.utcoffset() != timedelta(0):
+        raise ValueError("replay_start must be UTC")
+    if replay_end is not None and replay_end.utcoffset() != timedelta(0):
+        raise ValueError("replay_end must be UTC")
+    if replay_start is not None and replay_end is not None and replay_end <= replay_start:
+        raise ValueError("replay_end must be after replay_start")
+    if any(sample.utcoffset() != timedelta(0) for sample in diagnostic_sample_times):
+        raise ValueError("diagnostic sample times must be UTC")
+    if evaluation_interval is None:
+        times = _panel_availability_times(panel)
+    else:
+        candle_field = f"candles_{evaluation_interval}"
+        times = sorted({c.available_at for data in panel.symbols.values()
+            for c in getattr(data, candle_field)})
+    if replay_start is not None:
+        times = [at for at in times if at >= replay_start]
+    if replay_end is not None:
+        times = [at for at in times if at < replay_end]
     config = {"schema_version": "c04.replay-config.v1", "engine": "thin-c02-c03-event-adapter.v1",
         "shortlist_limit": shortlist_limit, "policy_versions": {"T1": "T1.reclaim.v1",
         "R1": "R1.sweep.v1", "B1": "B1.original-ladder.v1"},
@@ -582,6 +774,17 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
         "selection": "C02 deterministic point-in-time eligibility/shortlist",
         "execution": "E0 policy truth; E1/E2 counterfactual simulation with separate per-scenario PortfolioLedger",
         "portfolio_policy": "v1.5 per-trade/aggregate risk, slots, symbol lock, leverage and UTC loss halt"}
+    if (evaluation_interval is not None or replay_start is not None or replay_end is not None
+            or history_limits or compact_diagnostics or diagnostic_sample_times):
+        config["bounded_replay_scope"] = {
+            "evaluation_interval": evaluation_interval or "all_available_sources",
+            "start_inclusive": replay_start.isoformat() if replay_start else None,
+            "end_exclusive": replay_end.isoformat() if replay_end else None,
+            "history_limits_by_interval": history_limits or {},
+            "compact_diagnostics": compact_diagnostics,
+            "diagnostic_sample_times": sorted(at.isoformat() for at in diagnostic_sample_times),
+            "scope_note": "Source files retain full declared coverage; snapshots are evaluated only at this bounded cadence/window.",
+        }
     config_digest = config_hash(config)
     source_digests = sorted(p["retained_input_sha256"] for p in panel.partitions)
     run_id = stable_id("c04.run.v1", config_digest, source_digests)
@@ -589,6 +792,11 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
     strict_decisions: list[dict[str, Any]] = []
     strict_candidate_objects: list[ResearchDecision] = []
     diagnostic_decisions: list[dict[str, Any]] = []
+    diagnostic_counts: Counter[str] = Counter()
+    diagnostic_reasons: Counter[str] = Counter()
+    diagnostic_context_readiness: Counter[str] = Counter()
+    diagnostic_policy_eligible_count = 0
+    diagnostic_samples = set(diagnostic_sample_times)
     strict_states: dict[str, ResearchState] = {}
     diagnostic_states: dict[str, ResearchState] = {}
     discovered_at: dict[str, datetime] = {}
@@ -598,7 +806,8 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
     tracemalloc.start()
     started = time.perf_counter()
     for at in times:
-        visible = {symbol: _panel_point_in_time(panel, symbol, at) for symbol in panel.symbols}
+        visible = {symbol: _panel_point_in_time(panel, symbol, at, history_limits)
+                   for symbol in panel.symbols}
         for symbol in sorted(coverage_symbols):
             if symbol not in discovered_at:
                 discovered_at[symbol] = at
@@ -654,13 +863,42 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
             result = evaluate(data, symbol=symbol, instrument_id=instrument_id, as_of=at,
                 account=synthetic_account(at), profile=profile, requested_quantity=D("1"),
                 state=diagnostic_states.get(symbol, ResearchState()))
-            diagnostic_states[symbol] = result.state
+            diagnostic_states[symbol] = (result.state.model_copy(update={"decisions": ()})
+                if compact_diagnostics else result.state)
+            decision_counts: Counter[str] = Counter()
+            reason_counts: Counter[str] = Counter()
+            context_readiness_counts: Counter[str] = Counter()
             for decision in result.emitted:
                 serialized = decision.model_dump(mode="json")
-                diagnostic_decisions.append(serialized)
-                events.append(_funnel_event("EXPLORATORY_SIGNAL_DIAGNOSTIC", at, symbol,
-                    {"decision_id": decision.decision_id, "decision": decision.decision,
-                     "reasons": list(decision.rejection_reason_codes), "mandatory_gates_bypassed": []},
+                diagnostic_counts[decision.decision] += 1
+                decision_counts[decision.decision] += 1
+                for reason in decision.rejection_reason_codes:
+                    diagnostic_reasons[reason] += 1
+                    reason_counts[reason] += 1
+                context_dependency = next((dep for dep in decision.dependencies
+                    if dep.name == "CONTEXT"), None)
+                if context_dependency is not None:
+                    diagnostic_context_readiness[context_dependency.readiness] += 1
+                    context_readiness_counts[context_dependency.readiness] += 1
+                if decision.decision == "RESEARCH_CANDIDATE" and any(
+                        dep.name == "C02_UNIVERSE" and dep.readiness == "READY"
+                        for dep in decision.dependencies):
+                    diagnostic_policy_eligible_count += 1
+                if not compact_diagnostics or at in diagnostic_samples:
+                    diagnostic_decisions.append(serialized)
+                if not compact_diagnostics:
+                    events.append(_funnel_event("EXPLORATORY_SIGNAL_DIAGNOSTIC", at, symbol,
+                        {"decision_id": decision.decision_id, "decision": decision.decision,
+                         "reasons": list(decision.rejection_reason_codes), "mandatory_gates_bypassed": []},
+                        source_time=last_source.event_time if last_source else None,
+                        available_at=last_source.available_at if last_source else None))
+            if compact_diagnostics:
+                events.append(_funnel_event("EXPLORATORY_SIGNAL_SNAPSHOT", at, symbol,
+                    {"decision_count": sum(decision_counts.values()),
+                     "decision_counts": dict(sorted(decision_counts.items())),
+                     "reason_counts": dict(sorted(reason_counts.items())),
+                     "context_readiness_counts": dict(sorted(context_readiness_counts.items())),
+                     "mandatory_gates_bypassed": []},
                     source_time=last_source.event_time if last_source else None,
                     available_at=last_source.available_at if last_source else None))
     scenario_outcomes, execution_events, execution_metrics = _execution_replay(
@@ -684,9 +922,8 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
     for row in eligibility_latest.values():
         for reason in row["reasons"]:
             no_trade_reasons[reason] = no_trade_reasons.get(reason, 0) + 1
-    for row in diagnostic_decisions:
-        for reason in row["rejection_reason_codes"]:
-            no_trade_reasons[reason] = no_trade_reasons.get(reason, 0) + 1
+    for reason, count in diagnostic_reasons.items():
+        no_trade_reasons[reason] = no_trade_reasons.get(reason, 0) + count
     synthetic_panel = panel.source_manifest.get("evidence_class", "").startswith("SYNTHETIC_")
     strict_status = ("SYNTHETIC_PIPELINE_TEST_ONLY" if synthetic_panel else
         ("BLOCKED_BY_DATA" if not strict_candidates else "RESEARCH_CANDIDATES_ONLY"))
@@ -717,12 +954,10 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
             "status": strict_status},
             "EXPLORATORY_SIGNAL_DIAGNOSTICS": {"evidence_class": "SYNTHETIC_DIAGNOSTICS" if synthetic_panel
                 else "OBSERVED_HISTORICAL_DIAGNOSTICS",
-                "decision_count": len(diagnostic_decisions), "candidate_count": sum(
-                    d["decision"] == "RESEARCH_CANDIDATE" for d in diagnostic_decisions),
-                "mandatory_gates_bypassed": [], "policy_eligible_trade_count": sum(
-                    d["decision"] == "RESEARCH_CANDIDATE" and any(
-                        dep["name"] == "C02_UNIVERSE" and dep["readiness"] == "READY"
-                        for dep in d["dependencies"]) for d in diagnostic_decisions)}},
+                "decision_count": sum(diagnostic_counts.values()), "candidate_count": diagnostic_counts["RESEARCH_CANDIDATE"],
+                "mandatory_gates_bypassed": [],
+                "policy_eligible_trade_count": diagnostic_policy_eligible_count},
+        },
         "funnel": {"symbols_discovered": len(discovered_at), "symbols_with_source_coverage": len(coverage_symbols),
             "symbols_eligible_latest": len(eligible_latest), "symbol_evaluations_latest": len(eligibility_latest),
             "eligible_symbol_windows": sum(e["event_type"] == "ELIGIBILITY_WINDOW"
@@ -738,7 +973,7 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
             "setups_confirmed": sum(1 for setup in diagnostic_setups if setup.snapshot.confirmed_at is not None),
             "setups_consumed": setup_state_counts.get("CONSUMED", 0),
             "strict_candidate_decisions": len(strict_candidates),
-            "diagnostic_no_trade_decisions": sum(d["decision"] == "NO_TRADE" for d in diagnostic_decisions),
+            "diagnostic_no_trade_decisions": diagnostic_counts["NO_TRADE"],
             "vetoes_by_reason": dict(sorted(no_trade_reasons.items())),
             **{k: v for k, v in execution_metrics.items() if k not in (
                 "candidate_scenario_count", "portfolio_end_state_by_scenario")}},
@@ -751,9 +986,17 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15) -> dict[s
         "statistics": statistics,
         "holdout": {"development": None, "validation": None, "untouched_evaluation": None,
             "status": "NOT_TESTABLE", "reason": "The retained panel does not provide contiguous multi-symbol warm-up or valid policy opportunities."}}
+    decision_ledger = {"strict": strict_decisions, "diagnostic": diagnostic_decisions,
+        "scenario_outcomes": scenario_outcomes}
+    if compact_diagnostics:
+        core["diagnostic_summary"] = {
+            "decision_counts": dict(sorted(diagnostic_counts.items())),
+            "reason_counts": dict(sorted(diagnostic_reasons.items())),
+            "context_readiness_counts": dict(sorted(diagnostic_context_readiness.items())),
+            "sample_count": len(diagnostic_decisions), "compact": True}
+        decision_ledger["diagnostic_summary"] = core["diagnostic_summary"]
     core["output_manifest"] = {"schema_version": "c04.output-manifest.v1", "run_id": run_id,
-        "decision_ledger_sha256": config_hash({"strict": strict_decisions, "diagnostic": diagnostic_decisions,
-            "scenario_outcomes": scenario_outcomes}),
+        "decision_ledger_sha256": config_hash(decision_ledger),
         "funnel_ledger_sha256": config_hash(events), "source_partition_sha256": source_digests,
         "replay_version": "c04.thin-event-adapter.v2"}
     core["measurements"] = {"runtime_seconds": elapsed, "peak_traced_memory_bytes": peak_bytes,

@@ -24,7 +24,11 @@ def point_in_time(data: SymbolData, as_of) -> SymbolData:
         if s.available_at <= as_of and s.event_time <= as_of)
     fields["event_clearance"] = data.event_clearance if (
         data.event_clearance and data.event_clearance.as_of <= as_of) else None
-    return SymbolData.model_validate_json(data.model_copy(update=fields).model_dump_json())
+    # Every selected value is copied from an already validated immutable
+    # SymbolData instance. Re-validating hundreds or thousands of historical
+    # candles through JSON on every replay timestamp changes no evidence and
+    # dominates bounded multi-month archive runs.
+    return data.model_copy(update=fields)
 
 
 def evaluate(data: SymbolData, *, symbol: str, instrument_id: str, as_of,
