@@ -252,3 +252,8 @@ No code-derived deferred issues yet. Add only with reason, affected phase, inexp
 - **Evidence and recommendation:** [Tardis third-party data preflight](../research/c05/THIRD_PARTY_DATA_PREFLIGHT.md) records the four requested SOLUSDT/DOGEUSDT date cases, feed matrix, and C02/P3 gaps. Recommendation: **STOP pending owner/provider access clarification**; no account, subscription, or purchase. No Binance request, historical download, C04 replay, or test suite was run.
 - **Status preserved:** P3 remains unqualified; phase credit 45%; `C05 = INSUFFICIENT_EVIDENCE`; T1/R1/B1 remain `RESEARCH_ONLY`; OpenBot, approval/risk controls, and C06–C09 roadmap unchanged. This source check does not advance the gate.
 - **Session/resources:** one session, no subagents, one Tardis GET attempt, 0 response bytes. Precise elapsed time/model quota is unavailable. PR/commit delivery details follow after publication.
+
+#### C05 Tardis micro-preflight delivery addendum — 2026-10-25
+
+- **Commit:** `09a119c28da5acebebd8d81d85512581a159843d` — `Docs: add Tardis historical data preflight`.
+- **Branch / PR / base:** `codex/c05-tardis-source-microcheck`; [PR #9](https://github.com/KasunKarandagolla/AstraBot/pull/9) opened against `main` at verified base `c75c3f99c49e6f71aa5bc7ade0716e2a551a5922`. PR is open and unmerged; no auto-merge was enabled.
