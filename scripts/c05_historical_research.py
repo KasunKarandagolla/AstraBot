@@ -32,6 +32,7 @@ from astrabot.data.historical_sources import (  # noqa: E402
     new_diagnostics,
     verify_source,
 )
+from astrabot.data.historical_evidence import EVIDENCE_VERSION, load_evidence  # noqa: E402
 from astrabot.data.models import config_hash  # noqa: E402
 
 MANIFEST_VERSION = "c05g.historical-source-manifest.v1"
@@ -158,7 +159,7 @@ def _diagnostic_summary(diag: FeedDiagnostics) -> dict[str, Any]:
 
 def _markdown(report: dict[str, Any]) -> str:
     lines = [
-        f"# C05-G historical research replay - {report['symbol']} {report['date']}",
+        f"# C05-G/H historical research replay - {report['symbol']} {report['date']}",
         "",
         f"**Source integrity:** {'SYNTHETIC FIXTURE' if report['synthetic'] else 'SHA-256 verified original feeds'}; "
         f"configuration `{report['configuration_hash']}`.",
@@ -203,13 +204,30 @@ def _markdown(report: dict[str, Any]) -> str:
         "with both source timestamps no later than that endpoint and a strict maximum age below 60 seconds. The median threshold remains 0.10%; "
         "60 distinct occupied endpoints are required. The adjacent raw event-time count is reported separately.",
         "",
-        "Raw L2 amounts are not certified quantity or USDT notional. OI remains raw with unverified units and measurement-refresh time. "
-        "Reported funding fields are not classified as settled funding. No historical instrument metadata, event clearance, candles, fee schedule, "
-        "fills, or complete C02 eligibility is inferred.",
+        "Evidence checks below apply only to the pinned artifacts, effective intervals and datasets supplied. "
+        "A VERIFIED synthetic check establishes validation mechanics only. Book notional is visible reconstructed depth, not executable liquidity. "
+        "OI notional uses an explicitly supported same-row mark and measurement time; it is not a reported venue notional. "
+        "Reported funding fields are not classified as settled funding. Event clearance, candles, fees, fills and complete C02 eligibility remain separate gates.",
         "",
-        "## Unresolved blockers",
+        "## Historical metadata and quantity evidence",
         "",
+        f"Evidence version: `{report['evidence_version']}`; manifest SHA-256: `{report['evidence_manifest_sha256']}`.",
+        "",
+        "| Decision UTC | Check | Status | Reasons | Evidence IDs |",
+        "|---|---|---|---|---|",
     ])
+    for snapshot in report["snapshots"]:
+        validation = snapshot["evidence_validation"]
+        for name, check in sorted(validation["checks"].items()):
+            lines.append(f"| {snapshot['decision_time']} | {name} | {check['status']} | "
+                         f"{', '.join(check['reasons'])} | {', '.join(check['evidence_ids'])} |")
+    for snapshot in report["snapshots"]:
+        validation = snapshot["evidence_validation"]
+        lines.extend(["", f"At {snapshot['decision_time']}: OI measurement UTC `{validation['oi_measurement_at']}`; "
+                      f"OI notional USDT `{validation['oi_notional_usdt']}`; "
+                      f"visible bid/ask USDT within 0.20% `{validation['book_bid_notional_usdt_within_0_20']}` / "
+                      f"`{validation['book_ask_notional_usdt_within_0_20']}`.", ""])
+    lines.extend(["## Unresolved blockers", ""])
     all_blockers = sorted({blocker for item in report["snapshots"] for blocker in item["quality_blockers"]})
     lines.extend(f"- `{blocker}`" for blocker in all_blockers)
     lines.extend([
@@ -236,6 +254,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         dataset: new_diagnostics(dataset, paths[dataset], hashes[dataset])
         for dataset in paths
     }
+    evidence = load_evidence(args.evidence_manifest) if args.evidence_manifest else None
     freshness = FreshnessLimits()
     snapshots = replay_observations(
         symbol=args.symbol,
@@ -252,7 +271,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         quote_diagnostics=diagnostics["quotes"],
         book_diagnostics=diagnostics["book_snapshot_25"],
         derivative_diagnostics=diagnostics["derivative_ticker"],
-        freshness=freshness,
+        freshness=freshness, evidence=evidence, synthetic=synthetic,
     )
     run_config = {
         "source_version": SOURCE_VERSION,
@@ -268,9 +287,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "open_interest_row": int(freshness.open_interest_row.total_seconds()),
         },
         "synthetic": synthetic,
+        "evidence_version": EVIDENCE_VERSION,
+        "evidence_manifest_sha256": evidence.manifest_sha256 if evidence else None,
     }
     report = {
-        "report_version": "c05g.historical-research-report.v1",
+        "report_version": "c05h.historical-research-report.v2",
+        "evidence_version": EVIDENCE_VERSION,
+        "evidence_manifest_sha256": evidence.manifest_sha256 if evidence else None,
+        "evidence_manifest": _safe(evidence.manifest) if evidence else None,
         "symbol": args.symbol,
         "date": args.date,
         "exchange": EXCHANGE,
@@ -313,6 +337,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--date", required=True, help="UTC source date as YYYY-MM-DD")
     parser.add_argument("--source-manifest", type=Path,
                         help="checksummed manifest for non-reference datasets or synthetic fixtures")
+    parser.add_argument("--evidence-manifest", type=Path,
+                        help="optional versioned local historical metadata/unit evidence manifest")
     parser.add_argument("--decision-time", action="append", default=None,
                         help="explicit ISO-8601 UTC cutoff; repeat to supply multiple timestamps")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "research" / "c05")
