@@ -1,0 +1,4118 @@
+{
+  "balance_reasons": {
+    "BALANCE_DISQUALIFYING_VOLUME_BREAKOUT": 4326,
+    "BALANCE_DRIFT_TOO_LARGE": 43956,
+    "BALANCE_SEPARATED_EDGE_TESTS_MISSING": 59892,
+    "BALANCE_SPREAD_UNAVAILABLE": 60480,
+    "BALANCE_WIDTH_ATR_OUT_OF_BOUNDS": 1332
+  },
+  "by_policy": {
+    "B1": {
+      "confirmation_days": 19,
+      "confirmations": 32,
+      "formation_days": 30,
+      "formations": 562,
+      "geometry_reasons": {
+        "SCREENABLE": 32
+      },
+      "gross_price_r": {
+        "max": "1.6",
+        "median": "1.6",
+        "min": "1.6",
+        "n": 32,
+        "p10": "1.6",
+        "p90": "1.6"
+      },
+      "route_feasible": 5,
+      "scenarios": {
+        "base": {
+          "confirmed_denominator": 32,
+          "cost_and_route_pass": 0,
+          "cost_pass": 0,
+          "cost_r": {
+            "max": "1.337797974069733649987841766",
+            "median": "0.2210857525416712006513488386",
+            "min": "0.07668792964223652417667385023",
+            "n": 32,
+            "p10": "0.1515455961941309931690389833",
+            "p90": "0.4714444226863844446099847073"
+          },
+          "cost_route_context_pass": 0,
+          "geometry_denominator": 32
+        },
+        "optimistic": {
+          "confirmed_denominator": 32,
+          "cost_and_route_pass": 1,
+          "cost_pass": 3,
+          "cost_r": {
+            "max": "0.4115839920214565076885666971",
+            "median": "0.06802638539743729250810733495",
+            "min": "0.02355013219761123820820733853",
+            "n": 32,
+            "p10": "0.04667556805973261328278122564",
+            "p90": "0.1451059762111952137261491407"
+          },
+          "cost_route_context_pass": 1,
+          "geometry_denominator": 32
+        },
+        "stress": {
+          "confirmed_denominator": 32,
+          "cost_and_route_pass": 0,
+          "cost_pass": 0,
+          "cost_r": {
+            "max": "2.881487944150195553819966880",
+            "median": "0.4761846977820610475567513448",
+            "min": "0.1652509253832786674574513697",
+            "n": 32,
+            "p10": "0.3263289764181282929794685795",
+            "p90": "1.015341833478366496083043985"
+          },
+          "cost_route_context_pass": 0,
+          "geometry_denominator": 32
+        }
+      },
+      "screenable": 32,
+      "states": {
+        "ARMED": 2,
+        "CONFIRMED": 32,
+        "EXPIRED": 233,
+        "INVALIDATED": 295
+      },
+      "stop_fraction": {
+        "max": "0.01684201151689722188613737687",
+        "median": "0.00588030233024758565335358113",
+        "min": "0.0009713830740150712599916998972",
+        "n": 32,
+        "p10": "0.002726959549245834863767788357",
+        "p90": "0.008246576301839557206095917975"
+      },
+      "symmetric_budget_bps": {
+        "max": "6.736804606758888754454950749",
+        "median": "2.352120932099034261341432452",
+        "min": "0.3885532296060285039966799589",
+        "n": 32,
+        "p10": "1.090783819698333945507115343",
+        "p90": "3.298630520735822882438367190"
+      }
+    },
+    "R1": {
+      "confirmation_days": 0,
+      "confirmations": 0,
+      "formation_days": 0,
+      "formations": 0,
+      "geometry_reasons": {},
+      "gross_price_r": {
+        "max": null,
+        "median": null,
+        "min": null,
+        "n": 0,
+        "p10": null,
+        "p90": null
+      },
+      "route_feasible": 0,
+      "scenarios": {
+        "base": {
+          "confirmed_denominator": 0,
+          "cost_and_route_pass": 0,
+          "cost_pass": 0,
+          "cost_r": {
+            "max": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "p10": null,
+            "p90": null
+          },
+          "cost_route_context_pass": 0,
+          "geometry_denominator": 0
+        },
+        "optimistic": {
+          "confirmed_denominator": 0,
+          "cost_and_route_pass": 0,
+          "cost_pass": 0,
+          "cost_r": {
+            "max": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "p10": null,
+            "p90": null
+          },
+          "cost_route_context_pass": 0,
+          "geometry_denominator": 0
+        },
+        "stress": {
+          "confirmed_denominator": 0,
+          "cost_and_route_pass": 0,
+          "cost_pass": 0,
+          "cost_r": {
+            "max": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "p10": null,
+            "p90": null
+          },
+          "cost_route_context_pass": 0,
+          "geometry_denominator": 0
+        }
+      },
+      "screenable": 0,
+      "states": {},
+      "stop_fraction": {
+        "max": null,
+        "median": null,
+        "min": null,
+        "n": 0,
+        "p10": null,
+        "p90": null
+      },
+      "symmetric_budget_bps": {
+        "max": null,
+        "median": null,
+        "min": null,
+        "n": 0,
+        "p10": null,
+        "p90": null
+      }
+    },
+    "T1": {
+      "confirmation_days": 29,
+      "confirmations": 434,
+      "formation_days": 29,
+      "formations": 624,
+      "geometry_reasons": {
+        "PRECONFIRMED_OPPOSING_TARGET_MISSING": 6,
+        "SCREENABLE": 149,
+        "TARGET_ORDER_INVALID": 279
+      },
+      "gross_price_r": {
+        "max": "14.14694775909022891970166792",
+        "median": "1.545777045957233012502396042",
+        "min": "1.005099040616018793144839516",
+        "n": 149,
+        "p10": "1.089654447687503784188408627",
+        "p90": "3.504757045199423079942807868"
+      },
+      "route_feasible": 149,
+      "scenarios": {
+        "base": {
+          "confirmed_denominator": 434,
+          "cost_and_route_pass": 25,
+          "cost_pass": 25,
+          "cost_r": {
+            "max": "3.106690291927621370516229235",
+            "median": "0.4709423074895164136005599128",
+            "min": "0.09266941805452047265916016170",
+            "n": 149,
+            "p10": "0.1972029919486564700166594009",
+            "p90": "1.138397982915027028871640228"
+          },
+          "cost_route_context_pass": 24,
+          "geometry_denominator": 149
+        },
+        "optimistic": {
+          "confirmed_denominator": 434,
+          "cost_and_route_pass": 56,
+          "cost_pass": 56,
+          "cost_r": {
+            "max": "0.9558585513623450370819166877",
+            "median": "0.1448591715352358195694030501",
+            "min": "0.02855982093985245312589543437",
+            "n": 149,
+            "p10": "0.06063168983035583692820289258",
+            "p90": "0.3502301485892390858066585317"
+          },
+          "cost_route_context_pass": 55,
+          "geometry_denominator": 149
+        },
+        "stress": {
+          "confirmed_denominator": 434,
+          "cost_and_route_pass": 8,
+          "cost_pass": 8,
+          "cost_r": {
+            "max": "6.691409859536415259573416814",
+            "median": "1.014414200746650736985821351",
+            "min": "0.1995187465789671718812680406",
+            "n": 149,
+            "p10": "0.4248218288124908584974202480",
+            "p90": "2.452011040124673600646609722"
+          },
+          "cost_route_context_pass": 8,
+          "geometry_denominator": 149
+        }
+      },
+      "screenable": 149,
+      "states": {
+        "CONFIRMED": 434,
+        "EXPIRED": 28,
+        "INVALIDATED": 162
+      },
+      "stop_fraction": {
+        "max": "0.01691089142563683425333038934",
+        "median": "0.003556840743081895988468062429",
+        "min": "0.0004183844173874247193122563067",
+        "n": 434,
+        "p10": "0.001481816588750882831916285154",
+        "p90": "0.007071149572109111364557988646"
+      },
+      "symmetric_budget_bps": {
+        "max": "68.62076563389268415803605677",
+        "median": "0.4506203932148265764123926033",
+        "min": "-27.85233874173463740333297028",
+        "n": 149,
+        "p10": "-6.487190042999668628188131928",
+        "p90": "21.36898986703288404385801896"
+      }
+    }
+  },
+  "content_sha256": "ac798c084efafeba4ee0bf61e9333fd5e50b077bed6f5de6db68d0c8d676df7f",
+  "context_counts": [
+    {
+      "count": 261,
+      "group": [
+        "ADAUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 36,
+      "group": [
+        "ADAUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1356,
+      "group": [
+        "ADAUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1830,
+      "group": [
+        "ADAUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 5157,
+      "group": [
+        "ADAUSDT",
+        "UNCLASSIFIED"
+      ]
+    },
+    {
+      "count": 372,
+      "group": [
+        "BNBUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 84,
+      "group": [
+        "BNBUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1176,
+      "group": [
+        "BNBUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1635,
+      "group": [
+        "BNBUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 5373,
+      "group": [
+        "BNBUSDT",
+        "UNCLASSIFIED"
+      ]
+    },
+    {
+      "count": 324,
+      "group": [
+        "BTCUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "BTCUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1383,
+      "group": [
+        "BTCUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1881,
+      "group": [
+        "BTCUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 4980,
+      "group": [
+        "BTCUSDT",
+        "UNCLASSIFIED"
+      ]
+    },
+    {
+      "count": 291,
+      "group": [
+        "DOGEUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 624,
+      "group": [
+        "DOGEUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1026,
+      "group": [
+        "DOGEUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1524,
+      "group": [
+        "DOGEUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 5175,
+      "group": [
+        "DOGEUSDT",
+        "UNCLASSIFIED"
+      ]
+    },
+    {
+      "count": 267,
+      "group": [
+        "ETHUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 36,
+      "group": [
+        "ETHUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1440,
+      "group": [
+        "ETHUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1422,
+      "group": [
+        "ETHUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 5475,
+      "group": [
+        "ETHUSDT",
+        "UNCLASSIFIED"
+      ]
+    },
+    {
+      "count": 327,
+      "group": [
+        "SOLUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "SOLUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1134,
+      "group": [
+        "SOLUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1401,
+      "group": [
+        "SOLUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 5766,
+      "group": [
+        "SOLUSDT",
+        "UNCLASSIFIED"
+      ]
+    },
+    {
+      "count": 231,
+      "group": [
+        "XRPUSDT",
+        "BREAKOUT_EVENT"
+      ]
+    },
+    {
+      "count": 504,
+      "group": [
+        "XRPUSDT",
+        "EXTREME_VOLATILITY"
+      ]
+    },
+    {
+      "count": 1140,
+      "group": [
+        "XRPUSDT",
+        "TREND_DOWN"
+      ]
+    },
+    {
+      "count": 1779,
+      "group": [
+        "XRPUSDT",
+        "TREND_UP"
+      ]
+    },
+    {
+      "count": 4986,
+      "group": [
+        "XRPUSDT",
+        "UNCLASSIFIED"
+      ]
+    }
+  ],
+  "counts": [
+    {
+      "count": 1,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "CENSORED_AT_END"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 29,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 71,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 37,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 73,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 96,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 17,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "ADAUSDT",
+        "WINDOW"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "CENSORED_AT_END"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 40,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 99,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 51,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 66,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 102,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 33,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "BNBUSDT",
+        "WINDOW"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 38,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 88,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 46,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 94,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 127,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 30,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "BTCUSDT",
+        "WINDOW"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 36,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 75,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 37,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 48,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 69,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 17,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "DOGEUSDT",
+        "WINDOW"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 33,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 74,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 37,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 50,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 74,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 18,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "ETHUSDT",
+        "WINDOW"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 35,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 89,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 49,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 40,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 68,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "SOLUSDT",
+        "WINDOW"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 22,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 66,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 38,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 63,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 88,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 23,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 8640,
+      "group": [
+        "XRPUSDT",
+        "WINDOW"
+      ]
+    }
+  ],
+  "daily_counts": [
+    {
+      "count": 5,
+      "group": [
+        "2024-09-01",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 17,
+      "group": [
+        "2024-09-01",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 38,
+      "group": [
+        "2024-09-01",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 16,
+      "group": [
+        "2024-09-01",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 27,
+      "group": [
+        "2024-09-01",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-01",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 37,
+      "group": [
+        "2024-09-01",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-01",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-02",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-02",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-02",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-02",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 40,
+      "group": [
+        "2024-09-02",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-02",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 68,
+      "group": [
+        "2024-09-02",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 18,
+      "group": [
+        "2024-09-02",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-03",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-03",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "2024-09-03",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 11,
+      "group": [
+        "2024-09-03",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-04",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 19,
+      "group": [
+        "2024-09-04",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-04",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "2024-09-04",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "2024-09-04",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-04",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-05",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 13,
+      "group": [
+        "2024-09-05",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "2024-09-05",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-05",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-05",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-05",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-05",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-06",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 16,
+      "group": [
+        "2024-09-06",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 31,
+      "group": [
+        "2024-09-06",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-06",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 19,
+      "group": [
+        "2024-09-06",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 22,
+      "group": [
+        "2024-09-06",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-06",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-07",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-07",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-07",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "2024-09-07",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 23,
+      "group": [
+        "2024-09-07",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-07",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-08",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 20,
+      "group": [
+        "2024-09-08",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 11,
+      "group": [
+        "2024-09-08",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-08",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-08",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-09",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-09",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 14,
+      "group": [
+        "2024-09-09",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-09",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-09",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-09",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-09",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-10",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 14,
+      "group": [
+        "2024-09-10",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-10",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "2024-09-10",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 33,
+      "group": [
+        "2024-09-10",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-10",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-11",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "2024-09-11",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-11",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-11",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-11",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-11",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-12",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 18,
+      "group": [
+        "2024-09-12",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-12",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 23,
+      "group": [
+        "2024-09-12",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-12",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 29,
+      "group": [
+        "2024-09-12",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-12",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 14,
+      "group": [
+        "2024-09-13",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 20,
+      "group": [
+        "2024-09-13",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-13",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-13",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "2024-09-13",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-13",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-14",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-14",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-14",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-14",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 31,
+      "group": [
+        "2024-09-14",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-14",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 42,
+      "group": [
+        "2024-09-14",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-14",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-15",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-15",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-15",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-15",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-15",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-15",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-15",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-16",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-16",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 13,
+      "group": [
+        "2024-09-16",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-16",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 31,
+      "group": [
+        "2024-09-16",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-16",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 51,
+      "group": [
+        "2024-09-16",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 18,
+      "group": [
+        "2024-09-16",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-17",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-17",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 14,
+      "group": [
+        "2024-09-17",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-17",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 21,
+      "group": [
+        "2024-09-17",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-17",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 32,
+      "group": [
+        "2024-09-17",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-17",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-18",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-18",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "2024-09-18",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-18",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-18",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-18",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-18",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-18",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-19",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-19",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 22,
+      "group": [
+        "2024-09-19",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 11,
+      "group": [
+        "2024-09-19",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 40,
+      "group": [
+        "2024-09-19",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-19",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 56,
+      "group": [
+        "2024-09-19",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 13,
+      "group": [
+        "2024-09-19",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-20",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-20",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 19,
+      "group": [
+        "2024-09-20",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-20",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 27,
+      "group": [
+        "2024-09-20",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 33,
+      "group": [
+        "2024-09-20",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-20",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-21",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 14,
+      "group": [
+        "2024-09-21",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 38,
+      "group": [
+        "2024-09-21",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 21,
+      "group": [
+        "2024-09-21",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-21",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-21",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-21",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-21",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-22",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-22",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-22",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-22",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-22",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 13,
+      "group": [
+        "2024-09-22",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 6,
+      "group": [
+        "2024-09-22",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-23",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 21,
+      "group": [
+        "2024-09-23",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-23",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-23",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-23",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-23",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-24",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 11,
+      "group": [
+        "2024-09-24",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 31,
+      "group": [
+        "2024-09-24",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 16,
+      "group": [
+        "2024-09-24",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-24",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 8,
+      "group": [
+        "2024-09-24",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-24",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-25",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-25",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-25",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-25",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "2024-09-25",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-25",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-25",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-26",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 16,
+      "group": [
+        "2024-09-26",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 37,
+      "group": [
+        "2024-09-26",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 20,
+      "group": [
+        "2024-09-26",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-26",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-26",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-26",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-27",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 22,
+      "group": [
+        "2024-09-27",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-27",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 26,
+      "group": [
+        "2024-09-27",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 32,
+      "group": [
+        "2024-09-27",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-27",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-28",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 10,
+      "group": [
+        "2024-09-28",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-28",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "2024-09-28",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-28",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 19,
+      "group": [
+        "2024-09-28",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-28",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-29",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-29",
+        "B1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 20,
+      "group": [
+        "2024-09-29",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 13,
+      "group": [
+        "2024-09-29",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 5,
+      "group": [
+        "2024-09-29",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-29",
+        "T1",
+        "EXPIRED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-29",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-29",
+        "T1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 2,
+      "group": [
+        "2024-09-30",
+        "B1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 11,
+      "group": [
+        "2024-09-30",
+        "B1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 7,
+      "group": [
+        "2024-09-30",
+        "B1",
+        "INVALIDATED"
+      ]
+    },
+    {
+      "count": 3,
+      "group": [
+        "2024-09-30",
+        "T1",
+        "CONFIRMED"
+      ]
+    },
+    {
+      "count": 4,
+      "group": [
+        "2024-09-30",
+        "T1",
+        "FORMED"
+      ]
+    },
+    {
+      "count": 1,
+      "group": [
+        "2024-09-30",
+        "T1",
+        "INVALIDATED"
+      ]
+    }
+  ],
+  "delay_model": "0/5 seconds assume no move; 15/60 seconds exceed frozen10-second deadline. No intrabar prices inferred.",
+  "end_exclusive": "2024-10-01T00:00:00+00:00",
+  "entry_model": "Unrounded confirmation close; post-confirmation quote, ticks, chase and quantities unverified",
+  "evidence_class": "INELIGIBLE_PRICE_DIAGNOSTICS",
+  "funding_model": "Declared non-negative max-hold debit in bps, not observed settlements",
+  "historical_profit_statistics": null,
+  "history_limits": {
+    "15m": 21,
+    "1h": 735,
+    "4h": 200,
+    "5m": 288
+  },
+  "policy_versions": {
+    "B1": "B1.original-ladder.v1",
+    "R1": "R1.sweep.v1",
+    "T1": "T1.reclaim.v1"
+  },
+  "price_rejections": [
+    {
+      "count": 261,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 31,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2680,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 3633,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 10286,
+      "group": [
+        "ADAUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 522,
+      "group": [
+        "ADAUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "ADAUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2712,
+      "group": [
+        "ADAUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 3660,
+      "group": [
+        "ADAUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10314,
+      "group": [
+        "ADAUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 521,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1356,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 685,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 563,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1830,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 857,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 780,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 18,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10314,
+      "group": [
+        "ADAUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 372,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 51,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 168,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2340,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 3255,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 10671,
+      "group": [
+        "BNBUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 744,
+      "group": [
+        "BNBUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 168,
+      "group": [
+        "BNBUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2352,
+      "group": [
+        "BNBUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 3270,
+      "group": [
+        "BNBUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10746,
+      "group": [
+        "BNBUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 744,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 168,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1176,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 562,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 462,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1635,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 945,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 506,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10746,
+      "group": [
+        "BNBUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 324,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 46,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 144,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2756,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 3736,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 9922,
+      "group": [
+        "BTCUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 648,
+      "group": [
+        "BTCUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 144,
+      "group": [
+        "BTCUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2766,
+      "group": [
+        "BTCUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 3762,
+      "group": [
+        "BTCUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 9960,
+      "group": [
+        "BTCUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 648,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 144,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1383,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 659,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 566,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1881,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 942,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 696,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 18,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 9960,
+      "group": [
+        "BTCUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 291,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 32,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 1248,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2047,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 3030,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 10298,
+      "group": [
+        "DOGEUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 582,
+      "group": [
+        "DOGEUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1248,
+      "group": [
+        "DOGEUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2052,
+      "group": [
+        "DOGEUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 3048,
+      "group": [
+        "DOGEUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10350,
+      "group": [
+        "DOGEUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 581,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1247,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1026,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 407,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 529,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1524,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 804,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 581,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10350,
+      "group": [
+        "DOGEUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 267,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 29,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2868,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2830,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 10894,
+      "group": [
+        "ETHUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 534,
+      "group": [
+        "ETHUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "ETHUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2880,
+      "group": [
+        "ETHUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2844,
+      "group": [
+        "ETHUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10950,
+      "group": [
+        "ETHUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 531,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 72,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1440,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 565,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 724,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 15,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1422,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 692,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 624,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 12,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 10948,
+      "group": [
+        "ETHUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 327,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 48,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2262,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2782,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 11475,
+      "group": [
+        "SOLUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 654,
+      "group": [
+        "SOLUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "SOLUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2268,
+      "group": [
+        "SOLUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2802,
+      "group": [
+        "SOLUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 11532,
+      "group": [
+        "SOLUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 653,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 24,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1134,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 400,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 600,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1401,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 740,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 556,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 21,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 11531,
+      "group": [
+        "SOLUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 231,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 21,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "BREAKOUT_EVENT",
+        "B1_FORMATION_EVENT_STALE"
+      ]
+    },
+    {
+      "count": 1007,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "EXTREME_VOLATILITY",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 2264,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "TREND_DOWN",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 3538,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "TREND_UP",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 9943,
+      "group": [
+        "XRPUSDT",
+        "B1",
+        "UNCLASSIFIED",
+        "B1_ALIGNED_BREAKOUT_EVENT_MISSING"
+      ]
+    },
+    {
+      "count": 462,
+      "group": [
+        "XRPUSDT",
+        "R1",
+        "BREAKOUT_EVENT",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1008,
+      "group": [
+        "XRPUSDT",
+        "R1",
+        "EXTREME_VOLATILITY",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 2280,
+      "group": [
+        "XRPUSDT",
+        "R1",
+        "TREND_DOWN",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 3558,
+      "group": [
+        "XRPUSDT",
+        "R1",
+        "TREND_UP",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 9972,
+      "group": [
+        "XRPUSDT",
+        "R1",
+        "UNCLASSIFIED",
+        "R1_STABLE_BALANCE_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 461,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "BREAKOUT_EVENT",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1008,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "EXTREME_VOLATILITY",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1140,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 491,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 555,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 9,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_DOWN",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 1779,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    },
+    {
+      "count": 1007,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PRIOR_VWAP_CROSS_MISSING"
+      ]
+    },
+    {
+      "count": 599,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_PULLBACK_OUTSIDE_VWAP_ZONE"
+      ]
+    },
+    {
+      "count": 19,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "TREND_UP",
+        "T1_SESSION_ROLLOVER_UNQUALIFIED"
+      ]
+    },
+    {
+      "count": 9971,
+      "group": [
+        "XRPUSDT",
+        "T1",
+        "UNCLASSIFIED",
+        "T1_CONTEXT_NOT_ALIGNED"
+      ]
+    }
+  ],
+  "scenarios": {
+    "base": {
+      "fee_bps_per_side": "5",
+      "friction_bps_per_route": "2",
+      "funding_bps": "1"
+    },
+    "optimistic": {
+      "fee_bps_per_side": "2",
+      "friction_bps_per_route": "0",
+      "funding_bps": "0"
+    },
+    "stress": {
+      "fee_bps_per_side": "10",
+      "friction_bps_per_route": "5",
+      "funding_bps": "3"
+    }
+  },
+  "schema_version": "c05k.r0-census.v1",
+  "source_manifest_sha256": "6a34aae6b37ec9b48aa166dda52cd578a86776ef8b36be05aaaa5bf42f51058a",
+  "source_rows_verified": 356454,
+  "start_inclusive": "2024-09-01T00:00:00+00:00",
+  "strict_eligible_trades": 0,
+  "symbols": [
+    "ADAUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ]
+}
