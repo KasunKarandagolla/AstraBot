@@ -145,3 +145,39 @@ not eligible-universe or strategy evidence.
 ## Acceptance for architecture phase
 
 A fake data snapshot can produce deterministic feature IDs and a NO_TRADE/proposal decision, without signed Binance access. A toy OpenBot coordinator can call the typed tools and cannot access trading keys. Services restart without losing recorded setup or approval state. Version pinning/fixture tests catch changed units or timestamps in adopted packages. No order-writing endpoint is accessible from the agent network.
+
+## C05-G offline historical research pipeline
+
+`data/historical_sources.py` streams strict Tardis-format USD-M `quotes`,
+`derivative_ticker` and `book_snapshot_25` gzip CSV schemas. It checks compressed
+SHA-256 before parsing, validates the full ordered header and each record,
+preserves exchange `timestamp` and provider `local_timestamp` independently,
+assigns stable source-row IDs, and detects duplicate rows, timestamp ties,
+regressions, inverted arrival times and incomplete/invalid books. Exact duplicate
+detection is disk-backed so a multi-million-row feed does not require an
+in-memory observation set. Gzip streams are consumed to EOF for CRC/trailer
+validation.
+
+`data/historical_replay.py` selects source observations only when both their
+exchange event and provider arrival proxy are no later than the decision time.
+The research-only `c05g.periodic-spread.v1` sampler keeps `sampled_at` separate
+from raw `event_time`, uses one distinct UTC-minute-aligned 60-second endpoint
+window per sample,
+requires 60 distinct occupied endpoints, preserves the 0.10% median threshold,
+and applies a strict source-event age below 60 seconds. It never fills a missing
+endpoint or rounds an exchange timestamp. C02's existing raw-event-time scanner
+is unchanged; promotion of periodic sampling requires engineering-lead and
+owner review. This isolates the proposed sampling interpretation from
+production-facing eligibility.
+
+Raw OI, book amounts, provider-arrival semantics and funding fields remain
+explicitly uncertain. No C02 OI/depth pass, funding settlement, historical
+metadata, event clearance or economic result can be inferred from these three
+feeds. `scripts/c05_historical_research.py` performs an offline, checksummed
+replay and writes deterministic JSON and Markdown reports; synthetic gzip
+fixtures live under `tests/fixtures/c05g/`.
+
+The replay's latest-quote, depth and OI freshness defaults derive from the
+existing C02 `FreshnessPolicy`; the report configuration hash includes the
+resolved thresholds. This keeps the research diagnostics aligned with existing
+gate limits without changing eligibility behavior.

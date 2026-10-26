@@ -1,0 +1,21 @@
+{
+  "date": "2024-10-01",
+  "exchange": "binance-futures",
+  "feeds": {
+    "book_snapshot_25": {
+      "file": "binance-futures_book_snapshot_25_2024-10-01_SOLUSDT.csv.gz",
+      "sha256": "a923691a30bda64052d7b9bcfeca1ab07b251024ae232918e2aa4197d2cd7498"
+    },
+    "derivative_ticker": {
+      "file": "binance-futures_derivative_ticker_2024-10-01_SOLUSDT.csv.gz",
+      "sha256": "ef2785ee9262405bd572d00dda29d4d3287d6f8dcca3b0afeb3d3c49e3b86790"
+    },
+    "quotes": {
+      "file": "binance-futures_quotes_2024-10-01_SOLUSDT.csv.gz",
+      "sha256": "4604508dda0f1adcf7e71001b5fd4a109da1f3d6b3877b1afc3e15f1f06c4c0f"
+    }
+  },
+  "manifest_version": "c05g.historical-source-manifest.v1",
+  "symbol": "SOLUSDT",
+  "synthetic": true
+}

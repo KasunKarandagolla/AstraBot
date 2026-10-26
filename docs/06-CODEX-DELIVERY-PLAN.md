@@ -15,7 +15,7 @@
 
 ## Current implementation checkpoint
 
-PRs #1–#16 are reviewed and merged through `8662a6c1f05bf4f714bc6b9f3e9b8fb6451d0583`. P0–P2 foundational gates are credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. C05 source preflight, offline public observer and third-party check remain `INSUFFICIENT_EVIDENCE`. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
+The C05-G branch starts from the latest merged `main` at `0b6595cc130cdc29d5001265f30e5d40eab6f0cd` (PR #21). P0–P2 foundational gates remain credited 45%; C04 authentic historical OHLCV and synthetic replay are implemented, but strict 2024 full-policy economics have zero qualified candidates/outcomes. Existing C05 source preflight, offline public observer and third-party checks remain `INSUFFICIENT_EVIDENCE`. C05-G adds reusable offline three-feed normalization, causal snapshots, a versioned opt-in spread sampler and replay reporting; this engineering change does not establish C02 readiness or advance the P3 economic gate. Binance `fapi` HTTP 451 and Codex Tardis CONNECT 403 are network-path observations, not a historical data/economic conclusion. P3 25% and P4–P6 remain unqualified.
 
 ## Emergency recovery choices — owner-selected limited offline Option B completed
 

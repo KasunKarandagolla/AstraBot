@@ -285,3 +285,37 @@ in [C04 source inventory](../research/c04/source_inventory.json) and
 predeclared window long enough for 735 contiguous hourly bars plus untouched
 post-warm-up development/validation/evaluation blocks; no current-symbol
 metadata may stand in for historical eligibility.
+
+## C05-G causal historical snapshots and spread-sampling contract
+
+The offline C05-G adapter/replay in `data/historical_sources.py` and
+`data/historical_replay.py` accepts only exact checksummed USD-M Tardis CSV
+schemas for quotes, derivative ticker and top-25 book snapshots. Each selected
+observation preserves original exchange `event_time`, provider
+`local_timestamp` as `available_at` proxy, source checksum, row number and a
+deterministic ID. A cutoff admits a row only when both timestamps are at or
+before it. Raw sequence order, timestamp ties, late-arrival exclusions and
+source-quality anomalies remain reportable.
+
+The C02 implementation still enforces its existing adjacent raw
+`SpreadSample.event_time` one-minute test. [Issue #22](https://github.com/KasunKarandagolla/AstraBot/issues/22)
+records why authentic quote events do not reliably meet that condition. C05-G
+therefore adds an isolated **opt-in research sampler**,
+`c05g.periodic-spread.v1`: UTC minute boundaries are the sample clock, and
+the latest boundary no later than the decision time is used. Every endpoint
+chooses the latest valid quote in
+`(endpoint - 60 seconds, endpoint]` with both source timestamps no later than
+the endpoint. The source event and provider arrival values stay unchanged;
+the separate `sampled_at` carries the periodic clock. No forward fill is used,
+the source-event age must be strictly under 60 seconds, and all 60 distinct
+endpoints must be occupied. The median threshold remains 0.10%. Both occupied
+endpoint count and the number of exact 60-second raw-event intervals are
+reported to prevent cadence from being mistaken for exchange event timing.
+
+This is a proposed interpretation of a readiness contract, not a unilateral
+production-policy change. The C02 scanner and its defaults remain unchanged
+pending engineering-lead and owner review. The three historical datasets also
+cannot establish point-in-time metadata, event clearance, confirmed funding
+settlement, OI units/refresh time, certified depth notional, full continuity,
+fees or fills. The replay reports those dependencies as blockers and never
+returns complete C02 eligibility or economic qualification.
