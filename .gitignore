@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 *.egg-info/
 *.sqlite*
+/research/c05/C05_J_DECISION_PACKET.json

@@ -38,6 +38,10 @@ class HistoricalPanel:
     partitions: tuple[dict[str, Any], ...]
     source_manifest: dict[str, Any]
     observation_history: dict[str, dict[str, tuple[Any, ...]]] = field(default_factory=dict)
+    # C05-H verification is scoped to the exact decision cutoff. Keeping these
+    # snapshots separate prevents later evidence from relabelling an earlier
+    # feed row, or a converted quantity escaping its effective evidence period.
+    research_snapshots: dict[datetime, dict[str, SymbolData]] = field(default_factory=dict)
 
 
 def _sha256(path: Path) -> str:
@@ -484,6 +488,10 @@ def _panel_point_in_time(panel: HistoricalPanel, symbol: str, as_of: datetime,
                 raise ValueError(f"history limit for {interval} must be positive")
             visible = visible[-limit:]
         updates[name] = visible
+    exact = panel.research_snapshots.get(as_of, {}).get(symbol)
+    if exact is not None:
+        updates.update({name: getattr(exact, name) for name in (
+            "metadata", "depth", "open_interest", "spread_samples")})
     return data.model_copy(update=updates)
 
 
@@ -596,7 +604,14 @@ def _execution_replay(
                         append_event("APPROVAL_EXPIRED", decision, scenario_id, decision.expires_at, {
                             "approval_mode": scenario.approval_mode})
 
-            outcome = simulate_decision(decision, panel.symbols[decision.symbol],
+            # Filters may exist only in the causal observation history or an
+            # exact C05-H cutoff snapshot. Pin the admitted decision's metadata
+            # while retaining future bars solely for outcome simulation.
+            outcome_data = _panel_point_in_time(panel, decision.symbol, decision.as_of)
+            outcome_data = outcome_data.model_copy(update={f"candles_{interval}":
+                getattr(panel.symbols[decision.symbol], f"candles_{interval}")
+                for interval in ("5m", "15m", "1h", "4h")})
+            outcome = simulate_decision(decision, outcome_data,
                 scenario=scenario, profile=profile,
                 funding=tuple(panel.observation_history.get(decision.symbol, {}).get("funding", ())),
                 evidence_class=evidence_class)
@@ -774,6 +789,9 @@ def replay_panel(panel: HistoricalPanel, *, shortlist_limit: int = 15,
         "selection": "C02 deterministic point-in-time eligibility/shortlist",
         "execution": "E0 policy truth; E1/E2 counterfactual simulation with separate per-scenario PortfolioLedger",
         "portfolio_policy": "v1.5 per-trade/aggregate risk, slots, symbol lock, leverage and UTC loss halt"}
+    if panel.research_snapshots:
+        config["c05_exact_snapshot_sha256"] = panel.source_manifest.get("c05_exact_snapshot_sha256")
+        config["c05_original_feed_inputs"] = panel.source_manifest.get("c05_original_feed_inputs")
     if (evaluation_interval is not None or replay_start is not None or replay_end is not None
             or history_limits or compact_diagnostics or diagnostic_sample_times):
         config["bounded_replay_scope"] = {
