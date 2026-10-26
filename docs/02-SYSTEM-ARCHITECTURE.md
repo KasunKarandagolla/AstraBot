@@ -153,3 +153,39 @@ The offline paper harness can opt into one marked synthetic-only directory at pr
 C01's fake owner ledger and fake venue remain authoritative in their existing separate SQLite files. A separate local fixture-owner CLI handles synthetic approval/rejection/expiry and one-use consumption; an independent fake supervisor reopens and reconciles the same C01 stores without an active OpenBot process. Read-only News/Events and Journal summaries preserve synthetic provenance and return `UNKNOWN`, `UNAVAILABLE` or `INCONSISTENT` explicitly. There is no transaction across the C06 plan database, C01 owner ledger and fake venue. Missing or contradictory evidence halts new exposure; an ambiguous order is never blindly resent. A correlated terminal reduce plus authoritative residual position can create a new reduce-only intent for a discovered late fill.
 
 SQLite transaction boundaries serialize each individual store only. They do not provide multi-host fencing, cross-database atomic commits, backups, encryption, production service isolation or 24/7 recovery guarantees. These databases, owner identity, order fills and role summaries are disposable synthetic test fixtures, not a production OMS, authenticated human MFA, Binance adapter or evidence of strategy quality.
+
+## C05-G offline historical research pipeline
+
+`data/historical_sources.py` streams strict Tardis-format USD-M `quotes`,
+`derivative_ticker` and `book_snapshot_25` gzip CSV schemas. It checks compressed
+SHA-256 before parsing, validates the full ordered header and each record,
+preserves exchange `timestamp` and provider `local_timestamp` independently,
+assigns stable source-row IDs, and detects duplicate rows, timestamp ties,
+regressions, inverted arrival times and incomplete/invalid books. Exact duplicate
+detection is disk-backed so a multi-million-row feed does not require an
+in-memory observation set. Gzip streams are consumed to EOF for CRC/trailer
+validation.
+
+`data/historical_replay.py` selects source observations only when both their
+exchange event and provider arrival proxy are no later than the decision time.
+The research-only `c05g.periodic-spread.v1` sampler keeps `sampled_at` separate
+from raw `event_time`, uses one distinct UTC-minute-aligned 60-second endpoint
+window per sample,
+requires 60 distinct occupied endpoints, preserves the 0.10% median threshold,
+and applies a strict source-event age below 60 seconds. It never fills a missing
+endpoint or rounds an exchange timestamp. C02's existing raw-event-time scanner
+is unchanged; promotion of periodic sampling requires engineering-lead and
+owner review. This isolates the proposed sampling interpretation from
+production-facing eligibility.
+
+Raw OI, book amounts, provider-arrival semantics and funding fields remain
+explicitly uncertain. No C02 OI/depth pass, funding settlement, historical
+metadata, event clearance or economic result can be inferred from these three
+feeds. `scripts/c05_historical_research.py` performs an offline, checksummed
+replay and writes deterministic JSON and Markdown reports; synthetic gzip
+fixtures live under `tests/fixtures/c05g/`.
+
+The replay's latest-quote, depth and OI freshness defaults derive from the
+existing C02 `FreshnessPolicy`; the report configuration hash includes the
+resolved thresholds. This keeps the research diagnostics aligned with existing
+gate limits without changing eligibility behavior.

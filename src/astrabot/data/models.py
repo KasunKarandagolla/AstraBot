@@ -23,6 +23,7 @@ Fidelity = Literal[
     "BAR_DERIVED_APPROX",
     "VENUE_REPORTED",
     "ESTIMATED",
+    "UNKNOWN",
     "SYNTHETIC_FIXTURE",
 ]
 Quality = Literal[
@@ -76,6 +77,12 @@ class MarketObservation(Contract):
     quality: Quality = "VALID"
     observation_id: ID
     config_hash: ID
+    source_sha256: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = Field(
+        default=None, exclude_if=lambda value: value is None)
+    source_record_number: int | None = Field(default=None, ge=1,
+        exclude_if=lambda value: value is None)
+    ingestion_time_semantics: Literal["SYSTEM_CAPTURE", "PROVIDER_ARRIVAL_PROXY", "UNKNOWN"] = Field(
+        default="UNKNOWN", exclude_if=lambda value: value == "UNKNOWN")
 
     @model_validator(mode="after")
     def ordered_times(self):
@@ -202,6 +209,11 @@ class Ticker24h(MarketObservation):
 
 
 class SpreadSample(MarketObservation):
+    # Populated only by the versioned C05-G periodic research sampler.  C02's
+    # production-facing scanner continues to use event_time until separately
+    # reviewed; sampled_at does not rewrite or replace that source timestamp.
+    sampled_at: UTC | None = Field(default=None,
+        exclude_if=lambda value: value is None)
     bid_price: Positive
     bid_quantity: Money
     ask_price: Positive
@@ -211,6 +223,10 @@ class SpreadSample(MarketObservation):
     def non_crossed(self):
         if self.ask_price < self.bid_price:
             raise ValueError("crossed best bid/ask snapshot")
+        if self.sampled_at is not None and (
+            self.event_time > self.sampled_at or self.available_at > self.sampled_at
+        ):
+            raise ValueError("periodic sample cannot precede its source event or arrival")
         return self
 
     @property
@@ -231,6 +247,10 @@ class DepthSnapshot(MarketObservation):
     last_update_id: int | None = Field(default=None, ge=0)
     bids: tuple[DepthLevel, ...] = Field(min_length=1)
     asks: tuple[DepthLevel, ...] = Field(min_length=1)
+    quantity_unit: ID = Field(default="UNKNOWN_RAW",
+        exclude_if=lambda value: value == "UNKNOWN_RAW")
+    unit_validated: bool = Field(default=False,
+        exclude_if=lambda value: value is False)
 
     @model_validator(mode="after")
     def ordered_sides(self):
