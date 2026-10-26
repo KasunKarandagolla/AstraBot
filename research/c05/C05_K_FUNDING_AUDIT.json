@@ -1,0 +1,154 @@
+{
+  "interpretation": "Ex-post reported calculation records; no prior entry awareness, mark notional or actual position payment is certified. Trailing12h uses (t-12h,t].",
+  "model_comparison": "Declared funding debit assumptions0/1/3bps are hypotheses, not guaranteed bounds.",
+  "schema_version": "c05k.reported-funding-audit.v1",
+  "symbols": {
+    "ADAUSDT": {
+      "compressed_bytes": 840,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "2.00000000",
+      "negative_rates": 19,
+      "rate_bps": {
+        "max": "1.00000000",
+        "median": "0.81750000",
+        "min": "-1.13630000",
+        "n": 90,
+        "p10": "-0.30320000",
+        "p90": "1.00000000"
+      },
+      "rows": 90,
+      "sha256": "387bb17d1ea7995270ce2769ec2c888bc8fa3d2110d5843888807254c40381d4",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/ADAUSDT/ADAUSDT-fundingRate-2024-09.zip"
+    },
+    "BNBUSDT": {
+      "compressed_bytes": 704,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "4.31360000",
+      "negative_rates": 12,
+      "rate_bps": {
+        "max": "0.67120000",
+        "median": "0E-8",
+        "min": "-3.57460000",
+        "n": 90,
+        "p10": "-0.33430000",
+        "p90": "0E-8"
+      },
+      "rows": 90,
+      "sha256": "2c9e13fa39b3956ea76d29074e26e0ccc6abbd3e235d752aa63b383de29a4d80",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/BNBUSDT/BNBUSDT-fundingRate-2024-09.zip"
+    },
+    "BTCUSDT": {
+      "compressed_bytes": 924,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "2.00000000",
+      "negative_rates": 30,
+      "rate_bps": {
+        "max": "1.00000000",
+        "median": "0.17945000",
+        "min": "-0.89530000",
+        "n": 90,
+        "p10": "-0.52450000",
+        "p90": "0.80650000"
+      },
+      "rows": 90,
+      "sha256": "6ef23b02392b481ef9c3855434bf3644289fb6e228b4f7d9a0dfc6d3cdff1116",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/BTCUSDT/BTCUSDT-fundingRate-2024-09.zip"
+    },
+    "DOGEUSDT": {
+      "compressed_bytes": 862,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "2.09060000",
+      "negative_rates": 21,
+      "rate_bps": {
+        "max": "1.00000000",
+        "median": "0.64945000",
+        "min": "-1.78530000",
+        "n": 90,
+        "p10": "-0.30530000",
+        "p90": "1.00000000"
+      },
+      "rows": 90,
+      "sha256": "92bc33954530f8d7bcf13a41d736a9480f4082cd1220d976d4a01bdbb52452b4",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/DOGEUSDT/DOGEUSDT-fundingRate-2024-09.zip"
+    },
+    "ETHUSDT": {
+      "compressed_bytes": 908,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "1.97340000",
+      "negative_rates": 10,
+      "rate_bps": {
+        "max": "1.00000000",
+        "median": "0.45175000",
+        "min": "-0.69420000",
+        "n": 90,
+        "p10": "-0.04150000",
+        "p90": "0.86200000"
+      },
+      "rows": 90,
+      "sha256": "ffb6e7441053137cb7ca81cc83bcdd996612f7dbb15aa2e168a7ee521f8cbbca",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-09.zip"
+    },
+    "SOLUSDT": {
+      "compressed_bytes": 880,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "2.00000000",
+      "negative_rates": 24,
+      "rate_bps": {
+        "max": "1.00000000",
+        "median": "0.33240000",
+        "min": "-0.82880000",
+        "n": 90,
+        "p10": "-0.37920000",
+        "p90": "1.00000000"
+      },
+      "rows": 90,
+      "sha256": "7666e4d3e6ea6dd28011c508cf01421007521e98e96ea551f809836441b43ca0",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2024-09.zip"
+    },
+    "XRPUSDT": {
+      "compressed_bytes": 861,
+      "first_calc_time_ms": 1725148800000,
+      "interval_hours": {
+        "8": 90
+      },
+      "last_calc_time_ms": 1727712000000,
+      "maximum_trailing_12h_absolute_rate_bps": "2.00000000",
+      "negative_rates": 9,
+      "rate_bps": {
+        "max": "1.00000000",
+        "median": "0.53480000",
+        "min": "-1.30700000",
+        "n": 90,
+        "p10": "-0.04660000",
+        "p90": "1.00000000"
+      },
+      "rows": 90,
+      "sha256": "69faf312921ce5c88092d8c328b04dc006ea42dabfe68ad5fee542d28c0ae2ca",
+      "url": "https://data.binance.vision/data/futures/um/monthly/fundingRate/XRPUSDT/XRPUSDT-fundingRate-2024-09.zip"
+    }
+  }
+}
