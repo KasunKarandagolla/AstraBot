@@ -149,8 +149,16 @@ def load_c02_panel(panel_dir: str | Path) -> HistoricalPanel:
     return HistoricalPanel(symbols=symbols, partitions=tuple(partitions), source_manifest=manifest)
 
 
-def load_public_um_archive_panel(manifest_path: str | Path, data_root: str | Path) -> HistoricalPanel:
-    """Load a fully verified external archive manifest through the C02 normalizer."""
+def load_public_um_archive_panel(
+    manifest_path: str | Path, data_root: str | Path, *,
+    source_end_exclusive: datetime | None = None,
+) -> HistoricalPanel:
+    """Load verified archives; optionally leave later monthly source bytes unopened.
+
+    The complete frozen manifest is still checked. A source bound must be a UTC
+    month boundary, so no partially read archive can expose later outcomes.
+    Existing callers retain the original full-panel behavior.
+    """
     from astrabot.data.public_archive import planned_archives, validate_archive_bytes
 
     manifest_file = Path(manifest_path).resolve()
@@ -189,8 +197,15 @@ def load_public_um_archive_panel(manifest_path: str | Path, data_root: str | Pat
             or {record.get("archive_id") for record in records} != set(by_id)):
         raise ValueError("pilot manifest is incomplete or exceeds the declared fixed plan")
     manifest_digest = _sha256(manifest_file)
+    if source_end_exclusive is not None and (
+        source_end_exclusive.utcoffset() != timedelta(0)
+        or source_end_exclusive.day != 1
+        or source_end_exclusive.time().isoformat() != "00:00:00"
+    ):
+        raise ValueError("source end must be a UTC month boundary")
     symbols: dict[str, dict[str, list[Candle]]] = {}
     partitions: list[dict[str, Any]] = []
+    unopened: list[str] = []
     step_ms = {"5m": 300_000, "15m": 900_000, "1h": 3_600_000, "4h": 14_400_000}
     for record in records:
         spec = by_id[record["archive_id"]]
@@ -202,6 +217,11 @@ def load_public_um_archive_panel(manifest_path: str | Path, data_root: str | Pat
                 or record.get("data_root_relative_path") != spec.relative_path
                 or record.get("http_status") != 200):
             raise ValueError(f"source plan/status mismatch for {spec.filename}")
+        if (source_end_exclusive is not None
+                and datetime.strptime(spec.period, "%Y-%m").replace(tzinfo=timezone.utc)
+                >= source_end_exclusive):
+            unopened.append(spec.filename)
+            continue
         relative = Path(record["data_root_relative_path"])
         archive_path = (root / relative).resolve()
         if root not in archive_path.parents:
@@ -291,6 +311,13 @@ def load_public_um_archive_panel(manifest_path: str | Path, data_root: str | Pat
         "funding_settlements": "UNAVAILABLE; no funding archive included",
         "observed_ioc_fills": "UNAVAILABLE; bars do not establish orders or fills",
     }
+    if source_end_exclusive is not None:
+        source_manifest.update(
+            source_end_exclusive=source_end_exclusive.isoformat(),
+            archive_count=len(partitions),
+            total_archive_bytes=sum(p["archive_bytes"] for p in partitions),
+            unopened_archive_ids=unopened,
+        )
     return HistoricalPanel(symbols=symbol_data, partitions=tuple(sorted(partitions,
         key=lambda row: (row["symbol"], row["interval"], row["coverage_start"]))),
         source_manifest=source_manifest)
