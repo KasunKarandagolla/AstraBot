@@ -1,0 +1,72 @@
+{
+  "book_unit": {
+    "base_asset": "SOL",
+    "base_per_contract": "0.1",
+    "price_unit": "USDT_PER_BASE_ASSET",
+    "raw_unit": "CONTRACTS"
+  },
+  "metadata": {
+    "as_of": "2024-10-01T00:00:00Z",
+    "available_at": "2024-10-01T00:00:00Z",
+    "base_asset": "SOL",
+    "config_hash": "synthetic",
+    "contract_size": "0.1",
+    "contract_type": "PERPETUAL",
+    "data_source": "SYNTHETIC_FIXTURE",
+    "effective_from": "2024-10-01T00:00:00Z",
+    "effective_to": "2024-10-02T00:00:00Z",
+    "event_time": "2024-10-01T00:00:00Z",
+    "fidelity": "SYNTHETIC_FIXTURE",
+    "filters": [
+      {
+        "filter_type": "PRICE_FILTER",
+        "max_value": "100000",
+        "min_value": "0.01",
+        "step_size": "0.01"
+      },
+      {
+        "filter_type": "LOT_SIZE",
+        "max_value": "1000000",
+        "min_value": "1",
+        "step_size": "1"
+      },
+      {
+        "filter_type": "MARKET_LOT_SIZE",
+        "max_value": "1000000",
+        "min_value": "1",
+        "step_size": "1"
+      },
+      {
+        "filter_type": "MIN_NOTIONAL",
+        "min_value": "5"
+      }
+    ],
+    "ingested_at": "2024-10-01T00:00:00Z",
+    "instrument_id": "BINANCE_USDM:PERPETUAL:SOLUSDT:SETTLE:USDT",
+    "minimum_notional": "5",
+    "minimum_quantity": "1",
+    "observation_id": "synthetic-sol-metadata",
+    "onboard_time": "2020-01-01T00:00:00Z",
+    "price_tick": "0.01",
+    "quality": "VALID",
+    "quantity_step": "1",
+    "quote_asset": "USDT",
+    "readiness": "READY",
+    "settle_asset": "USDT",
+    "source_version": "c05h.synthetic-metadata.v1",
+    "status": "TRADING",
+    "symbol": "SOLUSDT",
+    "units": "USDT price per SOL; contract_size SOL per contract"
+  },
+  "oi_time": {
+    "mark_price_semantics": "ROW_TIMESTAMP_IS_MARK_MEASUREMENT",
+    "semantics": "ROW_TIMESTAMP_IS_OI_MEASUREMENT",
+    "timestamp_field": "timestamp"
+  },
+  "oi_unit": {
+    "base_asset": "SOL",
+    "base_per_contract": "0.1",
+    "price_unit": "USDT_PER_BASE_ASSET",
+    "raw_unit": "CONTRACTS"
+  }
+}

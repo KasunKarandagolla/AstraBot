@@ -319,3 +319,27 @@ cannot establish point-in-time metadata, event clearance, confirmed funding
 settlement, OI units/refresh time, certified depth notional, full continuity,
 fees or fills. The replay reports those dependencies as blockers and never
 returns complete C02 eligibility or economic qualification.
+
+## C05-H historical metadata and quantity evidence
+
+The optional `c05h.historical-evidence.v1` manifest extends the existing offline
+C05-G replay. Pinned local structured artifacts identify provenance, finite
+historical effective intervals, historical availability, retrieval time, symbol,
+adapter version and exact feed hashes. Independent statuses cover instrument
+metadata, OI quantity units, OI measurement time, OI USDT conversion, book quantity
+units and visible top-25 USDT conversion. Only mutually consistent supported
+linear USDT-perpetual claims can verify; missing, unsupported or contradictory
+evidence remains `UNVERIFIED`. Metadata and quantity conversion reuse existing
+contracts; no current metadata is backdated. The evidence-input trust boundary,
+exact module changes, reproduction and remaining blockers are recorded in the
+[C05-H report](../research/c05/C05_H_EVIDENCE_VALIDATION.md).
+
+Quantity units alone cannot certify OI measurement time. The initial timing mode
+requires explicit field-specific measurement semantics and a supported same-time
+mark for calculated OI notional. Incomplete books cannot verify visible notional;
+visible reconstructed depth cannot prove executable liquidity. All synthetic
+verification is isolated from real-data assertions. No historical SOLUSDT evidence
+check closed in Codex Cloud: only repository reports and synthetic fixtures were
+available, and the original Windows gzip files were not inspected. Overall
+`NOT_READY_FAIL_CLOSED`, P3 `INSUFFICIENT_EVIDENCE`, and the research-only spread
+sampler boundary remain unchanged.

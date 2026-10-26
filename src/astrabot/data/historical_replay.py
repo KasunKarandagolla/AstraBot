@@ -30,6 +30,7 @@ from astrabot.data.historical_sources import (
     SOURCE_VERSION,
 )
 from astrabot.universe.eligibility import FreshnessPolicy
+from astrabot.data.historical_evidence import LoadedEvidence, EvidenceValidation, validate_evidence
 
 SAMPLER_VERSION = "c05g.periodic-spread.v1"
 SAMPLER_CONFIG = {
@@ -85,6 +86,7 @@ class ResearchSnapshot:
     depth_missing_bid_levels: int | None
     depth_missing_ask_levels: int | None
     latest_open_interest: OpenInterestObservation | None
+    open_interest_raw_quantity: Decimal | None
     open_interest_row_age_seconds: Decimal | None
     open_interest_last_value_change_at: datetime | None
     open_interest_value_change_state: str
@@ -104,6 +106,7 @@ class ResearchSnapshot:
     quality_blockers: tuple[str, ...]
     c02_eligibility: str
     economic_qualification: str
+    evidence_validation: EvidenceValidation
 
 
 def _utc(value: datetime, label: str) -> None:
@@ -168,37 +171,45 @@ def _spread_sample(observation: QuoteObservation, *, endpoint: datetime,
     )
 
 
-def _book_snapshot(observation: BookObservation, *, decision_time: datetime) -> DepthSnapshot:
+def _book_snapshot(observation: BookObservation, *, decision_time: datetime,
+                   base_multiplier: Decimal | None = None) -> DepthSnapshot:
     quality = "INCOMPLETE" if observation.quality == "INCOMPLETE" else "VALID"
+    multiplier = base_multiplier if base_multiplier is not None else Decimal(1)
     return DepthSnapshot(
         **_source_common(
             observation, decision_time=decision_time,
-            units="raw book amount; contract mapping UNVERIFIED",
+            units="BASE_ASSET from historical evidence" if base_multiplier is not None else
+                  "raw book amount; contract mapping UNVERIFIED",
             quality=quality,
             readiness="DEGRADED",
         ),
         last_update_id=None,
-        bids=tuple(DepthLevel(price=level.price, quantity=level.amount) for level in observation.bids),
-        asks=tuple(DepthLevel(price=level.price, quantity=level.amount) for level in observation.asks),
-        quantity_unit="UNVERIFIED_RAW_BOOK_AMOUNT",
-        unit_validated=False,
+        bids=tuple(DepthLevel(price=level.price, quantity=level.amount * multiplier)
+                   for level in observation.bids),
+        asks=tuple(DepthLevel(price=level.price, quantity=level.amount * multiplier)
+                   for level in observation.asks),
+        quantity_unit="BASE_ASSET" if base_multiplier is not None else "UNVERIFIED_RAW_BOOK_AMOUNT",
+        unit_validated=base_multiplier is not None,
     )
 
 
-def _open_interest(observation: DerivativeObservation, *, decision_time: datetime) -> OpenInterestObservation:
+def _open_interest(observation: DerivativeObservation, *, decision_time: datetime,
+                   validation: EvidenceValidation) -> OpenInterestObservation:
     assert observation.open_interest is not None
     return OpenInterestObservation(
         **_source_common(
             observation, decision_time=decision_time,
-            units="raw open_interest quantity; unit and measurement time UNVERIFIED",
+            units="BASE_ASSET from historical evidence; measurement status in evidence_validation"
+                  if validation.oi_base_multiplier is not None else
+                  "raw open_interest quantity; unit and measurement time UNVERIFIED",
             quality="UNKNOWN",
             readiness="DEGRADED",
         ),
-        open_interest=observation.open_interest,
-        quantity_unit="UNVERIFIED_RAW_OPEN_INTEREST",
+        open_interest=observation.open_interest * (validation.oi_base_multiplier or Decimal(1)),
+        quantity_unit="BASE_ASSET" if validation.oi_base_multiplier is not None else "UNVERIFIED_RAW_OPEN_INTEREST",
         reported_open_interest_value=None,
-        open_interest_notional_usdt=None,
-        unit_validated=False,
+        open_interest_notional_usdt=validation.oi_notional_usdt,
+        unit_validated=validation.oi_base_multiplier is not None,
         interval=None,
     )
 
@@ -248,6 +259,8 @@ def replay_observations(
     book_diagnostics: FeedDiagnostics,
     derivative_diagnostics: FeedDiagnostics,
     freshness: FreshnessLimits | None = None,
+    evidence: LoadedEvidence | None = None,
+    synthetic: bool = False,
 ) -> tuple[ResearchSnapshot, ...]:
     """Replay one pass over each source, with output memory bounded by cutoffs.
 
@@ -376,13 +389,16 @@ def replay_observations(
         quote_sample = _spread_sample(selected_quote, endpoint=decision, periodic=False) if selected_quote else None
 
         selected_book = book_best[decision]
-        depth = _book_snapshot(selected_book, decision_time=decision) if selected_book else None
+        selected_oi = oi_best[decision]
+        validation = validate_evidence(evidence=evidence, symbol=symbol, decision_time=decision,
+                                       synthetic=synthetic, book=selected_book, oi=selected_oi)
+        depth = _book_snapshot(selected_book, decision_time=decision,
+                               base_multiplier=validation.book_base_multiplier) if selected_book else None
         raw_bid = raw_ask = None
         if selected_book is not None:
             raw_bid, raw_ask = _raw_depth_within(selected_book, Decimal("0.002"))
 
-        selected_oi = oi_best[decision]
-        oi_contract = _open_interest(selected_oi, decision_time=decision) if selected_oi else None
+        oi_contract = _open_interest(selected_oi, decision_time=decision, validation=validation) if selected_oi else None
         selected_market = market_best[decision]
         market_contract = _mark_index(selected_market, decision_time=decision) if selected_market else None
         selected_funding = funding_best[decision]
@@ -417,6 +433,19 @@ def replay_observations(
             "EXECUTABLE_FILL_AND_FEE_EVIDENCE_MISSING",
             "PERIODIC_SPREAD_SAMPLER_IS_RESEARCH_OPT_IN_ONLY",
         }
+        evidence_blockers = {
+            "historical_metadata": "HISTORICAL_INSTRUMENT_METADATA_MISSING",
+            "oi_quantity_unit": "OPEN_INTEREST_UNIT_UNVERIFIED",
+            "oi_measurement_time": "OPEN_INTEREST_REFRESH_TIME_UNVERIFIED",
+            "book_quantity_unit": "DEPTH_AMOUNT_UNIT_UNVERIFIED",
+        }
+        for check, blocker in evidence_blockers.items():
+            if validation.checks[check].status == "VERIFIED":
+                blockers.discard(blocker)
+        if validation.checks["oi_notional_conversion"].status != "VERIFIED":
+            blockers.add("OPEN_INTEREST_NOTIONAL_UNVERIFIED")
+        if validation.checks["book_notional_conversion"].status != "VERIFIED":
+            blockers.add("DEPTH_NOTIONAL_UNVERIFIED")
         if selected_quote is None:
             blockers.add("QUOTE_MISSING")
         elif quote_age is not None and quote_age > Decimal(str(policy.quote.total_seconds())):
@@ -475,6 +504,7 @@ def replay_observations(
             depth_missing_bid_levels=selected_book.missing_bid_levels if selected_book else None,
             depth_missing_ask_levels=selected_book.missing_ask_levels if selected_book else None,
             latest_open_interest=oi_contract,
+            open_interest_raw_quantity=selected_oi.open_interest if selected_oi else None,
             open_interest_row_age_seconds=oi_age,
             open_interest_last_value_change_at=selected_oi.last_open_interest_change_at if selected_oi else None,
             open_interest_value_change_state=oi_change_state,
@@ -494,6 +524,7 @@ def replay_observations(
             quality_blockers=tuple(sorted(blockers)),
             c02_eligibility="NOT_READY_FAIL_CLOSED",
             economic_qualification="NOT_ASSESSED_INSUFFICIENT_EVIDENCE",
+            evidence_validation=validation,
         ))
     return tuple(snapshots)
 
@@ -505,11 +536,13 @@ def causal_as_of(
     quote_diagnostics: FeedDiagnostics, book_diagnostics: FeedDiagnostics,
     derivative_diagnostics: FeedDiagnostics,
     freshness: FreshnessLimits | None = None,
+    evidence: LoadedEvidence | None = None,
+    synthetic: bool = False,
 ) -> ResearchSnapshot:
     """Single-cutoff convenience API over validated, streaming source iterables."""
     return replay_observations(
         symbol=symbol, decision_times=(decision_time,), quotes=quotes, books=books,
         derivatives=derivatives, quote_diagnostics=quote_diagnostics,
         book_diagnostics=book_diagnostics, derivative_diagnostics=derivative_diagnostics,
-        freshness=freshness,
+        freshness=freshness, evidence=evidence, synthetic=synthetic,
     )[0]

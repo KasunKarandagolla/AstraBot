@@ -1,0 +1,188 @@
+{
+  "economic_qualification": "INSUFFICIENT_EVIDENCE",
+  "historical_assessment": {
+    "c02_eligibility": "NOT_READY_FAIL_CLOSED",
+    "evidence_manifest": "C05_H_EVIDENCE_SOLUSDT_2024-10-01.json",
+    "input_scope": "Repository reports only; Windows gzip files NOT inspected in Codex Cloud",
+    "original_feeds_replayed": false,
+    "validation": {
+      "book_ask_notional_usdt_within_0_20": null,
+      "book_base_multiplier": null,
+      "book_bid_notional_usdt_within_0_20": null,
+      "checks": {
+        "book_notional_conversion": {
+          "evidence_ids": [],
+          "reasons": [
+            "UNIT_OR_COMPLETE_VALID_BOOK_UNSUPPORTED"
+          ],
+          "status": "UNVERIFIED"
+        },
+        "book_quantity_unit": {
+          "evidence_ids": [],
+          "reasons": [
+            "OBSERVATION_MISSING_OR_INVALID"
+          ],
+          "status": "UNVERIFIED"
+        },
+        "historical_metadata": {
+          "evidence_ids": [],
+          "reasons": [
+            "NO_EFFECTIVE_EVIDENCE"
+          ],
+          "status": "UNVERIFIED"
+        },
+        "oi_measurement_time": {
+          "evidence_ids": [],
+          "reasons": [
+            "OBSERVATION_MISSING"
+          ],
+          "status": "UNVERIFIED"
+        },
+        "oi_notional_conversion": {
+          "evidence_ids": [],
+          "reasons": [
+            "UNIT_MEASUREMENT_OR_SAME_ROW_MARK_UNSUPPORTED"
+          ],
+          "status": "UNVERIFIED"
+        },
+        "oi_quantity_unit": {
+          "evidence_ids": [],
+          "reasons": [
+            "OBSERVATION_MISSING_OR_INVALID"
+          ],
+          "status": "UNVERIFIED"
+        }
+      },
+      "manifest_sha256": "ab298c6c653fc27c13071eadefb02cb5c62146e9cf5e02c0b5034b48cb144b64",
+      "metadata": null,
+      "oi_base_multiplier": null,
+      "oi_measurement_at": null,
+      "oi_notional_usdt": null,
+      "version": "c05h.historical-evidence.v1"
+    }
+  },
+  "report_version": "c05h.evidence-validation-summary.v1",
+  "synthetic_assessment": {
+    "c02_eligibility": "NOT_READY_FAIL_CLOSED",
+    "configuration_hash": "12b1c033aa9ecb75fef6901af6888c8d394f1d627fa6ffc68e0ae5637ef26344",
+    "evidence_manifest": "tests/fixtures/c05h/manifest.json",
+    "input_scope": "Committed invented fixtures only; no historical market claim",
+    "source_manifest": "tests/fixtures/c05g/manifest.json",
+    "validation": {
+      "book_ask_notional_usdt_within_0_20": "590.6860",
+      "book_base_multiplier": "0.1",
+      "book_bid_notional_usdt_within_0_20": "789.1040",
+      "checks": {
+        "book_notional_conversion": {
+          "evidence_ids": [
+            "synthetic-book_unit",
+            "synthetic-metadata"
+          ],
+          "reasons": [],
+          "status": "VERIFIED"
+        },
+        "book_quantity_unit": {
+          "evidence_ids": [
+            "synthetic-book_unit",
+            "synthetic-metadata"
+          ],
+          "reasons": [],
+          "status": "VERIFIED"
+        },
+        "historical_metadata": {
+          "evidence_ids": [
+            "synthetic-metadata"
+          ],
+          "reasons": [],
+          "status": "VERIFIED"
+        },
+        "oi_measurement_time": {
+          "evidence_ids": [
+            "synthetic-oi_time"
+          ],
+          "reasons": [],
+          "status": "VERIFIED"
+        },
+        "oi_notional_conversion": {
+          "evidence_ids": [
+            "synthetic-metadata",
+            "synthetic-oi_time",
+            "synthetic-oi_unit"
+          ],
+          "reasons": [],
+          "status": "VERIFIED"
+        },
+        "oi_quantity_unit": {
+          "evidence_ids": [
+            "synthetic-metadata",
+            "synthetic-oi_unit"
+          ],
+          "reasons": [],
+          "status": "VERIFIED"
+        }
+      },
+      "manifest_sha256": "512a4caa2e1b067fd258cb4fbd1d5046be06150189e9d4770c916e1bbd6d8718",
+      "metadata": {
+        "as_of": "2024-10-01T00:00:00.000000Z",
+        "available_at": "2024-10-01T00:00:00.000000Z",
+        "base_asset": "SOL",
+        "config_hash": "synthetic",
+        "contract_size": "0.1",
+        "contract_type": "PERPETUAL",
+        "data_source": "SYNTHETIC_FIXTURE",
+        "delivery_time": null,
+        "effective_from": "2024-10-01T00:00:00.000000Z",
+        "effective_to": "2024-10-02T00:00:00.000000Z",
+        "event_time": "2024-10-01T00:00:00.000000Z",
+        "fidelity": "SYNTHETIC_FIXTURE",
+        "filters": [
+          {
+            "filter_type": "PRICE_FILTER",
+            "max_value": "100000",
+            "min_value": "0.01",
+            "step_size": "0.01"
+          },
+          {
+            "filter_type": "LOT_SIZE",
+            "max_value": "1000000",
+            "min_value": "1",
+            "step_size": "1"
+          },
+          {
+            "filter_type": "MARKET_LOT_SIZE",
+            "max_value": "1000000",
+            "min_value": "1",
+            "step_size": "1"
+          },
+          {
+            "filter_type": "MIN_NOTIONAL",
+            "max_value": null,
+            "min_value": "5",
+            "step_size": null
+          }
+        ],
+        "ingested_at": "2024-10-01T00:00:00.000000Z",
+        "instrument_id": "BINANCE_USDM:PERPETUAL:SOLUSDT:SETTLE:USDT",
+        "minimum_notional": "5",
+        "minimum_quantity": "1",
+        "observation_id": "synthetic-sol-metadata",
+        "onboard_time": "2020-01-01T00:00:00.000000Z",
+        "price_tick": "0.01",
+        "quality": "VALID",
+        "quantity_step": "1",
+        "quote_asset": "USDT",
+        "readiness": "READY",
+        "settle_asset": "USDT",
+        "source_version": "c05h.synthetic-metadata.v1",
+        "status": "TRADING",
+        "symbol": "SOLUSDT",
+        "units": "USDT price per SOL; contract_size SOL per contract",
+        "venue": "BINANCE_USDM"
+      },
+      "oi_base_multiplier": "0.1",
+      "oi_measurement_at": "2024-10-01T00:59:59.000000Z",
+      "oi_notional_usdt": "10050.00",
+      "version": "c05h.historical-evidence.v1"
+    }
+  }
+}
