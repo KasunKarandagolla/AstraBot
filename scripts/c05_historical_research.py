@@ -238,7 +238,8 @@ def _markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def run(args: argparse.Namespace) -> dict[str, Any]:
+def load_snapshots(args: argparse.Namespace):
+    """Verify and normalize G/H input once; shared by both research CLIs."""
     data_root = args.data_root.expanduser().resolve()
     manifest, synthetic = _load_manifest(data_root, args.symbol, args.date, args.source_manifest)
     paths = {
@@ -273,6 +274,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         derivative_diagnostics=diagnostics["derivative_ticker"],
         freshness=freshness, evidence=evidence, synthetic=synthetic,
     )
+    return manifest, synthetic, hashes, decisions, diagnostics, evidence, freshness, snapshots
+
+
+def run(args: argparse.Namespace) -> dict[str, Any]:
+    (manifest, synthetic, hashes, decisions, diagnostics, evidence, freshness, snapshots) = load_snapshots(args)
     run_config = {
         "source_version": SOURCE_VERSION,
         "source_sha256": hashes,
