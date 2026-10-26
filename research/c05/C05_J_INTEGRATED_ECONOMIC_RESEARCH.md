@@ -324,3 +324,22 @@ that issue or promote the opt-in sampler. If those gates remain unsupported, the
 specific source or policy-interpretation decision needed; another generic
 validator or synthetic-only demonstration will not close P3. No C06/C07, demo,
 live, procurement or persistent collection follows automatically.
+
+## Delivery addendum
+
+- Open, unmerged [PR #26](https://github.com/KasunKarandagolla/AstraBot/pull/26).
+- Original base: `20600d12c66c253d968857a4af909084b4b9e5d0`.
+- Original implementation head: `883d31cf824d8a81e0bbe412261356ecb27974b9`.
+- This delivery record is a documentation-only follow-up on the same PR. The
+  final pushed head and its check runs are identified by PR metadata and the
+  final handoff; no self-referential commit hash is embedded here.
+- Local 314-test full suite and seven final focused cases passed. Final repeated
+  retained-sample CLI runs produced identical JSON, Markdown and deterministic
+  gzip; full packet decompression/content-hash checks passed. Source-backed
+  diagnostic/packet reconstruction matched the stored packet using the retained
+  authentic strict C04 ledger; this is not represented as a second full replay.
+  A sparse trade-only partition rendering edge case found during final CLI
+  verification was corrected and covered in the existing authentic-panel test.
+- Final-head GitHub Actions is observed after pushing this record and reported
+  separately in the final handoff. No merge or independent economic acceptance
+  is claimed by this engineering delivery.
