@@ -146,6 +146,14 @@ not eligible-universe or strategy evidence.
 
 A fake data snapshot can produce deterministic feature IDs and a NO_TRADE/proposal decision, without signed Binance access. A toy OpenBot coordinator can call the typed tools and cannot access trading keys. Services restart without losing recorded setup or approval state. Version pinning/fixture tests catch changed units or timestamps in adopted packages. No order-writing endpoint is accessible from the agent network.
 
+## C06-E/F offline durable paper implementation boundary
+
+The offline paper harness can opt into one marked synthetic-only directory at process startup. The six MCP tool names and schemas remain unchanged; no model-supplied path, approval, claim, submission, cancellation, reduction, shell or arbitrary file tool is exposed. Immutable plans/status and append-only machine events persist in one C06 SQLite file. Fresh MCP subprocesses reload and verify plan hashes, transitions and journal hash chains before returning status or event summaries. The default process-local fixture behavior remains available.
+
+C01's fake owner ledger and fake venue remain authoritative in their existing separate SQLite files. A separate local fixture-owner CLI handles synthetic approval/rejection/expiry and one-use consumption; an independent fake supervisor reopens and reconciles the same C01 stores without an active OpenBot process. Read-only News/Events and Journal summaries preserve synthetic provenance and return `UNKNOWN`, `UNAVAILABLE` or `INCONSISTENT` explicitly. There is no transaction across the C06 plan database, C01 owner ledger and fake venue. Missing or contradictory evidence halts new exposure; an ambiguous order is never blindly resent. A correlated terminal reduce plus authoritative residual position can create a new reduce-only intent for a discovered late fill.
+
+SQLite transaction boundaries serialize each individual store only. They do not provide multi-host fencing, cross-database atomic commits, backups, encryption, production service isolation or 24/7 recovery guarantees. These databases, owner identity, order fills and role summaries are disposable synthetic test fixtures, not a production OMS, authenticated human MFA, Binance adapter or evidence of strategy quality.
+
 ## C05-G offline historical research pipeline
 
 `data/historical_sources.py` streams strict Tardis-format USD-M `quotes`,
