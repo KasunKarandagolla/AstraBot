@@ -499,3 +499,9 @@ invented.
 Implementation and report form one cohesive PR against the original base above.
 Independent engineering-lead review is required; no self-merge or economic gate
 promotion follows from these tests.
+
+Published as [PR #27](https://github.com/KasunKarandagolla/AstraBot/pull/27),
+implementation `bad69c2241a22cbaaa0d06883fd4b858e24f5933`, against the original
+merged-main base above. This delivery record is a documentation-only commit on
+the same PR. Exact final head and observed GitHub CI are supplied in the handoff;
+the PR remains unmerged pending independent review.
