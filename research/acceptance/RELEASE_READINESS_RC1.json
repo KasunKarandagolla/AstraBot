@@ -1,0 +1,211 @@
+{
+  "base_commit": "0d5b45c4ccdadd782f9b4f42f290f35faf445a60",
+  "evidence_packets": {
+    "authentic": {
+      "content_sha256": "4966e85a85693dcebb480c75335b424a9e53ec91c79d082d9b25be2a700356fa",
+      "evidence_class": "OBSERVED_HISTORICAL_RESEARCH",
+      "path": "rc1/authentic/OPERATOR_PACKET.json.gz",
+      "run_id": "1a6b2434c63a6a1431dfb6aae7bb023c7c441e09f68a1c35bcee03a8805c3b85"
+    },
+    "synthetic": {
+      "content_sha256": "39fa809098219c1b15f0ccdbc575e32f162c90aa2db1bc99a3765e7ffb386dab",
+      "evidence_class": "SYNTHETIC_ONLY",
+      "path": "rc1/synthetic/OPERATOR_PACKET.json.gz",
+      "run_id": "b2db950314053157ea927b64f6060ab673b84ff7625a919625b040f61830c301"
+    }
+  },
+  "external_evidence_blockers": [
+    "Nine historical source requirements: zero fully accepted per external C05-M assessment recorded in issue #18.",
+    "Date-effective metadata/filters/lifecycle, source clock #22, OI/depth units and clocks, ticker/event coverage.",
+    "Observed executable fill, fees/funding/latency and representative causally eligible economics.",
+    "C05-L remains T1_INDETERMINATE; C05-M HOLD_REVISE. No justified positive P3 edge."
+  ],
+  "formal_phase_gate": {
+    "live": "NOT_AUTHORIZED",
+    "p3": "INSUFFICIENT_EVIDENCE",
+    "p5_demo": "NOT_QUALIFIED",
+    "policies": "RESEARCH_ONLY",
+    "prospective_210_day_collection": "DEFERRED",
+    "qualified_percent": 45,
+    "unqualified_percent": 55
+  },
+  "independent_acceptance": "PENDING_PR_REVIEW",
+  "next_gate": "Independent review of RC1 and repaired PR #28, then owner HOLD or separately preregistered economic-hypothesis revision; no source purchase/collector/Demo authorization.",
+  "schema_version": "astrabot.release-readiness.rc1.v1",
+  "software_implementation": {
+    "rubric": "One status per named subsystem, scoped to stated evidence; no software percentage assigned. INTEGRATED_AND_TESTED does not mean production-qualified.",
+    "status_counts": {
+      "INTEGRATED_AND_TESTED": 7,
+      "NOT_IMPLEMENTED": 1,
+      "PARTIAL": 3
+    },
+    "subsystems": [
+      {
+        "acceptance_tests": [
+          "tests/test_research_mvp_rc1.py::test_authentic_decision_flows_to_operator_with_sources_and_no_proposal",
+          "tests/test_c04_binance_archive.py"
+        ],
+        "code": [
+          "src/astrabot/research/replay.py::load_c02_panel",
+          "src/astrabot/research/replay.py::load_public_um_archive_panel",
+          "scripts/c05_integrated_research.py"
+        ],
+        "limits": "124-row authentic retained sample reproduced; existing full 112-archive seven-symbol interface supported but not re-executed in RC1. Original owner-host feeds unavailable.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "market_data_provenance"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_c02_universe.py",
+          "tests/test_research_mvp_rc1.py::test_authentic_decision_flows_to_operator_with_sources_and_no_proposal"
+        ],
+        "code": [
+          "src/astrabot/universe/eligibility.py::scan_universe",
+          "src/astrabot/c06/research_operator.py::present_historical"
+        ],
+        "limits": "Strict dynamic eligibility is implemented and integrated. Authentic sample has zero eligible windows; historical source acceptance remains blocked. Issue #22 is unchanged.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "universe_eligibility"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_c02_features.py",
+          "tests/test_c03_context_levels.py",
+          "tests/test_research_mvp_rc1.py::test_authentic_decision_flows_to_operator_with_sources_and_no_proposal"
+        ],
+        "code": [
+          "src/astrabot/features/providers.py",
+          "src/astrabot/research/context.py",
+          "src/astrabot/c06/research_operator.py::feature_readiness"
+        ],
+        "limits": "All ten families reported honestly. Narrow A01/A02/C03 providers are tested; full A03/A04/A05/A08 analytics remain unqualified or unimplemented. No fabricated flow/depth/profile.",
+        "status": "PARTIAL",
+        "subsystem": "a01_a10_feature_readiness"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_c03_context_levels.py",
+          "tests/test_c03_policies.py",
+          "tests/test_c05j_integrated_research.py"
+        ],
+        "code": [
+          "src/astrabot/research/context.py",
+          "src/astrabot/research/policies.py",
+          "src/astrabot/research/integrated.py::build_packet"
+        ],
+        "limits": "Frozen chronology, anchors, source-time availability and rejection paths reused; original hypotheses remain unvalidated economically.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "regime_setup_lifecycle"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_c03_policies.py",
+          "tests/test_c01_acceptance.py",
+          "tests/test_research_mvp_rc1.py"
+        ],
+        "code": [
+          "src/astrabot/research/engine.py",
+          "src/astrabot/research/decision.py",
+          "src/astrabot/contracts.py",
+          "src/astrabot/c06/research_operator.py"
+        ],
+        "limits": "Original deterministic policy/risk/economics calculations and no-promotion guard tested. Qualified expectancy registry and positive historical economics do not exist; the operator registry truth is RESEARCH_ONLY, never an executable qualification.",
+        "status": "PARTIAL",
+        "subsystem": "strategy_risk_economics"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_research_mvp_rc1.py::test_authentic_snapshot_serves_six_tools_after_process_restart",
+          "tests/test_c06_role_summaries.py",
+          "tests/test_c06_mcp_protocol.py"
+        ],
+        "code": [
+          "scripts/c06_mcp_server.py",
+          "src/astrabot/c06/paper_mvp.py",
+          "src/astrabot/c06/research_operator.py",
+          "src/astrabot/c06/role_summaries.py"
+        ],
+        "limits": "Six tools serve authentic NO_TRADE after process restart and separate synthetic proposals. SDK stdio calls tested; existing owner-host C06-F acceptance remains separate, not rerun or recertified. Historical journal persists as hashed files; synthetic journal uses existing SQLite.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "openbot_orchestration_journal"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_c01_acceptance.py",
+          "tests/test_research_mvp_rc1.py::test_complete_fake_lifecycle_retains_durable_approval_protection_and_deadlines"
+        ],
+        "code": [
+          "scripts/c06_fixture_owner.py",
+          "scripts/c06_paper_demo.py::FixtureOwnerDecision",
+          "tests/c01_fake.py::FakeOwner.claim"
+        ],
+        "limits": "One-use exact-plan/nonce and expiry/freshness semantics integrated and fake-tested. Real owner identity/MFA/approval service is not implemented/accepted.",
+        "status": "PARTIAL",
+        "subsystem": "owner_approval_semantics"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_research_mvp_rc1.py::test_complete_fake_lifecycle_retains_durable_approval_protection_and_deadlines",
+          "tests/test_c01_acceptance.py"
+        ],
+        "code": [
+          "scripts/rc1_synthetic.py",
+          "scripts/c06_fake_supervisor.py",
+          "tests/c01_fake.py"
+        ],
+        "limits": "Existing fake owner/venue reused: partial entry, immediate verified fake stop, original TP1, remainder reconciliation, forced reduction and verified flat. No genuine exchange behavior established.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "simulated_exchange_lifecycle"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_research_mvp_rc1.py",
+          "tests/test_c06_durable_runtime.py",
+          "tests/test_c06_process_acceptance.py",
+          "tests/test_c01_acceptance.py"
+        ],
+        "code": [
+          "scripts/c06_fake_supervisor.py",
+          "tests/c01_fake.py::FakeOwner.timers",
+          "src/astrabot/c06/role_summaries.py"
+        ],
+        "limits": "Restarted processes reopen authoritative fake state, no unknown-order duplicate, fixed first-fill 11h55/12h clocks, critical rejected-stop emergency closure. Positive scenario deliberately exercises unfilled-at-12h breach handling. Production fencing/watchdog/backup remain missing/unqualified.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "supervision_recovery"
+      },
+      {
+        "acceptance_tests": [],
+        "code": [],
+        "limits": "C07 and genuine Binance writer/adapter acceptance are outside this authorization. P3 and separate owner approval must precede Demo; no credential use or exchange account contact.",
+        "status": "NOT_IMPLEMENTED",
+        "subsystem": "genuine_demo_exchange_qualification"
+      },
+      {
+        "acceptance_tests": [
+          "tests/test_research_mvp_rc1.py::test_same_commands_reproduce_exact_packets_and_preserve_existing_state"
+        ],
+        "code": [
+          "scripts/c05_integrated_research.py",
+          "src/astrabot/c06/research_operator.py::owner_summary",
+          "scripts/rc1_synthetic.py::_audit_step"
+        ],
+        "limits": "One existing CLI with explicit evidence modes, bounded authentic cutoffs, deterministic packets/run IDs/events, fresh synthetic state requirement, and owner summaries derived from machine event IDs.",
+        "status": "INTEGRATED_AND_TESTED",
+        "subsystem": "reporting_operator_experience"
+      }
+    ]
+  },
+  "validation": {
+    "c03_golden_and_incomplete_panel": "PASS",
+    "c04_deterministic_blocker_replay": "PASS",
+    "compileall": "PASS",
+    "dependency_integrity": "pip check: no broken requirements",
+    "focused_operator_tests": "5 passing operator tests included in full suite",
+    "full_local_suite": "325 passed in 118.01 seconds",
+    "git_diff_check": "PASS",
+    "integration_final_head_github_ci": "See PR metadata for exact commit/run; independently checked after publication",
+    "pr28_head": "510165f3ad2f35142da927b7cf4ee601dc24ba10",
+    "pr28_remote_ci": "https://github.com/KasunKarandagolla/AstraBot/actions/runs/40436282335",
+    "pr28_remote_result": "success"
+  }
+}
