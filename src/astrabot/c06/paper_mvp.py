@@ -63,7 +63,7 @@ class Opportunity(StrictToolModel):
 
 class ScanOpportunitiesOutput(StrictToolModel):
     as_of: datetime
-    fixture_label: Literal["SYNTHETIC_FIXTURE"]
+    fixture_label: Literal["SYNTHETIC_FIXTURE", "OBSERVED_HISTORICAL_RESEARCH"]
     symbols: tuple[str, ...]
     opportunities: tuple[Opportunity, ...]
     executable: Literal[False] = False
@@ -246,7 +246,7 @@ class JournalEvent(StrictToolModel):
     event_id: str
     occurred_at: datetime
     received_at: datetime
-    actor: Literal["offline_test_driver", "fake_owner", "fake_supervisor"]
+    actor: Literal["offline_test_driver", "fake_owner", "fake_supervisor", "research_operator"]
     event_type: str
     plan_id: str
     lifecycle_id: str
@@ -581,7 +581,11 @@ class C06ToolGateway:
 
     def __init__(self, *, symbol: str, data: SymbolData, scan_notional_usdt: Decimal,
                  evaluation: Evaluation, candidate: ResearchDecision | None,
-                 setup: ResearchSetup | None, plans: PlanRegistry, journal: EventJournal) -> None:
+                 setup: ResearchSetup | None, plans: PlanRegistry, journal: EventJournal,
+                 evidence_class: Literal["SYNTHETIC_FIXTURE", "OBSERVED_HISTORICAL_RESEARCH"] = "SYNTHETIC_FIXTURE") -> None:
+        if evidence_class not in ("SYNTHETIC_FIXTURE", "OBSERVED_HISTORICAL_RESEARCH"):
+            raise ValueError("unsupported offline evidence class")
+        self._evidence_class = evidence_class
         self._symbol = symbol
         self._data = data
         self._scan_notional_usdt = scan_notional_usdt
@@ -603,7 +607,7 @@ class C06ToolGateway:
         if request.as_of != self._as_of:
             raise ValueError("as_of must match the immutable offline evaluation snapshot")
         result = scan_universe({self._symbol: self._data}, request.as_of, self._scan_notional_usdt)
-        return ScanOpportunitiesOutput(as_of=request.as_of, fixture_label="SYNTHETIC_FIXTURE",
+        return ScanOpportunitiesOutput(as_of=request.as_of, fixture_label=self._evidence_class,
             symbols=result.shortlist, opportunities=tuple(Opportunity(symbol=o.symbol, state=o.state,
                 eligible=o.eligible, reasons=o.reasons, shortlist_status=o.shortlist_status)
                 for o in result.considered))
@@ -635,6 +639,8 @@ class C06ToolGateway:
             reason_codes=candidate.rejection_reason_codes)
 
     def prepare_plan(self, request: PreparePlanInput) -> PaperPlan:
+        if self._evidence_class != "SYNTHETIC_FIXTURE":
+            raise ValueError("historical policies are unqualified; fake approval is a separate synthetic workflow")
         candidate = self._candidate
         setup = self._setup
         if not candidate or not setup or candidate.decision_id != request.candidate_id:

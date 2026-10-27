@@ -1,7 +1,7 @@
 # AstraBot — Living Project Sources
 
 **Project:** reuse-first, OpenBot-coordinated, multi-strategy Binance USDⓈ-M crypto-perpetual research and trading system, requiring explicit human approval before every new exposure.  
-**Baseline:** architecture v1.5 (24 Oct 2026); merged code through independently reviewed PR #27 at `0d5b45c4ccdadd782f9b4f42f290f35faf445a60`. **Current status: P0–P2 credited; P3 economic evidence on hold. PR #23 C06-E/F is merged, and the owner reports Windows/OpenBot C06-F acceptance PASS; that scope is closed.** Authentic seven-symbol OHLCV price diagnostics and one-day source samples exist; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
+**Baseline:** architecture v1.5 (24 Oct 2026); merged code through independently reviewed PR #26 at `153d4d31c473e1f55c4ca62eaf5ad877629ea415`. **Current status: P0–P2 credited; P3 economic evidence on hold. PR #23 C06-E/F is merged, and the owner reports Windows/OpenBot C06-F acceptance PASS; that scope is closed.** Authentic seven-symbol OHLCV price diagnostics and one-day source samples exist; strict policy replay remains `BLOCKED_BY_DATA`, and economic qualification remains `INSUFFICIENT_EVIDENCE`. P3 empirical and P4–P6 operational gates are not complete. No edge, demo safety or live readiness has been established.
 **Repository:** https://github.com/KasunKarandagolla/AstraBot
 
 ## Read in this order
@@ -39,9 +39,18 @@ Codex model selection is **complexity-triggered, not a Sol/Luna alternating patt
 
 ## Current focus and next action
 
-**P3 / C05-L: T1_INDETERMINATE; defer the proposed 210-day investment for independent review.** The preregistered authentic September event/control study reproduces all 624 T1 histories and 434 confirmations, preserving the original 24 base-screen survivors. All 24 touch their original stops within 12h; none reaches the original second target before the stop under either candle-order bound. Exact past controls exist for 11 survivors on five event days; the +3.88bps 12h equal-day contrast reverses sign on day deletion. This materially weakens C05-K's conditional cost argument without establishing executed losses or strategy profitability. See the [C05-L investment decision and all 24 cases](research/c05/C05_L_T1_EVENT_CONTROL_DECISION.md). October panel outcomes remain unopened; no collector or purchase has started.
+**Integrated offline research MVP RC1 — ready for independent review.** The existing C05 command now presents authentic source-backed NO_TRADE decisions through the existing six OpenBot-compatible tools and produces a separate protected fake lifecycle, durable fake approval/restart evidence and owner summaries derived from machine events. See [launch, evidence and limits](research/acceptance/INTEGRATED_RESEARCH_MVP_RC1.md) and the [software readiness matrix](research/acceptance/RELEASE_READINESS_RC1.json).
 
-**Phase credit remains 45% / 55% unqualified.** The owner-reported Windows/OpenBot C06-F PASS closes that acceptance scope; no host acceptance rerun is included. P3/C05 remains `INSUFFICIENT_EVIDENCE`, all T1/R1/B1 `RESEARCH_ONLY`; C07/demo/live remain blocked. **NEXT_GATE:** independent lead review of C05-L's authentic paths and incomplete matched sample, with a recommendation to defer activation of the existing prospective proposal. C05-K's US$350/210-day proposal remains unapproved and any future activation still requires explicit owner/source acceptance, including issue #22. No further C06, persistent collector or execution development is authorized.
+```sh
+python scripts/c05_integrated_research.py --mode authentic --output-dir work/rc1
+python scripts/c05_integrated_research.py --mode synthetic --output-dir work/rc1
+```
+
+The default authentic run verifies the retained 124-row C02 sample: 48 symbol-windows, zero eligible windows/candidates, NO_TRADE / BLOCKED_BY_DATA. Synthetic mode separately demonstrates partial entry/protection/TP/restart/11h55/12h/emergency closure and rejected, expired, stale-trigger and protection-failure cases. No qualified historical trade or new owner-host OpenBot acceptance is claimed. Existing complete C04 and owner G/H input interfaces are retained; original Windows feeds are not assumed accessible.
+
+**Programme truth:** P3 `INSUFFICIENT_EVIDENCE`; T1/R1/B1 `RESEARCH_ONLY`; formal credit **45% / 55% unqualified**. PR #28 was independently accepted (review `5661492640`) and merged by the lead at `2f2ea0b`; repaired head `510165f3ad2f35142da927b7cf4ee601dc24ba10` ([green CI](https://github.com/KasunKarandagolla/AstraBot/actions/runs/40436282335)). Its `T1_INDETERMINATE` finding preserves 24 original stop touches and zero original second targets before stop. External C05-M source/host assessment: `HOLD_REVISE`, zero of nine source requirements fully accepted, 210-day study **DEFERRED** (see issue #18; attachments are not in Git). RC1 began independently at `0d5b45c`, then reconciled actual merged main `2f2ea0b`. Its real seven-symbol run verifies 266,616 bars and produces 1,008 NO_TRADE decisions across 168 windows, zero candidates; all 28 October archives remain unopened. No unmerged changes were copied. The current owner assignment authorizes this offline integration only; completed C06-F host acceptance is not repeated.
+
+**NEXT_GATE:** independent review of RC1, then owner HOLD or a separately preregistered economic-hypothesis revision. C07, Demo/live, credentials, collector and paid procurement remain unauthorized. Software integration adds no formal phase credit.
 
 The following sample notes preserve earlier evidence and its limitations; their original next actions are historical context, not separate current work orders. Earlier Binance HTTP 451 and Tardis CONNECT 403 observations do not establish global data absence.
 

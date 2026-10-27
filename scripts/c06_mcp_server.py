@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MCP stdio adapter for the deterministic C06 offline fixture only."""
+"""Six offline research/proposal tools over synthetic or sealed historical inputs."""
 from __future__ import annotations
 
 import argparse
@@ -48,17 +48,17 @@ TOOL_MODELS: dict[str, tuple[type[BaseModel], type[BaseModel], str]] = {
     "scan_opportunities": (
         ScanOpportunitiesInput,
         ScanOpportunitiesOutput,
-        "Scan the fixed synthetic fixture. Output is offline research data only.",
+        "Scan the fixed offline snapshot. Inspect its evidence label; research only.",
     ),
     "evaluate_symbol": (
         EvaluateSymbolInput,
         EvaluateSymbolOutput,
-        "Evaluate the fixture symbol at its frozen snapshot time. Output is research-only.",
+        "Evaluate the selected offline symbol at its frozen snapshot time. Output is research-only.",
     ),
     "evaluate_candidates": (
         EvaluateCandidatesInput,
         CandidateOutput,
-        "Return the fixture decision for supplied IDs; unknown or rejected IDs yield NO_TRADE.",
+        "Return the selected offline decision for supplied IDs; unknown or rejected IDs yield NO_TRADE.",
     ),
     "prepare_plan": (
         PreparePlanInput,
@@ -73,7 +73,7 @@ TOOL_MODELS: dict[str, tuple[type[BaseModel], type[BaseModel], str]] = {
     "get_operations_summary": (
         GetOperationsSummaryInput,
         OperationsSummaryOutput,
-        "Summarize verified synthetic machine events; this is not a production audit log.",
+        "Summarize verified offline machine events. Inspect scan_opportunities for their evidence class.",
     ),
 }
 
@@ -160,7 +160,7 @@ def create_server(gateway: C06ToolGateway) -> Server:
         "AstraBot C06 Offline MCP",
         version="0.1.0",
         instructions=(
-            "All tools use deterministic synthetic fixture data and are research-only. "
+            "Tools use one deterministic offline snapshot; inspect its evidence class. "
             "No tool approves, claims, submits, places, or manages exchange orders. "
             "This local MCP process is not an OS security boundary."
         ),
@@ -189,7 +189,15 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument("--state-dir", type=Path,
         help="opt in to a dedicated persistent synthetic-only fixture directory")
+    parser.add_argument("--research-snapshot", type=Path,
+        help="sealed authentic snapshot exported by c05_integrated_research --mode authentic")
     args = parser.parse_args(argv)
+    if args.research_snapshot:
+        if args.state_dir is not None or '--fixture' in (argv if argv is not None else sys.argv[1:]):
+            parser.error("historical snapshots cannot be combined with synthetic fixture/state options")
+        from astrabot.c06.research_operator import load_operator_gateway
+        anyio.run(_serve, load_operator_gateway(args.research_snapshot))
+        return
     state_path = None
     if args.state_dir is not None:
         state_dir = prepare_synthetic_state_dir(args.state_dir)
