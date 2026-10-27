@@ -3,7 +3,7 @@
 **Type:** append-only factual handoff ledger, not a substitute for tests or code.  
 **Last editorial checkpoint:** 2026-10-27 · owner-authorized integrated offline research RC1 prepared for independent review.
 **Current phase:** `P3 — RESEARCH EVIDENCE HOLD` (C04 engineering merged; complete-policy historical economic evidence not qualified).
-**NEXT_GATE:** `Independent review of integrated offline RC1 and repaired PR #28, then owner HOLD or separately preregistered economic-hypothesis revision. Formal phase credit 45%; no C07/Demo/live/collection authorization.`
+**NEXT_GATE:** `Independent review of integrated offline RC1 (PR #28 was externally accepted/merged), then owner HOLD or separately preregistered economic-hypothesis revision. Formal phase credit 45%; no C07/Demo/live/collection authorization.`
 **Next assigned Codex profile:** `NONE; current owner emergency offline integration is delivered for independent review.`
 **Live funds enabled:** **NO**. **Any strategy economically qualified:** **NO**.
 
@@ -448,3 +448,12 @@ Repair validation: **330 full offline tests passed**; compileall, pip check, C03
 - **NEXT_GATE:** independent review of this RC1 and repaired PR #28; then an owner HOLD or explicitly preregistered economic research pivot. No self-merge; no credentials, exchange account contact, orders, collector, purchase, C02 sampler edits, C07 or Demo/live authorization. Model/session quota unavailable.
 
 RC1 final local validation: **325 tests passed in 118.01s**, including five new combined operator checks. `compileall`, `pip check`, both deterministic C03 commands, C04 blocker replay to external scratch and `git diff --check` passed. Final-head remote CI is recorded on the integration PR after publication, without implying independent phase acceptance.
+
+### 2026-10-27 — RC1 reconciled with independently accepted PR #28; genuine seven-symbol operator run
+
+- During RC1 publication the lead independently posted ACCEPT review `5661492640` on repaired PR #28 and merged it at `2f2ea0bc87d4004dee71f4b71f4143ba9e5585b1` (02:18:31 UTC). This agent did not merge PR #28. Earlier statements that it remained pending describe the prior checkpoint. RC1 PR #29 was already independently implemented at `587bf16b1ae5ad378939f6def4011823e6c68c1e`; actual main was then merged, preserving all journal entries and resolving README/roadmap conflicts.
+- The reviewed monthly-source bound is now a merged API. RC1 uses it to open only months needed by the explicit operator scope, with month-end boundary regressions. No unmerged source code was copied and no further downloads occurred.
+- Authentic seven-symbol September 1 run executed twice: 266,616 original normalized bars / 84 verified July–September sources; 168 windows / 1,008 NO_TRADE / zero strict candidates or trades; 17 price-only formations / 3 confirmations. All 28 October archives remain unopened. Committed authentic RC1 packets now contain this larger actual result rather than the tiny C02 smoke. All 8,708 retained native symbol/interval OHLC bars were independently checked against 56 original CSV members. JSON/gzip/events reproduced byte-identically; actual seven-symbol BTC snapshot passed six-tool MCP reopening in two fresh SDK processes. The tiny default C02 command remains covered by CI.
+- Run ID `e07dfad9dc720a2cd8821c9ec7e2d5e4311ac5f7fc89a604fc8e9fc8834145f8`; C05 packet `347a6b909835ef992513830254141b41a672b91c4f334144ab24ec2322668169`; operator content `efd8725a2a281c1ae3b4da92e5b02137f512b0b16b92b071ea92c50be24d54e0`. Post-merge full suite/final-head remote CI are checked on PR #29. No strategy/economic promotion; formal 45% unchanged. NEXT_GATE: RC1 review, real owner-host historical OpenBot invocation when available, and owner HOLD or explicitly preregistered economic-hypothesis revision.
+
+RC1 post-merge validation: **339 full offline tests passed in 127.45s**, including nine RC1 checks and all repaired C05-L regressions. Final generic offline MCP descriptions passed four protocol checks in 7.18s. Compilation, dependency integrity, both C03 deterministic commands, C04 blocker replay and whitespace validation passed. Exact remote final-head CI is recorded in PR #29; independent RC1 acceptance remains pending.

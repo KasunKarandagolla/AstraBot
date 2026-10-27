@@ -9,7 +9,8 @@ from c06_subprocess_env import isolated_child_environment
 
 ROOT = Path(__file__).resolve().parents[1]
 snapshot = Path(sys.argv[1])
-at = json.loads(snapshot.read_text())['as_of']
+payload = json.loads(snapshot.read_text())
+at = payload['as_of']
 async def check():
     params = StdioServerParameters(command=sys.executable,
         args=[str(ROOT/'scripts/c06_mcp_server.py'), '--research-snapshot', str(snapshot)],
@@ -26,6 +27,6 @@ async def check():
         journal = await client.call_tool('get_operations_summary', {})
         return journal.structured_content
 first = asyncio.run(check())
-assert first['event_count'] == 2
+assert first['event_count'] == len(payload['journal_events']) > 0
 assert asyncio.run(check()) == first
 print("RC1_HISTORICAL_MCP_PASS")

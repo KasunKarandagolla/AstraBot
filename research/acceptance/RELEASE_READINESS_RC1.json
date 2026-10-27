@@ -1,11 +1,11 @@
 {
-  "base_commit": "0d5b45c4ccdadd782f9b4f42f290f35faf445a60",
+  "base_commit": "2f2ea0bc87d4004dee71f4b71f4143ba9e5585b1",
   "evidence_packets": {
     "authentic": {
-      "content_sha256": "4966e85a85693dcebb480c75335b424a9e53ec91c79d082d9b25be2a700356fa",
+      "content_sha256": "efd8725a2a281c1ae3b4da92e5b02137f512b0b16b92b071ea92c50be24d54e0",
       "evidence_class": "OBSERVED_HISTORICAL_RESEARCH",
       "path": "rc1/authentic/OPERATOR_PACKET.json.gz",
-      "run_id": "1a6b2434c63a6a1431dfb6aae7bb023c7c441e09f68a1c35bcee03a8805c3b85"
+      "run_id": "e07dfad9dc720a2cd8821c9ec7e2d5e4311ac5f7fc89a604fc8e9fc8834145f8"
     },
     "synthetic": {
       "content_sha256": "39fa809098219c1b15f0ccdbc575e32f162c90aa2db1bc99a3765e7ffb386dab",
@@ -30,7 +30,9 @@
     "unqualified_percent": 55
   },
   "independent_acceptance": "PENDING_PR_REVIEW",
-  "next_gate": "Independent review of RC1 and repaired PR #28, then owner HOLD or separately preregistered economic-hypothesis revision; no source purchase/collector/Demo authorization.",
+  "initial_independent_base_commit": "0d5b45c4ccdadd782f9b4f42f290f35faf445a60",
+  "integration_main_update": "PR #28 independently accepted/merged while RC1 was being published; reconciled actual main before using the reviewed source-bound loader.",
+  "next_gate": "Independent RC1 review and actual owner-host historical OpenBot run when available; owner HOLD or separately preregistered economic-hypothesis revision. No purchase/collector/Demo authority.",
   "schema_version": "astrabot.release-readiness.rc1.v1",
   "software_implementation": {
     "rubric": "One status per named subsystem, scoped to stated evidence; no software percentage assigned. INTEGRATED_AND_TESTED does not mean production-qualified.",
@@ -50,7 +52,7 @@
           "src/astrabot/research/replay.py::load_public_um_archive_panel",
           "scripts/c05_integrated_research.py"
         ],
-        "limits": "124-row authentic retained sample reproduced; existing full 112-archive seven-symbol interface supported but not re-executed in RC1. Original owner-host feeds unavailable.",
+        "limits": "266,616 original bars from 84 July\u2013September files; actual seven-symbol September day reproduced twice. 168 windows / 1,008 NO_TRADE / zero strict candidates. All 8,708 retained operator OHLC rows checked against 56 raw archive members. 28 October sources unopened. Tiny default C02 smoke also tested. Original owner-host G/H feeds unavailable.",
         "status": "INTEGRATED_AND_TESTED",
         "subsystem": "market_data_provenance"
       },
@@ -200,12 +202,15 @@
     "c04_deterministic_blocker_replay": "PASS",
     "compileall": "PASS",
     "dependency_integrity": "pip check: no broken requirements",
-    "focused_operator_tests": "5 passing operator tests included in full suite",
-    "full_local_suite": "325 passed in 118.01 seconds",
+    "focused_operator_tests": "9 operator checks included in full suite",
+    "full_local_suite": "339 passed in 127.45 seconds after reconciling merged PR #28; final protocol metadata check: 4 passed in 7.18 seconds",
     "git_diff_check": "PASS",
     "integration_final_head_github_ci": "See PR metadata for exact commit/run; independently checked after publication",
     "pr28_head": "510165f3ad2f35142da927b7cf4ee601dc24ba10",
+    "pr28_independent_acceptance": "Review 5661492640; externally merged at 2f2ea0bc87d4004dee71f4b71f4143ba9e5585b1",
     "pr28_remote_ci": "https://github.com/KasunKarandagolla/AstraBot/actions/runs/40436282335",
-    "pr28_remote_result": "success"
+    "pr28_remote_result": "success",
+    "seven_symbol_raw_ohlc": "8,708 unique retained bars verified against 56 original pinned CSV members",
+    "seven_symbol_reproduction": "Byte-identical operator JSON/gzip, C05 gzip and events in two fresh paths; actual historical MCP reopened in two SDK processes"
   }
 }

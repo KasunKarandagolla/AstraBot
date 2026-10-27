@@ -53,12 +53,12 @@ TOOL_MODELS: dict[str, tuple[type[BaseModel], type[BaseModel], str]] = {
     "evaluate_symbol": (
         EvaluateSymbolInput,
         EvaluateSymbolOutput,
-        "Evaluate the fixture symbol at its frozen snapshot time. Output is research-only.",
+        "Evaluate the selected offline symbol at its frozen snapshot time. Output is research-only.",
     ),
     "evaluate_candidates": (
         EvaluateCandidatesInput,
         CandidateOutput,
-        "Return the fixture decision for supplied IDs; unknown or rejected IDs yield NO_TRADE.",
+        "Return the selected offline decision for supplied IDs; unknown or rejected IDs yield NO_TRADE.",
     ),
     "prepare_plan": (
         PreparePlanInput,
@@ -73,7 +73,7 @@ TOOL_MODELS: dict[str, tuple[type[BaseModel], type[BaseModel], str]] = {
     "get_operations_summary": (
         GetOperationsSummaryInput,
         OperationsSummaryOutput,
-        "Summarize verified synthetic machine events; this is not a production audit log.",
+        "Summarize verified offline machine events. Inspect scan_opportunities for their evidence class.",
     ),
 }
 

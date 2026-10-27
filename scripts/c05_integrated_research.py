@@ -67,7 +67,17 @@ def main() -> int:
         if args.c02_panel:
             panel = load_c02_panel(args.c02_panel)
         elif args.data_root:
-            panel = load_public_um_archive_panel(args.manifest, args.data_root)
+            if args.mode == 'authentic':
+                # PR #28's source bound is now independently merged at 2f2ea0b.
+                # Open only source months needed by the explicit operator scope.
+                end = args.end or (args.start or parse_utc('2024-09-01T00:00:00Z'))+timedelta(days=1)
+                last_month = (end-timedelta(microseconds=1)).replace(
+                    day=1, hour=0, minute=0, second=0, microsecond=0)
+                source_end = (last_month+timedelta(days=32)).replace(day=1)
+                panel = load_public_um_archive_panel(args.manifest, args.data_root,
+                    source_end_exclusive=source_end)
+            else:
+                panel = load_public_um_archive_panel(args.manifest, args.data_root)
         else:
             raise ValueError("--data-root or ASTRABOT_DATA_ROOT must identify retained external C04 archives")
         args.interval = args.interval or ('1h' if args.mode == 'authentic' else '5m')

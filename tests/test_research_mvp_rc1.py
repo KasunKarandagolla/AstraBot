@@ -1,5 +1,6 @@
 """Acceptance of the newly combined operator flow, across the real six-tool MCP."""
 from datetime import datetime, timedelta
+import gzip
 import json
 from pathlib import Path
 import subprocess
@@ -8,8 +9,10 @@ import sys
 import pytest
 
 from astrabot.c06.paper_mvp import EventJournal, PlanRegistry, C06ToolGateway
-from astrabot.c06.research_operator import load_operator_gateway
-from astrabot.data.models import config_hash
+from astrabot.c06.research_operator import load_operator_gateway, historical_gateway
+from astrabot.data.models import config_hash, Candle
+from astrabot.research.integrated import safe
+from astrabot.universe.eligibility import SymbolData
 from c06_subprocess_env import isolated_child_environment
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -135,3 +138,57 @@ def test_tampered_or_synthetic_snapshots_and_mixed_modes_fail_closed(operator_ou
     command(tmp_path, 'synthetic', '--c02-panel', ROOT/'research/c02_panel', success=False)
     command(tmp_path, 'authentic', '--c02-panel', ROOT/'research/c02_panel', '--start',
         '2024-10-30T00:00:00Z', '--end', '2024-10-29T00:00:00Z', success=False)
+
+
+@pytest.mark.parametrize('end, expected', [
+    ('2024-09-02T00:00:00Z', '2024-10-01T00:00:00+00:00'),
+    ('2024-10-01T00:00:00Z', '2024-10-01T00:00:00+00:00'),
+    ('2024-10-02T00:00:00Z', '2024-11-01T00:00:00+00:00'),
+])
+def test_archive_operator_leaves_later_source_months_unopened(monkeypatch, tmp_path, end, expected):
+    monkeypatch.syspath_prepend(str(ROOT/'scripts'))
+    from scripts import c05_integrated_research as cli
+    selected = []
+    def loader(manifest, root, *, source_end_exclusive):
+        selected.append(source_end_exclusive.isoformat())
+        raise OSError('test stops before reading any source bytes')
+    monkeypatch.setattr(cli, 'load_public_um_archive_panel', loader)
+    monkeypatch.setattr(sys, 'argv', ['c05_integrated_research', '--mode', 'authentic',
+        '--data-root', str(tmp_path), '--end', end])
+    with pytest.raises(SystemExit) as result:
+        cli.main()
+    assert result.value.code == 2
+    assert selected == [expected]
+
+
+def test_committed_seven_symbol_packet_reproduces_policy_decisions_from_exact_bars():
+    root = ROOT/'research/acceptance/rc1/authentic'
+    report = json.loads(gzip.decompress((root/'OPERATOR_PACKET.json.gz').read_bytes()))
+    research = json.loads(gzip.decompress((root/'C05_J_DECISION_PACKET.json.gz').read_bytes()))
+    for value, field in ((report, 'content_sha256'), (research, 'packet_sha256')):
+        assert config_hash({k:v for k,v in value.items() if k != field}) == value[field]
+    assert report['source_packet_sha256'] == research['packet_sha256']
+    assert research['funnel']['symbol_evaluation_windows'] == 168
+    assert research['funnel']['diagnostic_no_trade_decisions'] == 1008
+    assert research['funnel']['strict_candidate_decisions'] == 0
+    assert research['price_diagnostics']['formation_count'] == 17
+    assert research['price_diagnostics']['confirmed_pattern_count'] == 3
+    manifest = research['provenance']['historical_manifest']
+    assert len(manifest['unopened_archive_ids']) == 28
+    assert all('2024-10' in name for name in manifest['unopened_archive_ids'])
+    assert {r['symbol'] for r in report['decisions']} == {
+        'BTCUSDT','ETHUSDT','BNBUSDT','SOLUSDT','XRPUSDT','ADAUSDT','DOGEUSDT'}
+    keys = set()
+    for row in report['decisions']:
+        fields = {f'candles_{interval}': tuple(Candle.model_validate_json(json.dumps(b))
+            for b in row['source_bars'] if b['interval'] == interval)
+            for interval in ('5m','15m','1h','4h')}
+        data = SymbolData.model_validate(fields)
+        _, result = historical_gateway(data, symbol=row['symbol'], at=datetime.fromisoformat(row['as_of']))
+        assert safe(result.emitted) == row['decisions']
+        for b in row['source_bars']:
+            key = (b['symbol'], b['interval'], b['source_record_id'])
+            assert key not in keys and b['symbol'] == row['symbol']
+            assert b['fidelity'] != 'SYNTHETIC_FIXTURE'
+            keys.add(key)
+    assert len(keys) == 8708

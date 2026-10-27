@@ -1,8 +1,9 @@
 # Integrated offline research MVP — RC1
 
-2026-10-27 (Asia/Colombo). Base: merged main
-`0d5b45c4ccdadd782f9b4f42f290f35faf445a60`.
-**NEXT_GATE: independent review of this RC1 and repaired PR #28; then an owner
+2026-10-27 (Asia/Colombo). Initial independent base:
+`0d5b45c4ccdadd782f9b4f42f290f35faf445a60`; subsequently reconciled with merged
+main `2f2ea0bc87d4004dee71f4b71f4143ba9e5585b1` after PR #28 was independently
+accepted during this task. **NEXT_GATE: independent review of RC1; then an owner
 HOLD / separately preregistered hypothesis-revision decision.** No economic,
 Demo or live phase promotion. Formal qualification remains **45%**.
 
@@ -76,14 +77,22 @@ The **original seven-symbol C04 archive interface is retained**:
 python scripts/c05_integrated_research.py --mode authentic --data-root /path/to/c04-data --start 2024-09-01T00:00:00Z --end 2024-09-02T00:00:00Z --interval 1h --output-dir work/seven-symbol-rc1
 ```
 
-That uses merged main's existing strict loader and requires its **complete 112
-pinned archives**, including October. It opens/verifies that complete source set;
-run it only when that source scope is authorized. RC1 does not fetch missing
-archives or independently open October. Only the 84 July–September originals were
-available in this session after the PR #28 repair, so the seven-symbol RC1 command
-was **not re-executed**. PR #28's unmerged source-bound loader extension is not
-copied, imported or required. There is no hidden merge dependency. The 84-file
-repair cache was reused/preserved; no further C04 downloads were made for RC1.
+That command now reuses the **independently merged** monthly source-bound loader
+from PR #28 (main `2f2ea0b`). The complete frozen 112-file manifest is validated,
+but only the 84 July–September source files are opened for this September scope;
+28 October archives stay unopened. The source cutoff is the first month boundary
+covering the explicit evaluation end. The new boundary tests include an exclusive
+October 1 end (still no October source bytes) and an explicitly selected October
+2 end (October source files then required). No data is downloaded by the operator.
+
+RC1 was originally built independently at `0d5b45c` without PR #28 code. When the
+lead independently accepted and merged PR #28 at 02:18:31 UTC during this task,
+main advanced to `2f2ea0b`; RC1 merged that actual main, resolved only documentation
+conflicts and then adopted its reviewed loader API. There is no unmerged dependency
+or secret cherry-pick. The above seven-symbol run was executed **twice**, with
+byte-identical JSON/gzip packets and events, reusing the same retained cache.
+The historical BTC snapshot from that run also passed actual six-tool MCP stdio
+reopening in two fresh processes. October remains unopened.
 
 RC1 operator evaluation is capped at one day's cutoffs (24 hourly / 288 five-minute
 cutoffs); the original C05 CLI remains available for longer research by omitting
@@ -102,10 +111,23 @@ for that interface, not a new authentic host run.
 
 ## Actual outputs
 
-The committed evidence packets in `rc1/authentic/` and `rc1/synthetic/` are
-compressed copies of the actual command outputs, with separate owner summaries.
+The committed packets in `rc1/authentic/` (seven symbols) and `rc1/synthetic/`
+are compressed copies of the actual command outputs, with separate owner summaries.
+The tiny default C02 smoke run is tested separately and needs no external cache.
 
-**Authentic:** the pinned C02 files contain 24 BTCUSDT hourly candles for
+**Committed authentic seven-symbol result:** 266,616 normalized original bars
+from 84 verified July–September archives; 168 hourly symbol-windows on September
+1; **1,008 NO_TRADE policy-side decisions**, zero eligible windows, zero strict
+candidates/trades and no outcome rows. Price-only diagnostics retain **17
+formations / three confirmations**, outside admission. Each window is vetoed by
+missing dated metadata, ticker, 60-sample spread history, depth, validated OI and
+verified events. Existing C03 context is actually exercised (90 TREND_DOWN, 66
+UNCLASSIFIED and 12 BREAKOUT_EVENT contexts); session VWAP is ready at the last
+operator snapshot. The seven operator records at September 1 23:00 UTC (September
+2 04:30 Colombo) retain **8,708 unique symbol/interval/native-ID bars**. Every one
+was independently matched to exact original OHLC in 56 pinned archive CSV members.
+
+**Default bundled smoke command:** the pinned C02 files contain 24 BTCUSDT hourly candles for
 2024-10-28 and 100 APEUSDT aggregate trades for 2024-10-18. All 124 source rows
 are checksum verified. C05 evaluates **48 symbol-windows**, **288 policy-side
 NO_TRADE diagnostics**, zero eligible windows, zero strict candidates, zero
@@ -147,8 +169,10 @@ durable fake-owner/venue state, checks one-use approval, partial quantities,
 unchanged first fill, both deadlines and critical protection handling, reopens
 authentic MCP in two subprocesses, rejects an extra risk field and tampered or
 synthetic snapshots, and reproduces byte-identical packets/events in fresh paths.
-The full C01–C06 unit/integration/fault/operator suite passed: **325 tests in
-118.01 seconds**. Compilation, dependency integrity, deterministic C03 golden
+The full post-merge suite passed **339 tests in 127.45 seconds**, including nine
+RC1 operator checks, repaired C05-L tests, source-month boundary regressions and
+reproduction of all seven committed operator decisions from their exact bars.
+The final MCP description update also passed all four protocol checks. Compilation, dependency integrity, deterministic C03 golden
 and incomplete-panel checks, C04 blocker replay and whitespace checks passed.
 Exact final-head GitHub CI is recorded in the PR handoff after publication.
 
@@ -164,13 +188,14 @@ owner handoff summarized in issue #18; no C05-M artifact is invented in Git.
 
 PR #28's repaired evidence head is `510165f3ad2f35142da927b7cf4ee601dc24ba10`;
 its [exact-head CI](https://github.com/KasunKarandagolla/AstraBot/actions/runs/40436282335)
-passed. Its analytic verdict remains provisional pending repeat independent
-inspection: T1_INDETERMINATE, 24 original stop touches and zero original second
-targets before stop. C05-M HOLD_REVISE and the 210-day study DEFER remain current.
+passed. Independent review `5661492640` accepted that repaired research evidence;
+PR #28 was merged externally at `2f2ea0b`. Its verdict is T1_INDETERMINATE,
+24 original stop touches and zero original second targets before stop. C05-M HOLD_REVISE and the 210-day study DEFER remain current.
 Code integration does not establish P3 edge, P5 Demo acceptance or live readiness.
 
-Shortest legitimate next step: independently inspect both PRs and their machine
-evidence, then have the owner choose HOLD or an explicitly preregistered research
+Shortest legitimate next step: independently inspect RC1 and its machine
+evidence, run the existing historical snapshot through the actual owner OpenBot
+host when available, then have the owner choose HOLD or an explicitly preregistered research
 pivot without changing original T1/R1/B1. Source-clock/source/host procurement
 decisions become consequential only for a justified, separately authorized
 empirical route. No collector, purchase, credential use, exchange account contact,
