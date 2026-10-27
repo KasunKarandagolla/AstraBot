@@ -10,7 +10,7 @@ from scripts import c05_t1_event_control as study
 
 def bars(at, prices):
     return [SimpleNamespace(open_time=at+timedelta(minutes=5*i),
-        available_at=at+timedelta(minutes=5*(i+1)), source_record_id=f'SYNTHETIC_ONLY_{i}',
+        symbol='SYNTHETIC', interval='5m', available_at=at+timedelta(minutes=5*(i+1)), source_record_id=f'SYNTHETIC_ONLY_{i}',
         high=D(high), low=D(low), close=D(close)) for i, (high, low, close) in enumerate(prices)]
 
 
@@ -83,6 +83,61 @@ def test_dependence_components_join_symbols_and_midnight_windows():
         (t+timedelta(days=2), t+timedelta(days=2, hours=12))]) == 2
 
 
+def test_native_timestamp_collisions_preserve_symbol_and_interval_prices():
+    rows = [SimpleNamespace(symbol=symbol, interval=interval,
+        source_record_id='1725148800000', close=D(price))
+        for symbol, interval, price in [('BTCUSDT', '5m', '58000'),
+            ('SOLUSDT', '5m', '135'), ('SOLUSDT', '1h', '136')]]
+    retained = {study.bar_key(row): row for row in rows}
+    assert len(retained) == 3
+    assert [retained[study.bar_key(row)].close for row in rows] == [D(58000), D(135), D(136)]
+    assert all(row.source_record_id == '1725148800000' for row in retained.values())
+
+
+def test_all_event_control_paths_and_frozen_sources_resolve_exactly():
+    import gzip
+    import json
+    packet = json.loads(gzip.decompress((study.ROOT /
+        'research/c05/C05_L_T1_EVENT_CONTROL_EVIDENCE.json.gz').read_bytes()))
+    source = {r['source_key']: r for r in packet['source_bars']}
+    native = {}
+    for key, row in source.items():
+        assert key == study.source_key(row['symbol'], row['interval'], row['source_record_id'])
+        native.setdefault((row['interval'], row['source_record_id']), []).append(row)
+    assert any(len({r['symbol'] for r in rows}) > 1 and len({r['close'] for r in rows}) > 1
+        for rows in native.values())
+    for history in packet['setup_histories'].values():
+        symbol = history['formation_snapshot']['symbol']
+        for key in history['formation_source_keys'] + [t['source_key'] for t in history['transitions']]:
+            assert source[key]['symbol'] == symbol and source[key]['interval'] == '5m'
+    for row in packet['events'] + packet['controls']:
+        event = 'setup_id' in row
+        reference = source[row['confirmation_source_key' if event else 'reference_source_key']]
+        assert reference['symbol'] == row['symbol'] and reference['interval'] == '5m'
+        assert reference['close'] == row['entry' if event else 'reference_close']
+        at = study.dt(row['terminal_at' if event else 'event_time'])
+        keys = row['outcomes']['720']['source_keys']
+        bars = [SimpleNamespace(**{**source[key],
+            'open_time': study.dt(source[key]['open_time']),
+            'available_at': study.dt(source[key]['available_at']),
+            **{name: D(source[key][name]) for name in ('open', 'high', 'low', 'close')}}) for key in keys]
+        assert all(b.symbol == row['symbol'] and b.interval == '5m' for b in bars)
+        target = row['history']['structural_target'] if event else None
+        rebuilt = study.price_path(bars, at=at,
+            reference=D(row['entry' if event else 'reference_close']),
+            distance=D(row['stop_distance' if event else 'normalization_distance']),
+            side=row['side'], target2=D(target['price']) if target else None)
+        assert rebuilt == row['outcomes']
+        if event:
+            for name in ('stop_anchor', 'structural_target'):
+                level = row['history'][name]
+                if level:
+                    for sid, key in zip(level['source_ids'], row['history'][name + '_source_keys'], strict=True):
+                        original = source[key]
+                        assert (original['symbol'], original['interval'], original['source_record_id']) == (
+                            level['symbol'], level['timeframe'], sid)
+
+
 def test_authentic_packet_keeps_original_membership_and_all_paths_in_development():
     import gzip
     import json
@@ -101,7 +156,8 @@ def test_authentic_packet_keeps_original_membership_and_all_paths_in_development
     assert {r['setup_id'] for r in packet['events'] if study.base_survivor(r)} == {
         k for k, r in original_events.items() if study.base_survivor(r)}
     assert len(packet['setup_histories']) == 624
-    source = {r['source_record_id']: r for r in packet['source_bars']}
+    source = {r['source_key']: r for r in packet['source_bars']}
+    assert len(source) == len(packet['source_bars'])
     for event in packet['events']:
         frozen = original_events[event['setup_id']]
         assert all(event[k] == v for k, v in frozen.items())
@@ -109,8 +165,9 @@ def test_authentic_packet_keeps_original_membership_and_all_paths_in_development
         assert study.START <= at < study.END
         for horizon, outcome in event['outcomes'].items():
             assert outcome['complete'] == (at+timedelta(minutes=int(horizon)) <= study.END)
-            for identity in outcome['source_record_ids']:
+            for native_id, identity in zip(outcome['source_record_ids'], outcome['source_keys'], strict=True):
                 bar = source[identity]
+                assert (bar['symbol'], bar['interval'], bar['source_record_id']) == (event['symbol'], '5m', native_id)
                 assert study.dt(bar['open_time']) >= at
                 assert study.dt(bar['available_at']) <= min(at+timedelta(minutes=int(horizon)), study.END)
     pool = {r['window_id']: r for r in matching['pool']}

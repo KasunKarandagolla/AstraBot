@@ -45,6 +45,15 @@ def write_gzip(path, value):
             compressed.write((json.dumps(value, sort_keys=True, indent=2)+'\n').encode())
 
 
+def source_key(symbol, interval, native_id):
+    """Native timestamps are scoped to an instrument AND candle interval."""
+    return json.dumps([symbol, interval, native_id], separators=(',', ':'))
+
+
+def bar_key(bar):
+    return source_key(bar.symbol, bar.interval, bar.source_record_id)
+
+
 def base_survivor(row):
     return (row['geometry_status'] == 'SCREENABLE'
             and row['scenarios']['base']['passes_with_route'] and not row['known_context_veto'])
@@ -100,7 +109,7 @@ def metadata_and_histories(panel, census):
                 active[sid] = advanced
                 chronologies[sid]['transitions'].append({'at': at.isoformat(),
                     'state': advanced.snapshot.state, 'notes': list(advanced.notes),
-                    'source_record_id': bar.source_record_id})
+                    'source_record_id': bar.source_record_id, 'source_key': bar_key(bar)})
                 if advanced.snapshot.state in policies.TERMINAL | {'CONFIRMED'}:
                     original = next(r for r in symbol_formations if r['setup_id'] == sid)
                     assert advanced.snapshot.state == original['state'], sid
@@ -137,8 +146,9 @@ def metadata_and_histories(panel, census):
                 chronologies[original['setup_id']] = {
                     'formation_snapshot': setup.snapshot.model_dump(mode='json'),
                     'formation_source_ids': list(setup.processed_event_ids),
+                    'formation_source_keys': [source_key(symbol, '5m', sid) for sid in setup.processed_event_ids],
                     'transitions': [{'at': at.isoformat(), 'state': setup.snapshot.state,
-                        'notes': list(setup.notes), 'source_record_id': bar.source_record_id}]}
+                        'notes': list(setup.notes), 'source_record_id': bar.source_record_id, 'source_key': bar_key(bar)}]}
             reasons = []
             if active:
                 reasons.append('T1_ACTIVE_OR_TERMINAL_AT_CUTOFF')
@@ -230,7 +240,7 @@ def price_path(bars, *, at, reference, distance, side, target2=None, end=END):
             return None
         si, t1i, t2i = first_hit(stop, False), first_hit(target1, True), first_hit(target2, True)
         def touch(i):
-            return None if i is None else {'source_record_id': rows[i].source_record_id,
+            return None if i is None else {'source_record_id': rows[i].source_record_id, 'source_key': bar_key(rows[i]),
                 'bar_open': rows[i].open_time.isoformat(), 'available_at': rows[i].available_at.isoformat(),
                 'minutes_lower': i*5, 'minutes_upper': (i+1)*5}
         favorable = max([D(0), *(sign*((b.high if sign == 1 else b.low)-reference) for b in rows)])
@@ -241,6 +251,7 @@ def price_path(bars, *, at, reference, distance, side, target2=None, end=END):
             'observed_bars': len(rows), 'requested_endpoint': endpoint.isoformat(),
             'last_available_at': rows[-1].available_at.isoformat() if rows else None,
             'source_record_ids': [b.source_record_id for b in rows],
+            'source_keys': [bar_key(b) for b in rows],
             'signed_close_r': str(signed/distance) if complete and signed is not None else None,
             'signed_close_bps': str(signed/reference*10000) if complete and signed is not None else None,
             'mfe_r': str(favorable/distance), 'mae_r': str(adverse/distance),
@@ -393,10 +404,10 @@ def main():
         bars = panel.symbols[row['symbol']].candles_5m
         start = bisect_right(bars, at, key=lambda b: b.available_at)
         path = bars[start:start+144]
-        used_bars[bars[start-1].source_record_id] = bars[start-1]
+        used_bars[bar_key(bars[start-1])] = bars[start-1]
         results = price_path(path, at=at, reference=D(row['entry']), distance=D(row['stop_distance']),
             side=row['side'], target2=target2)
-        r = {**row, 'classification': classify(row), 'history': history, 'outcomes': results,
+        r = {**row, 'confirmation_source_key': bar_key(bars[start-1]), 'classification': classify(row), 'history': history, 'outcomes': results,
              'thesis_management': 'NO_SEPARATE_FROZEN_POST_ENTRY_THESIS_EXIT_IMPLEMENTED; OPTIONAL_MANAGEMENT_DISABLED'}
         r['hypothetical_entry_sensitivity'] = {}
         for shift in (D(0), D('.025'), D('.05')):
@@ -415,7 +426,7 @@ def main():
             'interpretation': 'AGGREGATE_EX_POST_STRESS_ONLY_NOT_EVENT_SPECIFIC_OR_POSITION_CASHFLOW'}
         outcomes.append(r)
         for b in path:
-            used_bars[b.source_record_id] = b
+            used_bars[bar_key(b)] = b
     for link in matches:
         if not link['control_id']:
             continue
@@ -425,31 +436,45 @@ def main():
         bars = panel.symbols[control['symbol']].candles_5m
         start = bisect_right(bars, at, key=lambda b: b.available_at)
         path = bars[start:start+144]
-        used_bars[bars[start-1].source_record_id] = bars[start-1]
+        used_bars[bar_key(bars[start-1])] = bars[start-1]
         reference = D(control['reference_close'])
         # Matched original risk fraction is only a diagnostic normalization.
         distance = reference*D(event['stop_fraction'])
         results = price_path(path, at=at, reference=reference, distance=distance, side=event['side'])
-        controls.append({**control, 'matched_event_id': event['setup_id'], 'control_id': control['window_id'],
+        controls.append({**control, 'reference_source_key': bar_key(bars[start-1]), 'matched_event_id': event['setup_id'], 'control_id': control['window_id'],
             'pool_window_id': control['window_id'],
             'side': event['side'], 'normalization': 'MATCHED_CASE_STOP_FRACTION_NOT_A_CONTROL_STRATEGY',
             'normalization_distance': str(distance), 'outcomes': results})
         for b in path:
-            used_bars[b.source_record_id] = b
-    # Keep source records once, indexed by native source ID; no October source.
-    history_ids = {sid for h in chronologies.values() for sid in h['formation_source_ids']}
-    history_ids.update(t['source_record_id'] for h in chronologies.values() for t in h['transitions'])
+            used_bars[bar_key(b)] = b
+    # Retain source records by instrument/interval/native ID, including frozen
+    # 1h structural-target inputs. Native IDs and policy snapshots stay intact.
+    history_keys = {key for h in chronologies.values() for key in h['formation_source_keys']}
+    history_keys.update(t['source_key'] for h in chronologies.values() for t in h['transitions'])
+    for h in recovered.values():
+        symbol = h['snapshot']['symbol']
+        h['processed_source_keys'] = [source_key(symbol, '5m', sid) for sid in h['processed_source_ids']]
+        history_keys.update(h['processed_source_keys'])
+        for name in ('stop_anchor', 'structural_target'):
+            level = h[name]
+            if level:
+                h[name + '_source_keys'] = [source_key(level['symbol'], level['timeframe'], sid)
+                    for sid in level['source_ids']]
+                history_keys.update(h[name + '_source_keys'])
     for data in panel.symbols.values():
-        for b in data.candles_5m:
-            if b.source_record_id in history_ids:
-                used_bars[b.source_record_id] = b
+        for interval in ('5m', '1h'):
+            for b in getattr(data, 'candles_' + interval):
+                if bar_key(b) in history_keys:
+                    used_bars[bar_key(b)] = b
+    assert history_keys <= used_bars.keys(), 'unresolved original setup source'
     source_bars = []
-    for b in sorted(used_bars.values(), key=lambda b: (b.symbol, b.open_time)):
+    for b in sorted(used_bars.values(), key=lambda b: (b.symbol, b.interval, b.open_time)):
         assert b.open_time < END
-        archive_id = f'{b.symbol}-5m-{b.open_time:%Y-%m}.zip'
-        source_bars.append({'source_record_id': b.source_record_id, 'observation_id': b.observation_id,
+        archive_id = f'{b.symbol}-{b.interval}-{b.open_time:%Y-%m}.zip'
+        minutes = {'5m': 5, '1h': 60}[b.interval]
+        source_bars.append({'source_key': bar_key(b), 'interval': b.interval, 'source_record_id': b.source_record_id, 'observation_id': b.observation_id,
             'symbol': b.symbol, 'archive_id': archive_id,
-            'csv_record_number_including_header': int((b.open_time.day-1)*288+b.open_time.hour*12+b.open_time.minute//5)+2,
+            'csv_record_number_including_header': int(((b.open_time.day-1)*1440+b.open_time.hour*60+b.open_time.minute)//minutes)+2,
             'open_time': b.open_time.isoformat(), 'close_time': b.close_time.isoformat(),
             'available_at': b.available_at.isoformat(), **{k: str(getattr(b,k)) for k in ('open','high','low','close')}})
     selections = {'all_original_confirmations': outcomes,
@@ -470,7 +495,7 @@ def main():
         'matched_events': len(controls), 'unique_controls': len({r['pool_window_id'] for r in controls}),
         'groups': {name: group_summary(rows, controls, matches) for name, rows in selections.items()}}
     summary['decision'] = decision(summary)
-    packet = {'schema_version': 'c05l.event-control-evidence.v1', 'summary': summary,
+    packet = {'schema_version': 'c05l.event-control-evidence.v2', 'summary': summary,
         'source_partitions': list(panel.partitions), 'formations': formations,
         'setup_histories': chronologies,
         'events': outcomes, 'controls': controls, 'source_bars': source_bars,

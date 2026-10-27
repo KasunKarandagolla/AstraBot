@@ -139,6 +139,28 @@ The command is bounded to the frozen September population and local manifest-pin
 - [Control pool and matches](C05_L_MATCHES.json.gz): all 60,480 timestamps, causal exclusions, exact cohorts, candidate counts/digests and deterministic links, including unmatched cases.
 - [Summary](C05_L_T1_EVENT_CONTROL_SUMMARY.json): population/horizon distributions, equal-day matched contrasts and explicit uncertainty limitations.
 
-Evidence content hash: `1bb69d021b70a09655bde84214364172b0e6d50a2a75d1c3e18a44522bab6a13`. Matching content hash: `e83a7eb9541c511f7e33174585b9c5429663919ad7f76a10169a67aef52d98c4`. The final matching artifact is byte-identical to the first forward-outcome-blind selection; the final full run adds retained state histories and sensitivity annotations without changing selection or findings.
+Evidence content hash: `531b72e51b79f686332022ca6306db1cbd21adad3b6ec799a2f34193ad425e69`. Matching content hash: `e83a7eb9541c511f7e33174585b9c5429663919ad7f76a10169a67aef52d98c4`. The final matching artifact is byte-identical to the first forward-outcome-blind selection; the final full run adds retained state histories and sensitivity annotations without changing selection or findings.
 
 Validation: 20 focused C05-L/C05-K/C04 archive checks; full relevant offline CI suite **328 passed**; compilation, dependency integrity, deterministic C03 golden/incomplete-panel checks, C04 blocker replay to scratch and `git diff --check` pass. The authentic final bounded command reproduced all original histories and geometries; artifact checks independently bind the 434/24 membership, original row fields, source paths, match embargoes and hashes. Remote final-head CI is reported with PR publication rather than inferred from these local results.
+
+## 2026-10-27 source-lineage correction on PR #28
+
+Evidence schema v2 retains the native ID unchanged and keys records by the JSON
+composite `[symbol, interval, source_record_id]`. Formation/transition, confirmation,
+control-reference, forward-path/touch and frozen anchor/target references now resolve
+unambiguously. The inventory preserves **24,414** distinct original bars (previously
+7,778 timestamp-collapsed records), including hourly structural-target inputs.
+Every retained OHLC row and CSV record number was independently compared with the
+original bytes in 21 manifest-pinned source archives. This fresh workspace restored
+the missing 84 July–September archives once (original hashes checked); no October
+archives were retrieved or opened. Subsequent work reuses this local cache.
+
+The original summary is exactly unchanged. The compressed matching artifact is
+byte-identical. Removing only additive source-reference fields reproduces the
+original events, controls and all 624 histories exactly: 434 confirmations, 24
+survivors, 24 stop touches and zero second targets before stop. New regressions
+preserve different prices at identical cross-symbol timestamps, resolve interval
+collisions and reconstruct every event/control outcome from the retained OHLC.
+Independent review remains required; no self-merge or phase promotion.
+
+Repair validation: **330 full offline tests passed**; compileall, pip check, C03 golden/incomplete-panel checks, C04 deterministic blocker replay and `git diff --check` passed. Remote CI is checked against the published repair head separately.
