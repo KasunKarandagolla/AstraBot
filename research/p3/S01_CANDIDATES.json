@@ -1,0 +1,83 @@
+{
+  "schema_version": "astrabot.s01.proposed-policies.v1",
+  "status": "PROPOSED_RESEARCH_ONLY_OWNER_APPROVAL_REQUIRED",
+  "base_commit": "b06079077850bf6cbc176d010e0ccf3bc42b032a",
+  "candidates": {
+    "PC2": {
+      "policy_id": "PC2.structural-pullback.v0.1",
+      "hypothesis": "A counter-direction 15m pullback to session value in an aligned trend can resume toward already observed nearby opposition; use the original 45m pullback structure for invalidation.",
+      "formation_clock": "new closed 15m bar only; one active setup per symbol and side",
+      "regime": "c03.context.v1 READY TREND_UP for LONG / TREND_DOWN for SHORT; ATR percentile <95",
+      "pullback_bars_15m": 3,
+      "counter_direction_latest_15m": true,
+      "extreme_distance_to_vwap_max_atr15": "0.50",
+      "close_directional_distance_from_vwap_min_atr15": "0",
+      "close_directional_distance_from_vwap_max_atr15": "1",
+      "stop_buffer_atr15": "0.25",
+      "target": "nearest directionally ahead formation-confirmed 1h swing OR highest/lowest of latest20 closed1h bars; no farther level may replace a nearer one",
+      "confirmation": "first of next3 distinct closed5m bars with directional body and close beyond formation15m high/low; cancel if fixed stop touched first, missing/extreme context, opposite4h bias or UTC VWAP session changes",
+      "expiry_minutes": 15,
+      "stop": "min(low of last3 closed15m)-0.25*frozenATR15 LONG; max(high)+0.25*frozenATR15 SHORT",
+      "management": "FIXED_SINGLE_STRUCTURAL_TARGET_NO_ELECTIVE_TRAIL_NO_BREAKEVEN"
+    },
+    "FR2": {
+      "policy_id": "FR2.failed-range-break.v0.1",
+      "hypothesis": "A first failed break of an already tested low-drift five-hour range, followed by a distinct acceptance close, can rotate toward the range midpoint before invalidating the sweep.",
+      "formation_clock": "new closed15m bar; one active range per symbol and side; never re-arm on same15m bar",
+      "regime": "c03 context READY; ADX1h<25; abs(normalizedEMA1h slope)<=0.30; ATR percentile<95; current15m RVOL breakout in either direction disqualifies",
+      "range_bars_15m": 20,
+      "edge_tests_each": 2,
+      "same_edge_test_separation_bars": 3,
+      "edge_test_tolerance_atr15": "0.25",
+      "max_touch_bar_fraction_of_range": "0.75",
+      "first5_last5_mean_close_drift_max_width": "0.20",
+      "range_width_min_atr15": "2",
+      "range_width_max_atr15": "8",
+      "sweep_search_next5m_bars": 3,
+      "sweep_min_penetration_atr15": "0.10",
+      "sweep_max_penetration_atr15": "0.75",
+      "sweep": "first subsequent5m breach of own edge must close strictly inside frozen range and meet penetration bounds; any two-sided full-range bar or failed first breach invalidates",
+      "confirmation": "exactly next distinct5m close beyond sweep high/low with directional body; invalidate first if original sweep stop touched, close fails to stay strictly inside range, missing/extreme context; no later retry",
+      "stop_buffer_atr15": "0.25",
+      "stop": "sweep low-0.25*frozenATR15 LONG; sweep high+0.25*frozenATR15 SHORT",
+      "target": "nearest directionally ahead formation-confirmed1h opposing swing OR frozen range midpoint; no farther target replaces nearer opposition",
+      "expiry": "no sweep by third5m close expires; third-bar sweep permits only fourth-bar confirmation",
+      "management": "FIXED_SINGLE_STRUCTURAL_TARGET_NO_ELECTIVE_TRAIL_NO_BREAKEVEN"
+    }
+  },
+  "common": {
+    "symmetric_long_short": true,
+    "target_quantity_fraction": "1",
+    "minimum_target_price_r": "1.8",
+    "maximum_target_price_r": "4.0",
+    "maximum_stop_fraction": "0.02",
+    "entry_reference": "hypothetical confirmation close; never a fill; forward starts next5m open at availability(close+1ms)",
+    "history_limits": "unchanged C05-J HISTORY_LIMITS and c03.context.v1; source_end_exclusive=2024-10-01T00:00:00Z",
+    "horizons_minutes": [15, 60, 240, 720],
+    "costs": "unchanged C05-K cost_screen; one target fraction1; policy not R1 so no old midpoint extra screen",
+    "adverse_entry_original_r": ["0", "0.025", "0.05"],
+    "holding": "flatten attempt at earliest confirmed fill+11h55; hard12h emergency; clocks never reset",
+    "execution": "one-use authenticated human bounded preapproval; confirmation+10s IOC deadline; adverse cap=min(2 dated ticks,0.10 frozenATR5,0.05 originalR); skip absent approval or evidence",
+    "risk": "per-trade<=0.25% reconciled equity; total pending+open<=0.50%; two slots; one position/symbol; isolated<=2x; daily1% entry halt; no scale-in, no widening; exactly one writer",
+    "quantity": "per-base-unit R0 only; later round_down(min(0.0025*equity,remaining_stop_risk)/(adverse_stop_distance+cost_allowance),step), independently cap filters, margin, notional and leverage; never assume a reconciled account",
+    "qualification": "No approved registry entry or activation in S01; owner approval before S04 implementation"
+  },
+  "matching": {
+    "seed": 20261027,
+    "controls_per_event": 1,
+    "with_replacement": true,
+    "exact": ["symbol", "side", "candidate_regime", "ATR_percentile_quartile", "UTC_four_hour_session"],
+    "past_window_hours": [12, 168],
+    "pc_nontrigger": "no active PC2 at cutoff and no fresh PC2 formation; trend regime on relevant side",
+    "fr_nontrigger": "price-balance regime; no sweep/pending confirmation/terminal trigger at cutoff; an unswept armed range is permitted",
+    "no_outcomes_or_future_trigger_filter": true,
+    "normalization": "control own close; transplant case stop and target FRACTIONS only for path comparability; never a control policy"
+  },
+  "r0_decision": {
+    "source_dependent": "essential price trigger cannot be measured legitimately",
+    "reject": "at least20 confirmations and zero base-cost-and-geometry survivors OR at least20 full12h base survivors and target-before-stop UPPER<=0.20",
+    "advance": "at least20 full12h base survivors on>=8UTC days and>=4symbols; base survivors>=10% of confirmations; target-before-stop LOWER>=0.35; matched>=50% of complete survivors on>=8event days; equal-day signed case-control mean>0 at1h and4h and>=0 at12h; 4h leave-one-day-out lower>0",
+    "otherwise": "REVISE_BEFORE_IMPLEMENTATION; no silent same-outcome retuning",
+    "priority": "ADVANCE before REVISE before SOURCE_DEPENDENT before REJECT; tie: larger4h equal-day contrast, then lower base costR, then PC2"
+  }
+}
