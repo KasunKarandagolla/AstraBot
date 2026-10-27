@@ -179,3 +179,26 @@ def test_archive_panel_loader_reverifies_external_bytes_and_uses_c02_normalizer(
     assert panel.source_manifest["cross_archive_continuity"]["BTCUSDT:4h"]["MISSING_INTERVAL"] == 0
     with pytest.raises(ValueError, match="outside the Git repository"):
         load_public_um_archive_panel(manifest_path, repository / "raw")
+
+    # A development-only run must not require or open held-out October bytes.
+    # Reuse the existing synthetic archive fixture; the October file is absent.
+    from datetime import datetime, timezone
+    october = ArchiveSpec("BTCUSDT", "4h", "2024-10", "monthly")
+    monkeypatch.setattr(archive_module, "planned_archives", lambda phase: (spec, october))
+    manifest = json.loads(manifest_path.read_text())
+    manifest.update(archive_count_planned=2, archive_count_completed=2,
+                    total_actual_bytes=len(blob)*2)
+    manifest["archives"].append({**record, "archive_id": october.filename,
+        "period_utc": october.period, "source_url": october.url,
+        "data_root_relative_path": october.relative_path})
+    manifest_path.write_text(json.dumps(manifest))
+    end = datetime(2024, 10, 1, tzinfo=timezone.utc)
+    bounded = load_public_um_archive_panel(manifest_path, data_root, source_end_exclusive=end)
+    assert len(bounded.symbols["BTCUSDT"].candles_4h) == 186
+    assert bounded.source_manifest["archive_count"] == 1
+    assert bounded.source_manifest["unopened_archive_ids"] == [october.filename]
+    with pytest.raises(ValueError, match="archive missing"):
+        load_public_um_archive_panel(manifest_path, data_root)
+    with pytest.raises(ValueError, match="UTC month boundary"):
+        load_public_um_archive_panel(manifest_path, data_root,
+            source_end_exclusive=end.replace(day=2))
