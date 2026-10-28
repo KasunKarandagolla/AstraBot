@@ -485,7 +485,7 @@
         "src/astrabot/research/simulation.py",
         "docs/05-EXECUTION-SUPERVISION.md"
       ],
-      "timestamp_contract": "Owner approval to bounded IOC submission within existing 10s contract; first actual fill starts unresettable 12h clock; clock sync/error evidence required.",
+      "timestamp_contract": "Measure approval-to-IOC latency and trigger-to-submission separately. Existing max 10s applies to trigger-to-submission, not elapsed time since an earlier armed approval. First actual fill starts the unresettable 12h clock; synchronized clock/error evidence required.",
       "unaccepted_facts": [
         "actual dated tier/discounts",
         "approval-to-IOC latency",

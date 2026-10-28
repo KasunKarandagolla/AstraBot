@@ -481,7 +481,7 @@
   "version_hash_semantics": "SHA256 of UTF-8 text normalized to LF; original source_hashes remain exact compressed bytes",
   "version_hashes": {
     "requirements-test.txt": "b346db42cdb0b136998404f1a939ba8c2581dafdac3430976b17c4415ac687cd",
-    "research/p3/S02_SOURCE_ACCEPTANCE.json": "06f09994bc501a831c62ab4ba18b4f6b2ed81bfe9947d2df9ea0390f62f985a2",
+    "research/p3/S02_SOURCE_ACCEPTANCE.json": "54342b1116254e10e8a251b8291d04730dd6901ae009a4e89de649a8057e1e8d",
     "research/p3/S02_SOURCE_CONTRACT.json": "fa60bb1375b45c04d8643ae68e9398a3379613358f9e4f9e98bad56452505aa8",
     "scripts/s02_source_diagnostic.py": "57fb64168637b424f341f058034d7419f90d080428181f5afbd833ae95b1aa54",
     "src/astrabot/contracts.py": "9d6713bb0cc395e6f1b64979f013c8ec13c41dcf3e0f836349f2b4ea0dd024ec",
