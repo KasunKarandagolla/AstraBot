@@ -1,0 +1,1283 @@
+{
+  "acceptance": "hash/schema/chronology consistency does not certify origin, rights, completeness, owner receipt or any other C02 gate",
+  "bound": "100000 offered rows per pure call; exceeding it aborts, never truncates",
+  "cutoffs_utc": [
+    "2024-10-01T00:30:00+00:00",
+    "2024-10-01T01:05:00+00:00",
+    "2024-10-01T08:05:00+00:00",
+    "2024-10-01T16:05:00+00:00"
+  ],
+  "default_clock": {
+    "availability_clock": "PROVIDER_HISTORY",
+    "cadence_seconds": 60,
+    "endpoint_count": 60,
+    "maximum_event_age_seconds": 60,
+    "maximum_input_rows": 100000,
+    "maximum_median_spread_fraction": "0.001",
+    "no_event_reuse": true,
+    "version": "proposed.c02.sample-clock.v2.0.0"
+  },
+  "original_files": {
+    "book_snapshot_25": {
+      "rows": 1522898,
+      "sha256": "19655523821b384f741715a2d4bf5db2fe1f825fddbed66ecaf9ef1796a6e3ba"
+    },
+    "derivative_ticker": {
+      "rows": 119927,
+      "sha256": "8c7301a2b3aa22de1430af3844afac9bb05de061dfc28a65a7bdc4920c1357d7"
+    },
+    "quotes": {
+      "rows": 1064711,
+      "sha256": "ce31562cbfa20312aeda0246caf2d83754ce90835ce7579aeca40988b50f68cc"
+    }
+  },
+  "production_c02_changed": false,
+  "schemas": {
+    "BBOObservationV2": {
+      "$defs": {
+        "FieldMeasurement": {
+          "additionalProperties": false,
+          "properties": {
+            "available_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Available At"
+            },
+            "evidence_id": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Evidence Id"
+            },
+            "field": {
+              "minLength": 1,
+              "title": "Field",
+              "type": "string"
+            },
+            "measured_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Measured At"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Value"
+            }
+          },
+          "required": [
+            "field",
+            "unit",
+            "measured_at",
+            "available_at",
+            "evidence_id"
+          ],
+          "title": "FieldMeasurement",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "ask_price": {
+          "description": "Finite exact decimal string; financial bounds validated by contract.",
+          "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+          "title": "Ask Price",
+          "type": "string"
+        },
+        "ask_quantity": {
+          "description": "Finite exact decimal string; financial bounds validated by contract.",
+          "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+          "title": "Ask Quantity",
+          "type": "string"
+        },
+        "bid_price": {
+          "description": "Finite exact decimal string; financial bounds validated by contract.",
+          "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+          "title": "Bid Price",
+          "type": "string"
+        },
+        "bid_quantity": {
+          "description": "Finite exact decimal string; financial bounds validated by contract.",
+          "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+          "title": "Bid Quantity",
+          "type": "string"
+        },
+        "exchange_event_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Exchange Event Time"
+        },
+        "exchange_time_semantics": {
+          "default": "UNVERIFIED",
+          "enum": [
+            "EXCHANGE_EVENT_RECORDED",
+            "PROVIDER_FALLBACK",
+            "UNVERIFIED"
+          ],
+          "title": "Exchange Time Semantics",
+          "type": "string"
+        },
+        "field_measurements": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FieldMeasurement"
+          },
+          "title": "Field Measurements",
+          "type": "array"
+        },
+        "instrument_id": {
+          "minLength": 1,
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "native_event_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Native Event Id"
+        },
+        "owner_arrival_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Arrival Time"
+        },
+        "owner_receipt_evidence_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Receipt Evidence Id"
+        },
+        "provider_arrival_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Provider Arrival Time"
+        },
+        "raw_cells": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 8,
+          "title": "Raw Cells",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "proposed.market-observation.v2.0.0",
+          "default": "proposed.market-observation.v2.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "SYNTHETIC_ONLY",
+            "ORIGINAL_SAMPLE_HASH_VERIFIED"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "source_class": {
+          "enum": [
+            "NATIVE_BBO",
+            "RECONSTRUCTED_L2_QUOTE"
+          ],
+          "title": "Source Class",
+          "type": "string"
+        },
+        "source_dataset": {
+          "enum": [
+            "quotes",
+            "book_ticker"
+          ],
+          "title": "Source Dataset",
+          "type": "string"
+        },
+        "source_record_number": {
+          "minimum": 2,
+          "title": "Source Record Number",
+          "type": "integer"
+        },
+        "source_row_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Row Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "symbol": {
+          "minLength": 1,
+          "title": "Symbol",
+          "type": "string"
+        },
+        "venue": {
+          "const": "BINANCE_USDM",
+          "default": "BINANCE_USDM",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol",
+        "instrument_id",
+        "source_class",
+        "scope",
+        "source_sha256",
+        "source_record_number",
+        "source_row_id",
+        "exchange_event_time",
+        "provider_arrival_time",
+        "source_dataset",
+        "raw_cells",
+        "bid_price",
+        "bid_quantity",
+        "ask_price",
+        "ask_quantity"
+      ],
+      "title": "BBOObservationV2",
+      "type": "object"
+    },
+    "MarketObservationV2": {
+      "$defs": {
+        "FieldMeasurement": {
+          "additionalProperties": false,
+          "properties": {
+            "available_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Available At"
+            },
+            "evidence_id": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Evidence Id"
+            },
+            "field": {
+              "minLength": 1,
+              "title": "Field",
+              "type": "string"
+            },
+            "measured_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Measured At"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Value"
+            }
+          },
+          "required": [
+            "field",
+            "unit",
+            "measured_at",
+            "available_at",
+            "evidence_id"
+          ],
+          "title": "FieldMeasurement",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Wire envelope; unknown field clocks stay null, never inherit row clocks.",
+      "properties": {
+        "exchange_event_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Exchange Event Time"
+        },
+        "exchange_time_semantics": {
+          "default": "UNVERIFIED",
+          "enum": [
+            "EXCHANGE_EVENT_RECORDED",
+            "PROVIDER_FALLBACK",
+            "UNVERIFIED"
+          ],
+          "title": "Exchange Time Semantics",
+          "type": "string"
+        },
+        "field_measurements": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FieldMeasurement"
+          },
+          "title": "Field Measurements",
+          "type": "array"
+        },
+        "instrument_id": {
+          "minLength": 1,
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "owner_arrival_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Arrival Time"
+        },
+        "owner_receipt_evidence_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Receipt Evidence Id"
+        },
+        "provider_arrival_time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Provider Arrival Time"
+        },
+        "schema_version": {
+          "const": "proposed.market-observation.v2.0.0",
+          "default": "proposed.market-observation.v2.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "SYNTHETIC_ONLY",
+            "ORIGINAL_SAMPLE_HASH_VERIFIED"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "source_class": {
+          "enum": [
+            "NATIVE_BBO",
+            "RECONSTRUCTED_L2_QUOTE",
+            "NATIVE_DEPTH_SEQUENCE",
+            "PROVIDER_DERIVATIVE_TICKER",
+            "VENUE_METADATA",
+            "NATIVE_TICKER",
+            "NEWS_EVENT",
+            "FUNDING_SETTLEMENT",
+            "ACCOUNT_EXECUTION",
+            "NATIVE_CANDLE"
+          ],
+          "title": "Source Class",
+          "type": "string"
+        },
+        "source_record_number": {
+          "minimum": 1,
+          "title": "Source Record Number",
+          "type": "integer"
+        },
+        "source_row_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Row Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "symbol": {
+          "minLength": 1,
+          "title": "Symbol",
+          "type": "string"
+        },
+        "venue": {
+          "const": "BINANCE_USDM",
+          "default": "BINANCE_USDM",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol",
+        "instrument_id",
+        "source_class",
+        "scope",
+        "source_sha256",
+        "source_record_number",
+        "source_row_id",
+        "exchange_event_time",
+        "provider_arrival_time"
+      ],
+      "title": "MarketObservationV2",
+      "type": "object"
+    },
+    "SampleClockV2": {
+      "additionalProperties": false,
+      "properties": {
+        "availability_clock": {
+          "default": "PROVIDER_HISTORY",
+          "enum": [
+            "PROVIDER_HISTORY",
+            "OWNER_RECEIPT"
+          ],
+          "title": "Availability Clock",
+          "type": "string"
+        },
+        "cadence_seconds": {
+          "const": 60,
+          "default": 60,
+          "title": "Cadence Seconds",
+          "type": "integer"
+        },
+        "endpoint_count": {
+          "const": 60,
+          "default": 60,
+          "title": "Endpoint Count",
+          "type": "integer"
+        },
+        "maximum_event_age_seconds": {
+          "const": 60,
+          "default": 60,
+          "title": "Maximum Event Age Seconds",
+          "type": "integer"
+        },
+        "maximum_input_rows": {
+          "const": 100000,
+          "default": 100000,
+          "title": "Maximum Input Rows",
+          "type": "integer"
+        },
+        "maximum_median_spread_fraction": {
+          "const": "0.001",
+          "default": "0.001",
+          "title": "Maximum Median Spread Fraction",
+          "type": "string"
+        },
+        "no_event_reuse": {
+          "const": true,
+          "default": true,
+          "title": "No Event Reuse",
+          "type": "boolean"
+        },
+        "version": {
+          "const": "proposed.c02.sample-clock.v2.0.0",
+          "default": "proposed.c02.sample-clock.v2.0.0",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "SampleClockV2",
+      "type": "object"
+    },
+    "SamplingDiagnostic": {
+      "$defs": {
+        "BBOObservationV2": {
+          "additionalProperties": false,
+          "properties": {
+            "ask_price": {
+              "description": "Finite exact decimal string; financial bounds validated by contract.",
+              "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+              "title": "Ask Price",
+              "type": "string"
+            },
+            "ask_quantity": {
+              "description": "Finite exact decimal string; financial bounds validated by contract.",
+              "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+              "title": "Ask Quantity",
+              "type": "string"
+            },
+            "bid_price": {
+              "description": "Finite exact decimal string; financial bounds validated by contract.",
+              "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+              "title": "Bid Price",
+              "type": "string"
+            },
+            "bid_quantity": {
+              "description": "Finite exact decimal string; financial bounds validated by contract.",
+              "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+              "title": "Bid Quantity",
+              "type": "string"
+            },
+            "exchange_event_time": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Exchange Event Time"
+            },
+            "exchange_time_semantics": {
+              "default": "UNVERIFIED",
+              "enum": [
+                "EXCHANGE_EVENT_RECORDED",
+                "PROVIDER_FALLBACK",
+                "UNVERIFIED"
+              ],
+              "title": "Exchange Time Semantics",
+              "type": "string"
+            },
+            "field_measurements": {
+              "default": [],
+              "items": {
+                "$ref": "#/$defs/FieldMeasurement"
+              },
+              "title": "Field Measurements",
+              "type": "array"
+            },
+            "instrument_id": {
+              "minLength": 1,
+              "title": "Instrument Id",
+              "type": "string"
+            },
+            "native_event_id": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Native Event Id"
+            },
+            "owner_arrival_time": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Owner Arrival Time"
+            },
+            "owner_receipt_evidence_id": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Owner Receipt Evidence Id"
+            },
+            "provider_arrival_time": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Provider Arrival Time"
+            },
+            "raw_cells": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 8,
+              "minItems": 8,
+              "title": "Raw Cells",
+              "type": "array"
+            },
+            "schema_version": {
+              "const": "proposed.market-observation.v2.0.0",
+              "default": "proposed.market-observation.v2.0.0",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "scope": {
+              "enum": [
+                "SYNTHETIC_ONLY",
+                "ORIGINAL_SAMPLE_HASH_VERIFIED"
+              ],
+              "title": "Scope",
+              "type": "string"
+            },
+            "source_class": {
+              "enum": [
+                "NATIVE_BBO",
+                "RECONSTRUCTED_L2_QUOTE"
+              ],
+              "title": "Source Class",
+              "type": "string"
+            },
+            "source_dataset": {
+              "enum": [
+                "quotes",
+                "book_ticker"
+              ],
+              "title": "Source Dataset",
+              "type": "string"
+            },
+            "source_record_number": {
+              "minimum": 2,
+              "title": "Source Record Number",
+              "type": "integer"
+            },
+            "source_row_id": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Source Row Id",
+              "type": "string"
+            },
+            "source_sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            },
+            "symbol": {
+              "minLength": 1,
+              "title": "Symbol",
+              "type": "string"
+            },
+            "venue": {
+              "const": "BINANCE_USDM",
+              "default": "BINANCE_USDM",
+              "title": "Venue",
+              "type": "string"
+            }
+          },
+          "required": [
+            "symbol",
+            "instrument_id",
+            "source_class",
+            "scope",
+            "source_sha256",
+            "source_record_number",
+            "source_row_id",
+            "exchange_event_time",
+            "provider_arrival_time",
+            "source_dataset",
+            "raw_cells",
+            "bid_price",
+            "bid_quantity",
+            "ask_price",
+            "ask_quantity"
+          ],
+          "title": "BBOObservationV2",
+          "type": "object"
+        },
+        "FieldMeasurement": {
+          "additionalProperties": false,
+          "properties": {
+            "available_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Available At"
+            },
+            "evidence_id": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Evidence Id"
+            },
+            "field": {
+              "minLength": 1,
+              "title": "Field",
+              "type": "string"
+            },
+            "measured_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Measured At"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Value"
+            }
+          },
+          "required": [
+            "field",
+            "unit",
+            "measured_at",
+            "available_at",
+            "evidence_id"
+          ],
+          "title": "FieldMeasurement",
+          "type": "object"
+        },
+        "RowAudit": {
+          "additionalProperties": false,
+          "properties": {
+            "event_identity": {
+              "title": "Event Identity",
+              "type": "string"
+            },
+            "reasons": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Reasons",
+              "type": "array"
+            },
+            "selected_endpoint": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Selected Endpoint"
+            },
+            "source_record_number": {
+              "title": "Source Record Number",
+              "type": "integer"
+            },
+            "source_row_id": {
+              "title": "Source Row Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source_record_number",
+            "source_row_id",
+            "event_identity",
+            "selected_endpoint",
+            "reasons"
+          ],
+          "title": "RowAudit",
+          "type": "object"
+        },
+        "SampleClockV2": {
+          "additionalProperties": false,
+          "properties": {
+            "availability_clock": {
+              "default": "PROVIDER_HISTORY",
+              "enum": [
+                "PROVIDER_HISTORY",
+                "OWNER_RECEIPT"
+              ],
+              "title": "Availability Clock",
+              "type": "string"
+            },
+            "cadence_seconds": {
+              "const": 60,
+              "default": 60,
+              "title": "Cadence Seconds",
+              "type": "integer"
+            },
+            "endpoint_count": {
+              "const": 60,
+              "default": 60,
+              "title": "Endpoint Count",
+              "type": "integer"
+            },
+            "maximum_event_age_seconds": {
+              "const": 60,
+              "default": 60,
+              "title": "Maximum Event Age Seconds",
+              "type": "integer"
+            },
+            "maximum_input_rows": {
+              "const": 100000,
+              "default": 100000,
+              "title": "Maximum Input Rows",
+              "type": "integer"
+            },
+            "maximum_median_spread_fraction": {
+              "const": "0.001",
+              "default": "0.001",
+              "title": "Maximum Median Spread Fraction",
+              "type": "string"
+            },
+            "no_event_reuse": {
+              "const": true,
+              "default": true,
+              "title": "No Event Reuse",
+              "type": "boolean"
+            },
+            "version": {
+              "const": "proposed.c02.sample-clock.v2.0.0",
+              "default": "proposed.c02.sample-clock.v2.0.0",
+              "title": "Version",
+              "type": "string"
+            }
+          },
+          "title": "SampleClockV2",
+          "type": "object"
+        },
+        "Slot": {
+          "additionalProperties": false,
+          "properties": {
+            "ask_price": {
+              "anyOf": [
+                {
+                  "description": "Finite exact decimal string; financial bounds validated by contract.",
+                  "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ask Price"
+            },
+            "bid_price": {
+              "anyOf": [
+                {
+                  "description": "Finite exact decimal string; financial bounds validated by contract.",
+                  "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Bid Price"
+            },
+            "endpoint": {
+              "format": "date-time",
+              "title": "Endpoint",
+              "type": "string"
+            },
+            "event_age_microseconds": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Event Age Microseconds"
+            },
+            "event_identity": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Event Identity"
+            },
+            "exchange_event_time": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Exchange Event Time"
+            },
+            "exclusion_counts": {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "type": "array"
+              },
+              "title": "Exclusion Counts",
+              "type": "array"
+            },
+            "owner_arrival_time": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Arrival Time"
+            },
+            "provider_arrival_time": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Provider Arrival Time"
+            },
+            "source_record_number": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Record Number"
+            },
+            "source_row_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Row Id"
+            },
+            "state": {
+              "enum": [
+                "SELECTED",
+                "MISSING_EVIDENCE",
+                "OBSERVED_REJECTED"
+              ],
+              "title": "State",
+              "type": "string"
+            }
+          },
+          "required": [
+            "endpoint",
+            "source_row_id",
+            "source_record_number",
+            "event_identity",
+            "exchange_event_time",
+            "provider_arrival_time",
+            "owner_arrival_time",
+            "bid_price",
+            "ask_price",
+            "event_age_microseconds",
+            "state",
+            "exclusion_counts"
+          ],
+          "title": "Slot",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "clock": {
+          "$ref": "#/$defs/SampleClockV2"
+        },
+        "config_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Config Sha256",
+          "type": "string"
+        },
+        "cutoff": {
+          "format": "date-time",
+          "title": "Cutoff",
+          "type": "string"
+        },
+        "instrument_id": {
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "latest_sample_fresh_at_cutoff": {
+          "title": "Latest Sample Fresh At Cutoff",
+          "type": "boolean"
+        },
+        "median_spread_fraction": {
+          "anyOf": [
+            {
+              "description": "Finite exact decimal string; financial bounds validated by contract.",
+              "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Median Spread Fraction"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/BBOObservationV2"
+          },
+          "title": "Observations",
+          "type": "array"
+        },
+        "production_c02_eligibility": {
+          "const": "NOT_EVALUATED_UNCHANGED",
+          "default": "NOT_EVALUATED_UNCHANGED",
+          "title": "Production C02 Eligibility",
+          "type": "string"
+        },
+        "proposed_spread_diagnostic_pass": {
+          "title": "Proposed Spread Diagnostic Pass",
+          "type": "boolean"
+        },
+        "result": {
+          "const": "PROPOSED_C02_SAMPLE_CLOCK_V2_DIAGNOSTIC",
+          "default": "PROPOSED_C02_SAMPLE_CLOCK_V2_DIAGNOSTIC",
+          "title": "Result",
+          "type": "string"
+        },
+        "rows": {
+          "items": {
+            "$ref": "#/$defs/RowAudit"
+          },
+          "title": "Rows",
+          "type": "array"
+        },
+        "scope": {
+          "enum": [
+            "SYNTHETIC_ONLY",
+            "ORIGINAL_SAMPLE_HASH_VERIFIED"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "selected_count": {
+          "title": "Selected Count",
+          "type": "integer"
+        },
+        "slots": {
+          "items": {
+            "$ref": "#/$defs/Slot"
+          },
+          "title": "Slots",
+          "type": "array"
+        },
+        "source_class": {
+          "enum": [
+            "NATIVE_BBO",
+            "RECONSTRUCTED_L2_QUOTE"
+          ],
+          "title": "Source Class",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "strict_v1_exact_event_intervals": {
+          "title": "Strict V1 Exact Event Intervals",
+          "type": "integer"
+        },
+        "strict_v1_spread_diagnostic_pass": {
+          "title": "Strict V1 Spread Diagnostic Pass",
+          "type": "boolean"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clock",
+        "config_sha256",
+        "symbol",
+        "instrument_id",
+        "source_sha256",
+        "source_class",
+        "scope",
+        "cutoff",
+        "observations",
+        "rows",
+        "slots",
+        "selected_count",
+        "median_spread_fraction",
+        "proposed_spread_diagnostic_pass",
+        "latest_sample_fresh_at_cutoff",
+        "strict_v1_exact_event_intervals",
+        "strict_v1_spread_diagnostic_pass"
+      ],
+      "title": "SamplingDiagnostic",
+      "type": "object"
+    }
+  },
+  "slots": {
+    "age": "0 <= endpoint - exchange_event_time <= 60s (inclusive)",
+    "audit_scope": "exclusion counters and retained rejected rows are retrospective diagnostic evidence, never causal trading features",
+    "availability": "PROVIDER_HISTORY: provider<=endpoint; OWNER_RECEIPT: evidenced owner<=endpoint and provider<=endpoint if recorded",
+    "duplicates": "same source row offered again rejected; same event payload under another arrival rejected; contradictory same native ID quarantines members known by endpoint, never rewrites earlier slots",
+    "endpoint_i": "60s*floor(cutoff/60s) - (59-i)*60s, i in [0,59]",
+    "identity": "native venue ID if independently mapped; otherwise instrument/class/event/bid/ask/quantities fingerprint, excluding arrival and row locator",
+    "missingness": "no observed event in inclusive age band => MISSING_EVIDENCE; observed but all excluded => OBSERVED_REJECTED",
+    "out_of_order": "source record order authoritative; event or provider clock below prior high-water mark quarantined; never sorted to repair",
+    "selection": "ascending endpoints; max(event,provider_or_event,record_number,row_id), excluding already-used event identities",
+    "statistic": "median((ask-bid)/((ask+bid)/2)), Decimal precision 28 ROUND_HALF_EVEN; null unless 60 selected; pass<=0.001 plus last source event age at actual cutoff<=60s"
+  },
+  "source_fields": {
+    "ask_amount": "unvalidated native quantity",
+    "ask_price": "USDT per base asset subject to effective metadata",
+    "bid_amount": "unvalidated native quantity",
+    "bid_price": "same price unit",
+    "exchange": "provider exchange id",
+    "local_timestamp": "provider arrival, never owner arrival",
+    "symbol": "venue symbol",
+    "timestamp": "source event clock; validate no fallback"
+  },
+  "status": "PROPOSED_RESEARCH_ONLY_OWNER_APPROVAL_PENDING",
+  "version": "s02.source-contract.v1",
+  "wire_time": "explicit UTC ISO8601; source CSV integer epoch microseconds; never float epoch"
+}

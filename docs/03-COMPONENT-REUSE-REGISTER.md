@@ -110,6 +110,8 @@ The Binance [aggregate trades response](https://developers.binance.com/docs/deri
 options either do not provide required input continuity or fail causal
 qualification. No runtime dependency was added for C02.
 
+**S02 source-clock reuse (2026-10-28):** `data/source_clock.py` wraps the existing C01 frozen Decimal/UTC contracts, C02 identities/spread formula and C05-G header/time/Decimal/source-row hash helpers; the CLI also reuses G's disk duplicate detector and derivative/book audits. C05-H remains the date-effective unit/measurement authority. No package/platform is adopted. `proposed.c02.sample-clock.v2.0.0` is research-only with retained invalid rows and shared pure scanner/replay selection; production C02 and existing G versions stay unchanged. Boundary, causal-prefix, cross-source, normalization-integrity and replay reproduction tests are in `tests/test_s02_source_clock.py`. Retire the wrapper only after a separately approved replacement passes those same tests and preserves all original clocks/IDs; no historical source acceptance follows from software qualification. Full adapter map: [S02 ADR](adr/ADR-P3-SOURCE-CLOCK-AND-ACCEPTANCE-S02.md).
+
 ## 9. C03 causal policy components — ready for independent review
 
 Exact pins, inspected source/tests, practitioner cases and external verification

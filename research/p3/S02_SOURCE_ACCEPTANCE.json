@@ -1,0 +1,517 @@
+{
+  "as_of_client_date": "2026-10-28",
+  "baseline": "74007b2efd243e17bb6e8f65c193a028dc57b5c4",
+  "conversions": {
+    "linear_base": "Q_base=raw_quantity only with reviewed BASE_ASSET evidence",
+    "linear_contracts": "Q_base=raw_quantity*base_per_contract only with historical CONTRACTS evidence matching metadata.contract_size",
+    "metadata_interval": "effective_from<=time<effective_to AND available_at<=decision; overlapping contradictory known claims fail closed",
+    "oi_notional": "OI_raw*base_multiplier*same-measurement accepted mark; no stale carried-forward row timing",
+    "quote_notional": "sum(price_USDT_per_base * Q_base); price reference and full band frontier explicit",
+    "unsupported": "Unknown, inverse, quanto, cross-settlement or uncovered multiplier intervals => no conversion"
+  },
+  "feature_readiness": [
+    {
+      "dependencies": [
+        "native trades",
+        "causal continuity",
+        "maker-side mapping"
+      ],
+      "family": "A01",
+      "limitation": "Existing signed aggregate-trade volume only; no invented footprint/absorption from candles.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    },
+    {
+      "dependencies": [
+        "closed candles or native trades",
+        "anchor IDs",
+        "session clocks"
+      ],
+      "family": "A02",
+      "limitation": "Existing candle VWAP is BAR_DERIVED_APPROX; exact/anchored trade VWAP needs trades and explicit anchors.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    },
+    {
+      "dependencies": [
+        "closed candles",
+        "confirmation availability",
+        "dated tick"
+      ],
+      "family": "A03",
+      "limitation": "Existing strict causal pivots only; no promotion of hindsight SMC/BOS/CHOCH.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    },
+    {
+      "dependencies": [
+        "D",
+        "native liquidation messages",
+        "sequence/coverage"
+      ],
+      "family": "A04",
+      "limitation": "Top-25/forceOrder samples cannot prove complete depth or liquidation census; no fills.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "UNVERIFIED"
+    },
+    {
+      "dependencies": [
+        "closed candles",
+        "frozen formation/mitigation/expiry"
+      ],
+      "family": "A05",
+      "limitation": "ICT/FVG/order block providers remain unqualified; no retrospective zones.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "UNVERIFIED"
+    },
+    {
+      "dependencies": [
+        "E",
+        "H",
+        "dated mark/index"
+      ],
+      "family": "A06",
+      "limitation": "Raw positioning/rates preserved; no accepted OI notional or settled cashflow.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    },
+    {
+      "dependencies": [
+        "closed candles",
+        "causal state chronology"
+      ],
+      "family": "A07",
+      "limitation": "Existing frozen research reducers only; PC2/FR2 v0.1 implementation prohibited.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    },
+    {
+      "dependencies": [
+        "native trades",
+        "price buckets",
+        "continuous session"
+      ],
+      "family": "A08",
+      "limitation": "No trade-exact profile acceptance; no candle volume at invented price levels.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "UNVERIFIED"
+    },
+    {
+      "dependencies": [
+        "closed candles",
+        "warmup",
+        "TA-Lib pin"
+      ],
+      "family": "A09",
+      "limitation": "Existing causal ATR/ADX/EMA wrappers; not an empirically qualified strategy.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    },
+    {
+      "dependencies": [
+        "closed candles",
+        "causal warmup/regime persistence"
+      ],
+      "family": "A10",
+      "limitation": "Existing volatility/regime context; mean reversion policy remains unqualified.",
+      "missingness": "UNAVAILABLE or DEGRADED with source IDs; veto dependent entries, never stop independent position protection.",
+      "readiness": "PARTIAL"
+    }
+  ],
+  "grades": {
+    "PARTIAL": 7,
+    "SOURCE_ACCEPTED": 0,
+    "UNAVAILABLE": 0,
+    "UNVERIFIED": 2
+  },
+  "meaning": "Grades apply to complete claim categories. PARTIAL recognizes retained lower-fidelity evidence or executable contracts; no complete feed is accepted. Hash verification is not cryptographic publisher authentication or a rights grant.",
+  "original_day_empirical_acceptance": "PENDING_OWNER_RUN",
+  "requirements": [
+    {
+      "acceptance_test": [
+        "Verify pinned original hash/authority, consistent symbol/settlement/contract and all filters",
+        "Reject contradictory overlapping claims, future-known evidence and uncovered intervals",
+        "Check multiplier against each OI/depth feed unit claim"
+      ],
+      "adapter": "Reuse InstrumentMetadata/InstrumentFilter and C05-H EvidenceManifest; no new metadata service.",
+      "historical_coverage": "No accepted date-effective 2024 SOLUSDT lifecycle/filter artifacts. Provider changes is complete only for tracked multiplier changes; other fields best effort.",
+      "id": "A",
+      "missingness_behavior": "UNVERIFIED, metadata=None; fail closed new entries; do not backdate current data.",
+      "provenance_contract": "Contemporaneous venue payload or authoritative archived announcement/change series, original bytes/hash/locator, venue instrument identity. Current exchangeInfo cannot establish 2024 state.",
+      "required_native_fields": [
+        "symbol",
+        "contractType",
+        "status",
+        "onboardDate",
+        "deliveryDate",
+        "baseAsset",
+        "quoteAsset",
+        "marginAsset",
+        "PRICE_FILTER.tickSize/minPrice/maxPrice",
+        "LOT_SIZE.stepSize/minQty/maxQty",
+        "MARKET_LOT_SIZE.stepSize/minQty/maxQty",
+        "MIN_NOTIONAL.notional",
+        "contract multiplier",
+        "effective_from",
+        "effective_to"
+      ],
+      "requirement": "Instrument metadata and filters",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "src/astrabot/data/models.py:InstrumentMetadata",
+        "src/astrabot/data/historical_evidence.py:validate_evidence",
+        "research/c05/C05_H_EVIDENCE_SOLUSDT_2024-10-01.json:empty records",
+        "https://docs.tardis.dev/api/instruments-metadata-api"
+      ],
+      "timestamp_contract": "Half-open [effective_from,effective_to); artifact available_at<=decision and observed field time; publication/capture are separate. Metadata must cover decision and each converted observation.",
+      "unaccepted_facts": [
+        "2024 lifecycle/status/listing",
+        "all dated filter changes",
+        "historical multiplier and settlement mapping",
+        "causal publication history"
+      ],
+      "units": "Prices USDT/base; quantities BASE_ASSET or CONTRACTS explicitly; multiplier base/contract; minima exact Decimal; no precision-to-tick inference."
+    },
+    {
+      "acceptance_test": [
+        "Hash original rows and retain source ordinals/clocks/prices",
+        "Reject duplicate/conflicting native ID, inverted clocks and source order regression",
+        "Native CSV adapter must prove exchange timestamp origin before acceptance"
+      ],
+      "adapter": "S02 quote_from_cells wraps existing C05-G header/Decimal/time/row-ID utilities. Native CSV schema is supported but origin UNVERIFIED by default; raw native-ID mapping needs reviewed source artifact.",
+      "historical_coverage": "Prior one-day SOLUSDT quotes file reported 1,064,711 rows; original absent here. No native SOLUSDT bookTicker payload accepted. Documentation advertises Binance futures native BBO since 2019-11-17; exact SOLUSDT intervals/incidents pending.",
+      "id": "B",
+      "missingness_behavior": "Unknown clock/source => no slot; provider-only historical diagnostic possible; native acceptance stays PARTIAL.",
+      "provenance_contract": "Native bookTicker payload and sequence identity plus captured provider receipt; recorded channel/date/symbol manifest. L2-derived quotes retain RECONSTRUCTED_L2_QUOTE class.",
+      "required_native_fields": [
+        "bookTicker.e",
+        "bookTicker.E exchange event ms",
+        "bookTicker.T transaction ms retained separately",
+        "bookTicker.u update ID",
+        "bookTicker.s",
+        "bookTicker.b/B/a/A",
+        "provider local_timestamp",
+        "owner receipt when actually recorded"
+      ],
+      "requirement": "Native best bid/offer",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "research/c05/ORIGINAL_BYTES_PREFLIGHT.md",
+        "https://github.com/KasunKarandagolla/AstraBot/issues/22",
+        "https://docs.tardis.dev/faq/data",
+        "https://docs.tardis.dev/downloadable-csv-files/data-types"
+      ],
+      "timestamp_contract": "Keep E and T distinct; selected exchange clock must be explicitly mapped. Provider arrival is not owner receipt. CSV fallback to local_timestamp is not exchange event time.",
+      "unaccepted_facts": [
+        "native raw original records and IDs",
+        "timestamp fallback exclusion",
+        "rights/origin attestation",
+        "disconnect/completeness history",
+        "historical owner arrival unavailable"
+      ],
+      "units": "Price USDT/base; size native units pending A/D; source ms mapped exactly to UTC, CSV us retained unchanged."
+    },
+    {
+      "acceptance_test": [
+        "Independent endpoint/identity oracle; scanner/replay serialization parity",
+        "No future leakage including later contradictions; boundary, no reuse, late/missing/stale tests",
+        "Strict v1 same-row rejection regression; threshold remains 0.001"
+      ],
+      "adapter": "One pure reducer shared as scanner_diagnostic and replay_diagnostic; do not replace scan_universe or C05-G SAMPLER_VERSION.",
+      "historical_coverage": "Executable synthetic adversarial tests; genuine original SOLUSDT one-day run pending owner. Production C02 v1 unchanged.",
+      "id": "C",
+      "missingness_behavior": "Missing slot => median null and diagnostic false; observed invalid distinct from missing; production eligibility never asserted.",
+      "provenance_contract": "Pinned source digest/class/scope + retained raw cells; all offered rows and row audit retained. Hash consistency alone cannot authenticate publisher.",
+      "required_native_fields": [
+        "exchange_event_time",
+        "provider_arrival_time",
+        "owner_arrival_time nullable",
+        "minute endpoint",
+        "source_row_id",
+        "source_record_number",
+        "event_identity",
+        "source_class",
+        "scope"
+      ],
+      "requirement": "Minute endpoint clock",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "src/astrabot/data/source_clock.py:sample_bbo",
+        "tests/test_s02_source_clock.py",
+        "research/p3/S02_SOURCE_CONTRACT.json",
+        "https://github.com/KasunKarandagolla/AstraBot/issues/22"
+      ],
+      "timestamp_contract": "proposed.c02.sample-clock.v2.0.0: 60 inclusive UTC endpoints; 0<=age<=60s; causal availability<=endpoint; no reuse; endpoint=floor UTC minute; actual-cutoff latest-event freshness<=60s.",
+      "unaccepted_facts": [
+        "owner approval of proposed research semantics",
+        "one-day original-file run",
+        "accepted input classes and availability provenance"
+      ],
+      "units": "UTC timestamps microsecond exact; age integer us; spread fraction (not percent)."
+    },
+    {
+      "acceptance_test": [
+        "Verify sequence overlap/pu chain and all resets",
+        "For existing C02 mid reference, sum bids>=mid*0.998 and asks<=mid*1.002; each side must reach or pass boundary or have independently proven exhausted complete book",
+        "Do not rename a best-price-relative band as mid-relative; distinct versions if changed",
+        "Retain current >=5x max intended notional on both sides; displayed notional is not a fill"
+      ],
+      "adapter": "Reuse C05-G BookObservation and C05-H QuantityEvidence. Preserve C02 _depth_within; future native sequence adapter must pass the stated chain test.",
+      "historical_coverage": "Owner-reported 1,522,898 top-25 rows, original absent; 25 levels not guaranteed to reach +/-0.20% band frontier.",
+      "id": "D",
+      "missingness_behavior": "unit_validated=false and no executable depth acceptance; incomplete band => UNKNOWN, dependent entry veto.",
+      "provenance_contract": "Original native sequenced updates + REST snapshot and provider receipt/disconnect record. Reconstructed top-25 CSV is a different evidence class and cannot prove sequence truth.",
+      "required_native_fields": [
+        "snapshot.lastUpdateId",
+        "depth.U/u/pu",
+        "E/T clocks",
+        "bid/ask price levels",
+        "absolute native quantities",
+        "zero quantity deletes",
+        "disconnect/reset markers",
+        "effective multiplier",
+        "covered price frontier"
+      ],
+      "requirement": "Depth and order-book liquidity",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "research/c05/BOOK_SNAPSHOT_25_PREFLIGHT.md",
+        "src/astrabot/data/historical_sources.py:iter_books",
+        "src/astrabot/data/historical_evidence.py:validate_evidence",
+        "https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly"
+      ],
+      "timestamp_contract": "Snapshot must be known before replay; first U<=lastUpdateId<=u then each pu=previous u; gap => reset with new overlapping snapshot, never bridge. Both event and availability causal; freshness existing 10s.",
+      "unaccepted_facts": [
+        "original sequence-gap/reset proof",
+        "historical quantity multiplier",
+        "complete 0.20% price-band frontier",
+        "latency/cancellation and executable fill model"
+      ],
+      "units": "Q_base=raw_quantity for accepted BASE_ASSET, or raw_quantity*dated_base_per_contract for accepted CONTRACTS. Quote notional=sum(price*Q_base) USDT only for validated linear USDT contract."
+    },
+    {
+      "acceptance_test": [
+        "Reject carried-forward row time as measurement",
+        "C05-H date-effective authority/dataset-hash/symbol/unit tests",
+        "Availability<=decision, measurement age<=300s and supported exact aligned mark"
+      ],
+      "adapter": "Reuse DerivativeObservation, OpenInterestObservation and C05-H. S02 FieldMeasurement carries null field clocks; do not copy derivative row clock into them.",
+      "historical_coverage": "Prior one-day derivative ticker 119,927 rows, 119,913 nonempty OI, original absent. Native OI timing/unit/mark alignment unaccepted.",
+      "id": "E",
+      "missingness_behavior": "Preserve raw OI, quantity_unit=UNVERIFIED_RAW_OPEN_INTEREST; notional=None, unit_validated=false; C02 remains blocked.",
+      "provenance_contract": "Original raw OI REST record + provider polling provenance/field map + independent dated unit artifact + contemporaneous mark. C05-H requires explicit measurement evidence tied to dataset digest.",
+      "required_native_fields": [
+        "raw openInterest quantity",
+        "OI-specific venue measurement time",
+        "REST request/response or poll receipt",
+        "markPrice and its own E/T measurement",
+        "instrument mapping",
+        "provider emission/arrival"
+      ],
+      "requirement": "Open interest and mark",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "research/c05/DERIVATIVE_TICKER_PREFLIGHT.md",
+        "research/c05/C05_H_EVIDENCE_VALIDATION.md",
+        "src/astrabot/data/historical_evidence.py:MeasurementEvidence",
+        "https://docs.tardis.dev/historical-data-details/binance-futures"
+      ],
+      "timestamp_contract": "Normalized derivative timestamp is a row emission clock unless independently shown field-specific. An OI value change/repeat/poll cadence does not prove measurement time. Exact supported mark alignment requires same validated measurement time; otherwise no conversion.",
+      "unaccepted_facts": [
+        "native OI measurement clock",
+        "2024 quantity unit/multiplier",
+        "same-time mark semantics",
+        "actual original poll responses"
+      ],
+      "units": "OI native units must be evidenced, not inferred from field name. Supported linear conversion OI_notional=OI_raw*base_multiplier*mark_USDT_per_base; no inverse/quanto fallback."
+    },
+    {
+      "acceptance_test": [
+        "Causal join native symbol/window/q with effective metadata",
+        "Reject delisted/not-yet-listed/future known observations",
+        "Retain turnover>=20M USDT; no seven-symbol eligible-universe claim"
+      ],
+      "adapter": "Reuse C02 Ticker24h/InstrumentMetadata and public_archive loader; C04 fixed cohort remains price-only.",
+      "historical_coverage": "Retained seven-symbol C04 bar panel is fixed selection; no accepted point-in-time historical all-altcoin ticker/universe.",
+      "id": "F",
+      "missingness_behavior": "Ticker missing => WARMING; unknown lifecycle/membership => no dynamic eligibility.",
+      "provenance_contract": "Native dated ticker rows and full contemporaneous venue listing/status snapshots including delisted/ineligible instruments.",
+      "required_native_fields": [
+        "ticker.s/E",
+        "24h rolling window O/C",
+        "quote volume q",
+        "base volume v",
+        "trade count n",
+        "historical lifecycle/status and universe membership"
+      ],
+      "requirement": "Historical ticker and dynamic universe",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "research/c04/historical_manifest.json",
+        "src/astrabot/data/models.py:Ticker24h",
+        "src/astrabot/universe/eligibility.py:scan_universe",
+        "https://docs.tardis.dev/historical-data-details/binance-futures"
+      ],
+      "timestamp_contract": "Native rolling window end/measurement, publication/arrival and date-effective membership known<=decision; C02 60s ticker freshness retained.",
+      "unaccepted_facts": [
+        "2024 native ticker rows",
+        "24h quote turnover at each cutoff",
+        "survivorship-free dated membership/status"
+      ],
+      "units": "q in quote asset USDT for accepted instrument; never close*bar volume or fixed cohort sum substituted."
+    },
+    {
+      "acceptance_test": [
+        "Verify all named taxonomy coverage/outages, canonical instrument mapping and publication/available revision IDs",
+        "Apply unchanged v1.5 research macro [-30m,+15m] inclusively using only causally known verified event time; severe mapped notices remain vetoed pending manual release",
+        "CLEAR requires complete required coverage and no active approved veto; estimated dates and missing category policy stay UNKNOWN, rumors never invent a blackout"
+      ],
+      "adapter": "Reuse EventClearance and read-only News/Events contract; Luna may integrate missingness only, not synthesize clearance.",
+      "blackout_contract": {
+        "authority": "Existing explicitly unvalidated research defaults, not production promotion",
+        "delisting_suspension_incompatible_change": "Verified mapped notice: immediate new-entry veto from causal notice availability until manual policy release",
+        "estimated_undated": "Unknown timing cannot become an exact blackout; required unresolved safety clearance stays UNKNOWN",
+        "macro": "Known verified high-impact scheduled release: veto NEW approvals for all covered contracts at scheduled_time-30m <= decision <= scheduled_time+15m; original publication and source availability <= decision",
+        "missing_stale_feed": "Required source unavailable or clearance older than 1h => UNKNOWN and veto dependent new proposals; protection remains independent",
+        "rumor": "Alert uncertainty only; cannot create a trade, hard exit or model-invented blackout",
+        "security_breach_exploit": "Verified mapped incident: new-entry veto pending operator review",
+        "unlock_listing": "Event-risk/watchlist only; no invented direction or exact blackout. Missing validated category-specific interval => UNKNOWN for that required clearance claim",
+        "version": "binding-v1.5-section-4.4-research-defaults-preserved"
+      },
+      "coverage_taxonomy": [
+        "MACRO_SCHEDULED",
+        "EXCHANGE_LISTING",
+        "EXCHANGE_DELISTING",
+        "TOKEN_UNLOCK",
+        "TOKENOMICS",
+        "SECURITY_INCIDENT",
+        "NETWORK_OUTAGE",
+        "CONTRACT_RULE_CHANGE",
+        "EXCHANGE_MAINTENANCE",
+        "BREAKING_VERIFIED",
+        "UNVERIFIED_RUMOR"
+      ],
+      "historical_coverage": "No accepted historical 2024 coverage or complete event taxonomy feed.",
+      "id": "G",
+      "missingness_behavior": "UNKNOWN/UNVERIFIED; mandatory entry veto. Missing news is not CLEAR; no LLM narrative can clear it.",
+      "provenance_contract": "Authoritative venue announcements plus a defined licensed macro/project news coverage log, provider outage history and reviewed symbol mapping.",
+      "required_native_fields": [
+        "publisher ID",
+        "original publication time",
+        "provider first availability",
+        "owner observed availability when recorded",
+        "revision IDs/time",
+        "original and revised content hashes",
+        "symbol/entity mapping",
+        "coverage taxonomy",
+        "scheduled event time"
+      ],
+      "requirement": "News and event clearance",
+      "status": "UNVERIFIED",
+      "supporting_evidence": [
+        "src/astrabot/universe/eligibility.py:EventClearance",
+        "docs/04-TRADING-DECISION-RESEARCH.md"
+      ],
+      "timestamp_contract": "Select only revisions available<=decision. Future scheduled events may be known now; apply exact existing blackout intervals around their scheduled times.",
+      "unaccepted_facts": [
+        "coverage and outage intervals",
+        "publication/availability/revision history",
+        "symbol mapping and frozen blackout policy evidence"
+      ],
+      "units": "UTC time and declared coverage categories; no numeric market proxy can certify news absence."
+    },
+    {
+      "acceptance_test": [
+        "Check native settlement boundary, sign, units and instrument identity",
+        "Join only genuine or explicitly hypothetical contemporaneous positions",
+        "No funding history forecast using future settled values"
+      ],
+      "adapter": "Reuse C05-K archive/funding audit and C04 economics assumptions with evidence labels; no account adapter.",
+      "historical_coverage": "C05-K retained authentic funding audit from venue archives for development cohort; originals not reprocessed S02. One-day ticker is only upcoming rates.",
+      "id": "H",
+      "missingness_behavior": "Rate archive may support labeled ex-post scenario audit; unavailable settlement/mark/position => cashflow UNKNOWN, never zero by default.",
+      "provenance_contract": "Pinned venue settlement archives or raw records plus observed availability; hypothetical portfolio positions clearly separate from account funding ledger.",
+      "required_native_fields": [
+        "settled fundingRate",
+        "fundingTime actual boundary",
+        "symbol",
+        "applicable mark/position notional",
+        "record publication/arrival",
+        "position quantity and side if actual cashflow"
+      ],
+      "requirement": "Funding",
+      "status": "PARTIAL",
+      "supporting_evidence": [
+        "research/c05/C05_K_FUNDING_AUDIT.json",
+        "research/c05/C05_K_R0_MARKET_ECONOMICS_AND_SOURCE_DECISION.md",
+        "https://docs.tardis.dev/downloadable-csv-files/data-types"
+      ],
+      "timestamp_contract": "Upcoming mutable derivative funding rate/time is not settled funding. Later published settlements cannot become ex-ante expected funding; mark and position must align to settlement.",
+      "unaccepted_facts": [
+        "publication/availability of exact settlements",
+        "applicable mark alignment",
+        "any actual account positions/cashflow"
+      ],
+      "units": "Dimensionless signed rate; cashflow in USDT. Hypothetical long=-notional*rate, short=+notional*rate for qualified linear contracts at settlement only."
+    },
+    {
+      "acceptance_test": [
+        "Reconcile raw fill/fee ledger with dated orders and immutable approval",
+        "Empirically qualify any execution model against holdout microstructure/account traces",
+        "Do not infer order queue, stop fill or IOC fill from a 5m candle or visible depth"
+      ],
+      "adapter": "Reuse existing C01 contracts, C04 E0/E1/E2, C06 fake lifecycle; no new writer or trading credentials.",
+      "historical_coverage": "No authentic account cost/fill/latency/protection dataset accepted. Candles cannot resolve these events.",
+      "id": "I",
+      "missingness_behavior": "Execution evidence UNKNOWN; scenarios remain hypothetical, no economic promotion or signed routes.",
+      "provenance_contract": "Redacted authentic account execution/commission records and qualified sole-writer lifecycle/recovery traces; synthetic operator events are software tests only.",
+      "required_native_fields": [
+        "dated account commission tier",
+        "discount eligibility",
+        "approval timestamp",
+        "intent/submission/ack/fill receipt times",
+        "IOC nonfill/partial events",
+        "order and trade IDs",
+        "slippage reference",
+        "protective-stop submit/ack/reconcile",
+        "TP quantities/prices",
+        "11h55 flatten and hard 12h closure"
+      ],
+      "requirement": "Fees, latency and fills",
+      "status": "UNVERIFIED",
+      "supporting_evidence": [
+        "research/acceptance/INTEGRATED_RESEARCH_MVP_RC1.md",
+        "src/astrabot/research/economics.py",
+        "src/astrabot/research/simulation.py",
+        "docs/05-EXECUTION-SUPERVISION.md"
+      ],
+      "timestamp_contract": "Owner approval to bounded IOC submission within existing 10s contract; first actual fill starts unresettable 12h clock; clock sync/error evidence required.",
+      "unaccepted_facts": [
+        "actual dated tier/discounts",
+        "approval-to-IOC latency",
+        "nonfills/partials/queue/cancellation/slippage",
+        "stop/TP/forced-exit lifecycle and operational recovery"
+      ],
+      "units": "USDT fees and price/quantity, integer duration us; fee tier date-effective, side/order type/discount explicit."
+    }
+  ],
+  "session03": {
+    "allowed": [
+      "Integrate typed envelope and per-field missingness with existing G/H evidence validation",
+      "Call identical sample_bbo reducer from research scanner/replay",
+      "Add fail-closed A01-A10 pipeline wiring retaining fidelity/source/clock IDs",
+      "Load owner diagnostic only after pinned bytes and exact-version review"
+    ],
+    "must_not": [
+      "Replace C02 v1 scan_universe or silently reinterpret ingested_at as owner receipt",
+      "Implement/tune PC2/FR2 v0.1 or relabel T1/R1/B1 qualified",
+      "Invent 2024 metadata, OI measurement times, units, owner arrivals, news clearance or fills",
+      "Pool symbols/feed classes or future observations to fill gaps",
+      "Inspect October strategy outcomes or original October15-31 holdout archives",
+      "Buy/subscribe/contact vendor, deploy collector, create credentials or activate Demo/live",
+      "Add a new ingestion framework, queue, agent runtime or exchange writer"
+    ]
+  },
+  "source_route": "SOURCE_CONTRACT_PARTIAL_BUT_IMPLEMENTABLE",
+  "version": "s02.source-acceptance.v1"
+}
