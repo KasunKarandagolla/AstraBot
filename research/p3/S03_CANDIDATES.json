@@ -1,0 +1,31 @@
+{
+  "base_commit": "654b6c96aefcd537d7f10bf10361ee896c515f97",
+  "candidates": {
+    "FA3": {
+      "max_confirmation_bars": 1,
+      "mechanism": "FIRST_PREVIOUS_DAY_EXCURSION_REJECTION",
+      "policy_id": "FA3.prior-day-failed-auction.v0.1",
+      "rules": "S03_PREREGISTRATION.md: FA3 exact reducer"
+    },
+    "PC3": {
+      "max_confirmation_bars": 3,
+      "mechanism": "TREND_VALUE_PULLBACK_EARLY_ACCEPTANCE",
+      "policy_id": "PC3.value-acceptance.v0.1",
+      "rules": "S03_PREREGISTRATION.md: PC3 exact reducer"
+    }
+  },
+  "common": {
+    "entry_cap_atr15": ".25",
+    "gross_r_max": "4",
+    "gross_r_min": "1.8",
+    "protocol_sha256": "2e24286cb178f4906f61eba37cc53b704f4ad02a94b405ca6df9b488cc49903e",
+    "seed": 20261029,
+    "source_end_exclusive": "2024-10-01T00:00:00+00:00",
+    "source_manifest_sha256": "6a34aae6b37ec9b48aa166dda52cd578a86776ef8b36be05aaaa5bf42f51058a",
+    "status": "PROPOSED_RESEARCH_ONLY",
+    "stop_buffer_atr15": ".25",
+    "stop_fraction_max": ".02",
+    "target_net_rr_min": "1.5"
+  },
+  "schema_version": "s03.candidate-contract.v1"
+}
