@@ -376,6 +376,7 @@ def summarize(census, events, controls):
         c['advancement_checks']=s03.gate_checks(c)
         h=c['groups']['base_survivors']['horizons']['720']
         rejected=(len(primary)>=20 and not base) or (h['complete']>=20 and D(h['target_before_stop_upper'])/h['complete']<=D('.20'))
+        c['hard_reject']=rejected
         c['decision']='REJECT' if rejected else ('ADVANCE' if all(c['advancement_checks'].values()) else
             'REVISE' if h['complete']>9 and len(c['groups']['base_survivors']['symbols'])>=4
                 and D(h['target_before_stop_lower'])/h['complete']>D(1)/9 else 'REJECT')
@@ -541,11 +542,13 @@ def main():
     print('OUTCOME BLIND SEAL',digest,flush=True)
     if args.census_only:return
     events,controls,bars=paths(panel,census)
+    months=summarize(census,events,controls)
+    study_decision='REJECT' if any(c['hard_reject'] for c in months.values()) else months['2024-09']['decision']
     packet={'schema_version':'s04.exploratory-evidence.v1','census_sha256':digest,**binding,
         'preregistration_commit':'93adad5','source_manifest_sha256':MANIFEST_HASH,
         'source_partitions':list(panel.partitions),'verified_source_bars':len(bars),
         'october_outcomes_accessed':False,'strict_eligible_candidates':0,'economic_qualification':'INSUFFICIENT_EVIDENCE',
-        'months':summarize(census,events,controls),'benchmarks':benchmarks(panel),
+        'months':months,'study_decision':study_decision,'benchmarks':benchmarks(panel),
         'events':events,'controls':controls,'source_bars':bars,
         'dependencies':{name:importlib.metadata.version(name) for name in ('numpy','TA-Lib','pydantic')},
         'research_code_sha256':{str(p.relative_to(ROOT)):sha256(p.read_bytes()).hexdigest() for p in
