@@ -111,3 +111,99 @@ def test_month_purge_and_frozen_protocol():
     assert s.month_end(s.START)==s.dt('2024-09-01T00:00:00Z')
     assert s.month_end(s.dt('2024-09-30T23:55:00Z'))==s.END
     s.validate_inputs()
+
+
+def evidence():
+    return _evidence()
+
+
+@__import__('functools').lru_cache(maxsize=1)
+def _evidence():
+    packet,digest=s.old.checked_json(s.OUT/'S04_EVIDENCE.json.gz',compressed=True)
+    census,seal=s.old.checked_json(s.OUT/'S04_CAUSAL_CENSUS.json.gz',compressed=True)
+    assert packet['census_sha256']==seal
+    return packet,census
+
+
+def test_original_evidence_and_preregistration_code_bindings():
+    from hashlib import sha256
+    packet,census=evidence()
+    assert packet['verified_source_bars']==266616 and len(packet['source_partitions'])==84
+    assert len(census['pool'])==122976
+    assert packet['strict_eligible_candidates']==0 and packet['october_outcomes_accessed'] is False
+    assert packet['protocol_sha256']==s.PROTOCOL_SHA and packet['policy_version']==s.VERSION
+    assert all(r['coverage_start']<'2024-10' for r in packet['source_partitions'])
+    for path,digest in packet['research_code_sha256'].items():
+        assert sha256((s.ROOT/path).read_bytes()).hexdigest()==digest
+    assert packet['benchmarks']['T1']['target_first_lower']==0
+    assert packet['benchmarks']['PC2']['target_first_lower']==1
+    assert packet['benchmarks']['PC3']['target_first_lower']==1
+
+
+def test_all_original_formation_ranges_stops_and_atr_availability():
+    packet,census=evidence()
+    bars={r['source_key']:r for r in packet['source_bars']}
+    for f in census['formations']:
+        if f['target'] is None:continue
+        q=bars[f['formation_source_key']]
+        prior=[bars[k] for k in f['source_keys']]
+        assert len(prior)==24
+        assert all(s.dt(b['available_at'])<=s.dt(q['open_time']) for b in prior)
+        assert D(f['high'])==max(D(b['high']) for b in prior)
+        assert D(f['low'])==min(D(b['low']) for b in prior)
+        sgn=D(1) if f['side']=='LONG' else D(-1)
+        assert sgn*(D(q['close'])-D(f['edge']))>0
+        stoprows=[bars[k] for k in f['stop_source_keys']]
+        anchor=min(D(b['low']) for b in stoprows) if sgn==1 else max(D(b['high']) for b in stoprows)
+        assert D(f['stop'])==anchor-sgn*D('.25')*D(f['atr1_prebreak'])
+        span=f['prebreak_atr_span']
+        assert s.dt(bars[span['last']]['available_at'])<=s.dt(q['open_time'])
+        assert f['target']['available_at']<=f['formed_at']
+        if f['transitions']:
+            assert s.dt(f['transitions'][0]['at'])==s.dt(f['formed_at'])+timedelta(minutes=5)
+
+
+def test_all_original_paths_and_cashflows_by_independent_touch_arithmetic():
+    packet,_=evidence()
+    bars={r['source_key']:r for r in packet['source_bars']}
+    for e in packet['events']:
+        h=e['outcomes']['720'];rows=[bars[k] for k in h['source_keys']]
+        assert all(s.dt(b['open_time'])<s.month_end(s.dt(e['terminal_at'])) for b in rows)
+        sgn=D(1) if e['side']=='LONG' else D(-1)
+        stop,target=D(e['stop']),D(e['targets'][0]['price'])
+        si=next((i for i,b in enumerate(rows) if (D(b['low'])<=stop if sgn==1 else D(b['high'])>=stop)),None)
+        ti=next((i for i,b in enumerate(rows) if (D(b['high'])>=target if sgn==1 else D(b['low'])<=target)),None)
+        assert h['full_ladder_lower']==(h['ordered_ladder'] and ti is not None and (si is None or ti<si))
+        if len(rows)<143:continue
+        k=142;exit_price=D(rows[k]['close'])
+        for i,b in enumerate(rows[:143]):
+            if (D(b['low'])<=stop if sgn==1 else D(b['high'])>=stop):
+                k=i;exit_price=min(stop,D(b['open'])) if sgn==1 else max(stop,D(b['open']));break
+            if (D(b['high'])>=target if sgn==1 else D(b['low'])<=target):
+                k=i;exit_price=target;break
+        for name,terms in s.SCENARIOS.items():
+            c=e['modeled_cashflows'][name];entry=D(e['entry'])
+            fee=D(terms['fee_bps_per_side'])/10000
+            other=entry*(D(terms['friction_bps_per_route'])+D(terms['funding_bps']))/10000
+            risk=D(e['stop_distance'])+(entry+stop)*fee+other
+            pnl=sgn*(exit_price-entry)-(entry+exit_price)*fee-other
+            assert c['exit_source_key']==rows[k]['source_key']
+            assert D(c['modeled_initial_risk_return'])==pnl/risk
+
+
+def test_every_control_has_exact_past_covariates_and_never_crosses_month():
+    packet,census=evidence()
+    pool={r['window_id']:r for r in census['pool']}
+    events={e['setup_id']:e for e in packet['events']}
+    for link in census['matches']:
+        if link['control_id'] is None:continue
+        e,c=events[link['event_id']],pool[link['control_id']]
+        assert c['eligible_nontrigger'] and not c['exclusions']
+        assert c['symbol']==e['symbol'] and c['bias']==e['bias'] and c['regime']==e['regime']
+        assert int(D(c['atr_percentile'])//25)==int(D(e['atr_percentile'])//25)
+        at,ct=s.dt(e['terminal_at']),s.dt(c['event_time'])
+        assert at-timedelta(days=7)<=ct<=at-timedelta(hours=12)
+        assert at.month==ct.month and at.hour//4==ct.hour//4
+        assert ct+timedelta(hours=12)<=s.month_end(ct)
+    for c in packet['months'].values():
+        assert c['decision']!='ADVANCE' or all(c['advancement_checks'].values())
