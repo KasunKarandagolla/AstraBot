@@ -47,9 +47,11 @@ def select_matches(census):
 
 
 def run():
+    protocol=s.OUT/'S04_CONTROL_SUPPORT_PREREGISTRATION.md'
+    if sha256(protocol.read_bytes()).hexdigest()!='89e207ff5aa8b4ed87f1aba5a631c13068807dc23b9691cd6bdece99ceb74668':
+        raise ValueError('supplement preregistration changed')
     census,seal=s.old.checked_json(s.OUT/'S04_CAUSAL_CENSUS.json.gz',compressed=True)
     matches=select_matches(census)
-    protocol=s.OUT/'S04_CONTROL_SUPPORT_PREREGISTRATION.md'
     binding={'schema_version':'s04.lag-context-supplement.v1','census_sha256':seal,
              'protocol_sha256':sha256(protocol.read_bytes()).hexdigest(),
              'implementation_sha256':sha256(Path(__file__).read_bytes()).hexdigest()}

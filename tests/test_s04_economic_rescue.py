@@ -214,3 +214,36 @@ def test_every_control_has_exact_past_covariates_and_never_crosses_month():
         assert ct+timedelta(hours=12)<=s.month_end(ct)
     for c in packet['months'].values():
         assert c['decision']!='ADVANCE' or all(c['advancement_checks'].values())
+
+
+def test_supplement_matches_lagged_context_without_future_return_selection():
+    from scripts import s04_control_support as supplement
+    at=s.START+timedelta(days=4,hours=1)
+    e={'setup_id':'E','symbol':'SYNTHETIC','side':'LONG','terminal_at':at.isoformat()}
+    def row(key,when,eligible=False,regime='TREND_UP'):
+        return {'window_id':key,'symbol':'SYNTHETIC','event_time':when.isoformat(),
+                'eligible_nontrigger':eligible,'regime':regime,'bias':'BULLISH','atr_percentile':'40'}
+    control=at-timedelta(days=1)
+    pool=[row('CASE_LAG',at-timedelta(minutes=20)),
+          row('CONTROL_LAG',control-timedelta(minutes=20)),row('CONTROL',control,True,'RANGE')]
+    before=supplement.select_matches({'events':[e],'pool':pool})
+    assert before[0]['control_id']=='CONTROL'
+    # The current control can have a different post-treatment regime; matching
+    # binds only the predeclared pre-entry covariates and never future returns.
+    for r in pool:r['future_return']='9999'
+    assert before==supplement.select_matches({'events':[e],'pool':pool})
+
+
+def test_supplement_and_session05_never_override_original_rejection():
+    import json
+    from hashlib import sha256
+    packet,_=evidence()
+    supplement,digest=s.old.checked_json(s.OUT/'S04_CONTROL_SUPPORT.json.gz',compressed=True)
+    assert supplement['original_decision_unchanged']==packet['study_decision']=='REJECT'
+    assert supplement['promotion_authority'] is False
+    assert supplement['primary_evidence_sha256']==s.old.checked_json(s.OUT/'S04_EVIDENCE.json.gz',compressed=True)[1]
+    assert supplement['implementation_sha256']==sha256((s.ROOT/'scripts/s04_control_support.py').read_bytes()).hexdigest()
+    contract=json.loads((s.OUT/'S04_SESSION05_CONTRACT.json').read_text())
+    assert contract['default_action']=='HOLD_NO_POLICY_INTEGRATION' and contract['approved_policy_ids']==[]
+    for item in contract['frozen_inputs'].values():
+        assert sha256((s.ROOT/item['path']).read_bytes()).hexdigest()==item['file_sha256']
