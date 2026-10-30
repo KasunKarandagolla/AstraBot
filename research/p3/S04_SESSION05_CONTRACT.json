@@ -1,0 +1,157 @@
+{
+  "schema_version": "s04.session05.machine-contract.v1",
+  "baseline_main": "32c528866003f97ef76be1c510564b4d7156c051",
+  "session": "05",
+  "model_route": "Luna",
+  "policy_id": "VT4.compression-breakout.v0.1",
+  "policy_version_sha256": "e3fc5c0aca4f3cb57d97dcb70f31f9779f16d76cda2dff13b2a7a879261ef2bd",
+  "economic_decision": "REJECT",
+  "source_qualification": "SOURCE_BLOCKED",
+  "default_action": "HOLD_NO_POLICY_INTEGRATION",
+  "approved_policy_ids": [],
+  "production_clock_migration_approved": false,
+  "production_registry_write_allowed": false,
+  "orders_demo_procurement_or_capture_allowed": false,
+  "frozen_inputs": {
+    "S04_PREREGISTRATION.md": {
+      "path": "research/p3/S04_PREREGISTRATION.md",
+      "file_sha256": "c64c81cad1963d16fa66054d9c327483af311320cb16ed717aa41c98a2b68938"
+    },
+    "S04_CANDIDATES.json": {
+      "path": "research/p3/S04_CANDIDATES.json",
+      "file_sha256": "3dd0d38c1187c8d75e141f7dc4c1d76bdcde183accd7e22365a7dd0f50222792"
+    },
+    "S04_CAUSAL_CENSUS.json.gz": {
+      "path": "research/p3/S04_CAUSAL_CENSUS.json.gz",
+      "file_sha256": "8d193cbf36d56436e4307b7e0b3c7c142777afbca43c1e8fb6295b75078706ed"
+    },
+    "S04_EVIDENCE.json.gz": {
+      "path": "research/p3/S04_EVIDENCE.json.gz",
+      "file_sha256": "65bae0fb28ecbcd2165d99c3fe5a58e6bf0ba8512660d396a47096732819fbae"
+    },
+    "S04_SOURCE_FACTS.json": {
+      "path": "research/p3/S04_SOURCE_FACTS.json",
+      "file_sha256": "56457186da95e05c176f955f91851e8bd5458319b0e85236dd7c80537d7aa50a"
+    },
+    "S04_CONTROL_SUPPORT_PREREGISTRATION.md": {
+      "path": "research/p3/S04_CONTROL_SUPPORT_PREREGISTRATION.md",
+      "file_sha256": "89e207ff5aa8b4ed87f1aba5a631c13068807dc23b9691cd6bdece99ceb74668"
+    },
+    "S04_SUPPLEMENT_MATCHES.json.gz": {
+      "path": "research/p3/S04_SUPPLEMENT_MATCHES.json.gz",
+      "file_sha256": "cea16e00b5f2f478f882bf7bf52fdfd6e98d6ffb1a41db1fceae757ff6017e8a"
+    },
+    "S04_CONTROL_SUPPORT.json.gz": {
+      "path": "research/p3/S04_CONTROL_SUPPORT.json.gz",
+      "file_sha256": "b9a702f3fc4ced8a307c485c3f31e6cd8282122cbe3a1a6f54f34c087bb2b3d7"
+    },
+    "S04_ORIGINAL_SOURCE_AUDIT.json": {
+      "path": "research/p3/S04_ORIGINAL_SOURCE_AUDIT.json",
+      "file_sha256": "1b1f295f46fbfa4996be92a408e4299654427bf31307f7863c3a500a48376569"
+    }
+  },
+  "census_content_sha256": "ae1fee4e10382106d8992b091946706137c76c597641263facf02ec12aa22c88",
+  "evidence_content_sha256": "84cb5afcca3190b323eb7a528462b68427a79be409a715b61c24589352a5c19c",
+  "source_manifest_sha256": "6a34aae6b37ec9b48aa166dda52cd578a86776ef8b36be05aaaa5bf42f51058a",
+  "entrypoints": {
+    "rebuild": "python scripts/s04_economic_rescue.py --data-root /workspace/work/c04-data --workers 2 --output-dir work/s04-reproduction",
+    "reopen": "python scripts/s04_economic_rescue.py --data-root /workspace/work/c04-data --reuse-census research/p3/S04_CAUSAL_CENSUS.json.gz --output-dir work/s04-reopened",
+    "tests": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q",
+    "verify_original_csv": "python scripts/s04_verify_sources.py --data-root /workspace/work/c04-data"
+  },
+  "research_functions": {
+    "file": "scripts/s04_economic_rescue.py",
+    "functions": [
+      "raw_terms",
+      "advance",
+      "geometry",
+      "scan",
+      "select_matches",
+      "is_base",
+      "paths",
+      "cashflow",
+      "portfolio",
+      "summarize"
+    ]
+  },
+  "reuse": {
+    "source_clock": "src/astrabot/data/source_clock.py:sample_bbo",
+    "source_acceptance": "research/p3/S02_SOURCE_CONTRACT.json",
+    "source_evidence": "src/astrabot/data/historical_evidence.py",
+    "original_bytes": "src/astrabot/data/historical_sources.py",
+    "c02_default": "src/astrabot/universe/eligibility.py:scan_universe",
+    "causal_join": "src/astrabot/research/integrated.py:attach_snapshots",
+    "features": "src/astrabot/features/providers.py",
+    "readiness_type": "src/astrabot/universe/eligibility.py:SymbolData"
+  },
+  "activation_preconditions": [
+    "Independent economic review accepts advancement; no failed ablation substitution",
+    "Owner approval record binds exact policy and management hash; source-clock approval is separate",
+    "Every required original source is SOURCE_ACCEPTED with actual field clocks and dated units",
+    "Enough legitimate intended signals and independent shared-market blocks before reserved outcomes",
+    "Independent R1 then full-policy R2 pass frozen after-cost tests"
+  ],
+  "mechanical_recipe_after_all_preconditions": [
+    {
+      "path": "src/astrabot/research/s04_adapter.py",
+      "task": "Wrap the frozen research reducers using accepted SymbolData only; keep executable false and production registry untouched."
+    },
+    {
+      "path": "scripts/s05_source_replay.py",
+      "task": "Reuse existing G/H manifests and attach_snapshots; strict C02 scan first; join original fee/funding/arrival evidence; emit complete intended-signal and rejection ledger."
+    },
+    {
+      "path": "tests/test_s05_source_replay.py",
+      "task": "Prove scanner/replay parity, no backwards clock repair, missing units/owner receipt/news veto, no synthetic acceptance, and no policy/clock activation by a result flag."
+    }
+  ],
+  "required_acceptance_cases": [
+    "provider arrival cannot substitute for owner receipt",
+    "reconstructed quote cannot claim native BBO fidelity",
+    "60 distinct causal slots; missing/stale/late/duplicate slots fail",
+    "OI row timestamp cannot become an OI measurement timestamp",
+    "base/contract/depth units and dated filters never inferred",
+    "future available bars/metadata/events cannot change past decisions",
+    "every intended signal retains approvals/rejections/nonfills/partials",
+    "same-bar stop wins; fixed S/T and first-fill clocks never reset",
+    "missing mandatory input yields NO_TRADE and zero admitted samples",
+    "economic REJECT or REVISE cannot be changed by adding source plumbing"
+  ],
+  "independent_gates": {
+    "minimum_intended_signals": 100,
+    "minimum_utc_days": 30,
+    "minimum_shared_market_12h_components": 30,
+    "minimum_symbols": 4,
+    "minimum_altcoins": 2,
+    "minimum_dated_liquidity_cohorts": 2,
+    "minimum_exact_control_fraction": "0.50",
+    "r1_primary": "4h matched contrast joint24h-block one-sided97.5% lower>0; conservative target-first>=35%",
+    "r2_primary": "whole-policy initial-monetary net_R joint24h-block97.5% lower>0; stress lower>=0",
+    "october_validation": "2024-10-01/2024-10-15",
+    "october_evaluation": "2024-10-15/2024-11-01",
+    "purge_hours": 12
+  },
+  "risk": {
+    "per_trade": "0.0025",
+    "aggregate": "0.0050",
+    "daily_entry_halt": "0.01",
+    "slots": 2,
+    "one_per_symbol": true,
+    "isolated": true,
+    "effective_leverage_max": "2",
+    "owner_approval": "authenticated one-use immutable nonce",
+    "exchange_writers": 1,
+    "flatten_minutes": 715,
+    "emergency_minutes": 720,
+    "clock_origin": "earliest actual fill"
+  },
+  "owner_next_choice": "Accept the no-go for further September-only refinement of the exhausted tested families and HOLD Session05 strategy integration pending a separately reviewed economic/data proposal.",
+  "supplement": {
+    "script": "scripts/s04_control_support.py",
+    "command": "python scripts/s04_control_support.py",
+    "protocol_commit": "53aa226",
+    "evidence_content_sha256": "bf644b3639fb1c21decf01f20d01ec316889a27c10b27e530656a4e39ee6e6cf",
+    "promotion_authority": false,
+    "timing": "Analyst blind; primary path computation had completed, primary results had not been read."
+  }
+}
