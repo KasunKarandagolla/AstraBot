@@ -310,6 +310,12 @@ def cashflow(e, rows, scenario):
 
 def summarize_group(events, controls):
     result = old.group_summary(events,controls)
+    ids={e['setup_id'] for e in events}
+    intervals=[(dt(e['terminal_at']),min(dt(e['terminal_at'])+timedelta(hours=12),month_end(dt(e['terminal_at'])))) for e in events]
+    intervals.extend((dt(c['event_time']),dt(c['event_time'])+timedelta(hours=12))
+                     for c in controls if c['matched_event_id'] in ids)
+    result['connected_market_time_components']=market_components(intervals)
+    result['overlapping_case_control_window_pairs']=sum(a<d and c<b for i,(a,b) in enumerate(intervals) for c,d in intervals[i+1:])
     result['cashflow_scenarios'] = {name:distribution(e['modeled_cashflows'][name]['modeled_initial_risk_return']
                                                     for e in events) for name in SCENARIOS}
     result['cashflow_mean'] = {name:str(mean(values)) if (values:=[D(e['modeled_cashflows'][name]['modeled_initial_risk_return'])
@@ -375,6 +381,17 @@ def summarize(census, events, controls):
         c['control_balance']={field:distribution(D(e['confirmation_context'][source])-D(r[field])
             for e in base for r in controls if r['matched_event_id']==e['setup_id'])
             for field,source in (('adx','adx_1h'),('slope','normalized_slope'))}
+        days=c['groups']['base_survivors']['horizons']['240']['paired']['day_means_bps']
+        sigma=stdev(float(v) for v in days.values()) if len(days)>1 else None
+        c['planning_power']={'status':'APPROXIMATE_PLANNING_ONLY_NOT_A_GATE_OR_GUARANTEE',
+            'matched_4h_event_day_sd_bps':sigma,
+            'required_independent_joint_days_by_true_effect_bps':{
+                str(effect):max(30,__import__('math').ceil(((1.96+.84)*sigma/effect)**2)) if sigma is not None else None
+                for effect in (10,20,40)},
+            'observed_primary_confirmations_per_calendar_day':str(D(len(primary))/(31 if month=='2024-08' else 30)),
+            'observed_base_cases_per_calendar_day':str(D(len(base))/(31 if month=='2024-08' else 30)),
+            'minimum_calendar_days_for100_at_observed_base_rate':__import__('math').ceil(100*(31 if month=='2024-08' else 30)/len(base)) if base else None,
+            'source_eligible_rate_known':False}
         examples={}
         for label,predicate in (
             ('first_base',lambda e:is_base(e)),('first_target',lambda e:is_base(e) and e['outcomes']['720']['full_ladder_lower']),
@@ -412,16 +429,18 @@ def portfolio(events):
         elif len(pending)>=2: reason='TWO_SLOTS'
         elif any(p['symbol']==e['symbol'] for p in pending): reason='SYMBOL_RESERVED'
         elif equity<=baseline*D('.99'): reason='REALIZED_PROXY_DAILY_HALT'
-        risk=equity*D('.0025')
+        risk=min(equity*D('.0025'),max(D(0),equity*D('.005')-sum((p['risk'] for p in pending),D(0))))
+        actualrisk,notional=D(0),D(0)
         if reason is None:
             available=max(D(0),2*equity-sum((p['notional'] for p in pending),D(0)))
             notional=min(risk/D(cf['initial_modeled_loss_per_unit'])*D(e['entry']),available)
             actualrisk=notional/D(e['entry'])*D(cf['initial_modeled_loss_per_unit'])
-            if notional<=0: reason='TWO_X_NOTIONAL'
+            if notional<=0: reason='AGGREGATE_RISK_OR_TWO_X_NOTIONAL'
             else: pending.append({'symbol':e['symbol'],'release':at+timedelta(hours=12),'notional':notional,
-                                  'pnl':actualrisk*D(cf['modeled_initial_risk_return'])})
+                                  'risk':actualrisk,'pnl':actualrisk*D(cf['modeled_initial_risk_return'])})
         ledger.append({'event_id':e['setup_id'],'status':reason or 'CONDITIONALLY_ALLOCATED',
-                       'equity_before':str(equity),'source_eligibility':False})
+                       'equity_before':str(equity),'modeled_risk':str(actualrisk),'entry_notional':str(notional),
+                       'source_eligibility':False})
     for p in pending: equity+=p['pnl']
     return {'status':'OHLC_ONLY_FIXED_12H_RESERVATION_CAPACITY_DIAGNOSTIC',
         'counts':dict(Counter(r['status'] for r in ledger)),'conditional_terminal_equity_multiple':str(equity),
