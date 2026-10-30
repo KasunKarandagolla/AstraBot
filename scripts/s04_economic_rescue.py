@@ -313,6 +313,8 @@ def cashflow(e, rows, scenario):
         return {'status':'CENSORED_OR_INVALID','modeled_initial_risk_return':None}
     entry, stop, target = D(e['entry']), D(e['stop']), D(e['targets'][0]['price'])
     s, fee = sign_for(e['side']), D(scenario['fee_bps_per_side'])/10000
+    if s*(target-entry)<=0:
+        return {'status':'CENSORED_OR_INVALID','modeled_initial_risk_return':None}
     reason, exit_price, chosen = 'TIME_11H55',rows[142].close,rows[142]
     for b in rows[:143]:
         if (b.low <= stop if s == 1 else b.high >= stop):
