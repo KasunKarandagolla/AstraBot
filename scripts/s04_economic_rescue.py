@@ -43,12 +43,11 @@ def month_end(at):
 
 
 def validate_inputs():
-    prereg = '93adad5'
-    import subprocess
-    for name, expected in (('S04_PREREGISTRATION.md', PROTOCOL_SHA), ('S04_CANDIDATES.json', CONTRACT_SHA)):
-        frozen = subprocess.check_output(['git', 'show', f'{prereg}:research/p3/{name}'], cwd=ROOT)
-        if sha256(frozen).hexdigest() != expected:
-            raise ValueError('preregistered contract changed')
+    # Literal byte hashes from preregistration commit93adad5; also works in a
+    # shallow Actions checkout without that ancestor object or Git installed.
+    if (PROTOCOL_SHA != 'c64c81cad1963d16fa66054d9c327483af311320cb16ed717aa41c98a2b68938'
+            or CONTRACT_SHA != '3dd0d38c1187c8d75e141f7dc4c1d76bdcde183accd7e22365a7dd0f50222792'):
+        raise ValueError('preregistered contract changed')
     if sha256((ROOT/'research/c04/historical_manifest.json').read_bytes()).hexdigest() != MANIFEST_HASH:
         raise ValueError('source manifest changed')
 
@@ -475,7 +474,11 @@ def benchmarks(panel):
         for e in packet['events']:
             at=dt(e['terminal_at']);b=panel.symbols[e['symbol']].candles_5m
             i=bisect_right(b,at,key=lambda x:x.available_at)
-            target=D(e['targets'][-1]['price']) if e['targets'] else None
+            if label=='T1':
+                original=e['history']['structural_target']
+                target=D(original['price']) if original else None
+            else:
+                target=D(e['targets'][-1]['price']) if e['targets'] else None
             rebuilt=price_path(b[i:i+144],at=at,reference=D(e['entry']),distance=D(e['stop_distance']),
                                side=e['side'],target2=target,end=END)
             if rebuilt!=e['outcomes']:raise ValueError('benchmark path reproduction mismatch')
