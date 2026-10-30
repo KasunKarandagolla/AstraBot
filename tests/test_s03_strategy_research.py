@@ -220,3 +220,91 @@ def test_s03_retained_census_hash_matching_paths_and_native_provenance():
             distance=D(e['stop_distance' if event else 'normalization_distance']), side=e['side'], target2=target)
         assert actual == e['outcomes']
     assert s.summarize(census, p['events'], p['controls']) == p['candidates']
+
+
+@pytest.fixture(scope='module')
+def sealed_s03():
+    packet, _ = s.old.checked_json(s.OUT/'S03_EVIDENCE.json.gz', compressed=True)
+    return packet, {r['source_key']: r for r in packet['source_bars']}
+
+
+def test_comparator_partitions_and_retained_code_match_exact_sealed_inputs(sealed_s03):
+    from hashlib import sha256
+    import importlib.metadata
+    packet, _ = sealed_s03
+    prior, _ = s.old.checked_json(s.OUT/'S01_EVIDENCE.json.gz', compressed=True)
+    census, _ = s.old.checked_json(s.OUT/'S03_CAUSAL_CENSUS.json.gz', compressed=True)
+    assert packet['source_partitions'] == prior['source_partitions']
+    assert census['causal_implementation_sha256'] == s.causal_fingerprint()
+    for name, digest in packet['research_code_sha256'].items():
+        assert sha256((s.ROOT/name).read_bytes()).hexdigest() == digest
+    assert packet['dependencies'] == {name: importlib.metadata.version(name) for name in packet['dependencies']}
+    assert packet['strict_eligible_candidates'] == 0
+    assert not packet['october_outcomes_accessed']
+
+
+def test_original_price_ordering_independent_of_shared_path_function(sealed_s03):
+    packet, source = sealed_s03
+    counts = {'PC3': [0, 0, 0], 'FA3': [0, 0, 0]}
+    for e in packet['events']:
+        if not s.is_base(e):
+            continue
+        h = e['outcomes']['720']
+        assert h['complete']
+        rows = [source[k] for k in h['source_keys']]
+        stop, target = D(e['stop']), D(e['targets'][0]['price'])
+        long = e['side'] == 'LONG'
+        stop_index = next((i for i, r in enumerate(rows) if
+            (D(r['low']) <= stop if long else D(r['high']) >= stop)), None)
+        target_index = next((i for i, r in enumerate(rows) if
+            (D(r['high']) >= target if long else D(r['low']) <= target)), None)
+        lower = target_index is not None and (stop_index is None or target_index < stop_index)
+        upper = target_index is not None and (stop_index is None or target_index <= stop_index)
+        assert h['full_ladder_lower'] == lower
+        assert h['full_ladder_upper'] == upper
+        assert (h['stop_touch']['source_key'] if h['stop_touch'] else None) == (
+            rows[stop_index]['source_key'] if stop_index is not None else None)
+        assert (h['structural_target_touch']['source_key'] if h['structural_target_touch'] else None) == (
+            rows[target_index]['source_key'] if target_index is not None else None)
+        counts[e['candidate']][0] += 1
+        counts[e['candidate']][1] += lower
+        counts[e['candidate']][2] += stop_index is not None and (target_index is None or stop_index < target_index)
+    assert counts == {'PC3': [9, 1, 8], 'FA3': [1, 0, 1]}
+
+
+def test_original_entry_economics_independently_checks_both_fee_notionals(sealed_s03):
+    packet, _ = sealed_s03
+    for e in packet['events']:
+        if not e.get('scenarios'):
+            continue
+        entry, stop, target, distance = D(e['entry']), D(e['stop']), D(e['targets'][0]['price']), D(e['stop_distance'])
+        direction = D(1) if e['side'] == 'LONG' else D(-1)
+        for name, terms in s.SCENARIOS.items():
+            fee = D(terms['fee_bps_per_side'])/10000
+            other = entry*(D(terms['friction_bps_per_route'])+D(terms['funding_bps']))/10000
+            win = (entry+target)*fee+other
+            loss = (entry+stop)*fee+other
+            actual = e['scenarios'][name]
+            assert D(actual['cost_r']) == loss/distance
+            # Match the declared finite-Decimal order of operations, with a
+            # tight tolerance for equivalent unnormalized arithmetic.
+            expected = (direction*(target-entry)-win)/(distance+loss)
+            assert abs(D(actual['scenario_net_rr'])-expected) < D('1e-24')
+            assert actual['passes_cost_screen'] == (expected >= D('1.5'))
+
+
+def test_native_ids_csv_locators_and_clock_are_original_september_or_history(sealed_s03):
+    from datetime import datetime, timezone
+    packet, source = sealed_s03
+    minutes = {'5m':5, '15m':15, '1h':60, '4h':240}
+    epoch = datetime(1970,1,1,tzinfo=timezone.utc)
+    partition_ids = {r['archive_id'] for r in packet['source_partitions']}
+    for r in source.values():
+        at, available = s.dt(r['open_time']), s.dt(r['available_at'])
+        assert at < s.END and available <= s.END
+        assert r['archive_id'] in partition_ids
+        assert int(r['native_id']) == int((at-epoch).total_seconds()*1000)
+        assert available-at == timedelta(minutes=minutes[r['interval']])
+        assert json.loads(r['source_key']) == [r['symbol'],r['interval'],r['native_id']]
+        assert r['csv_record_number_including_header'] == (
+            ((at.day-1)*1440+at.hour*60+at.minute)//minutes[r['interval']])+2
