@@ -111,13 +111,14 @@ def advance(setup, bar):
 
 def geometry(setup, bar, inventory, context):
     result = old.confirmation_geometry(setup, bar, inventory)
-    s, target = sign_for(setup['side']), D(setup['target']['price'])
+    s = sign_for(setup['side'])
+    target = D(setup['target']['price']) if setup['target'] else None
     vetoes = list(setup['formation_vetoes'])
     if context.readiness != 'READY' or context.classification == 'EXTREME_VOLATILITY':
         vetoes.append('MISSING_OR_EXTREME_CONFIRMATION_CONTEXT')
     if s*(bar.close-D(setup['entry_cap'])) > 0:
         vetoes.append('ENTRY_CAP_FAILED')
-    if (bar.high >= target if s == 1 else bar.low <= target) or setup['target_touched_at_formation']:
+    if target is not None and ((bar.high >= target if s == 1 else bar.low <= target) or setup['target_touched_at_formation']):
         vetoes.append('TARGET_ALREADY_TOUCHED')
     result['formation_vetoes'] = list(setup['formation_vetoes'])
     result['policy_vetoes'] = sorted(set(vetoes))
@@ -129,7 +130,7 @@ def geometry(setup, bar, inventory, context):
     for shift in ('0', '0.025', '0.05'):
         e = bar.close+s*D(result['stop_distance'])*D(shift)
         d = s*(e-D(setup['stop']))
-        g = s*(target-e)/d if d > 0 else D(-1)
+        g = s*(target-e)/d if d > 0 and target is not None else D(-1)
         result['adverse_geometry'][shift] = (d > 0 and D('1.8') <= g <= D(4)
             and d/e <= D('.02') and s*(e-D(setup['entry_cap'])) <= 0)
     return result
@@ -191,8 +192,8 @@ def scan(panel):
                                 boundary=D(terms['projection']), boundary_keys=terms['source_keys'], boundary_at=at)
                             # Breakout projection is ahead by construction; nearest eligible opposition wins.
                             setup.update(target=target, formation_inventory=audit,
-                                target_touched_at_formation=(q.high >= D(target['price']) if terms['side']=='LONG'
-                                                             else q.low <= D(target['price'])))
+                                target_touched_at_formation=bool(target and (q.high >= D(target['price']) if terms['side']=='LONG'
+                                                             else q.low <= D(target['price']))))
                             active = setup
                         formations.append(setup)
             exclusions = []
@@ -226,6 +227,28 @@ def select_matches(events, pool):
     finally:
         s03.SEED = previous_seed
     return result
+
+
+_WORKER_PANEL = None
+
+
+def _scan_symbol(symbol):
+    from dataclasses import replace
+    return scan(replace(_WORKER_PANEL,symbols={symbol:_WORKER_PANEL.symbols[symbol]}))
+
+
+def run_census(panel, workers):
+    """Two independent symbol reducers; deterministic merge, no outcome access."""
+    if workers==1:
+        return scan(panel)
+    import multiprocessing
+    from concurrent.futures import ProcessPoolExecutor
+    global _WORKER_PANEL
+    _WORKER_PANEL=panel
+    with ProcessPoolExecutor(max_workers=workers,mp_context=multiprocessing.get_context('fork')) as executor:
+        fragments=list(executor.map(_scan_symbol,sorted(panel.symbols)))
+    return {key:[row for f in fragments for row in f[key]]
+            for key in ('formations','events','pool','scan_rejections')}
 
 
 def is_base(e, scenario='base', ignored=frozenset()):
@@ -450,7 +473,8 @@ def portfolio(events):
 
 
 def causal_fingerprint():
-    sources={f.__name__:inspect.getsource(f) for f in (raw_terms,advance,geometry,scan,select_matches,is_base)}
+    sources={f.__name__:inspect.getsource(f) for f in (raw_terms,advance,geometry,scan,select_matches,is_base,
+                                                     _scan_symbol,run_census)}
     for name in ('s01_economic_recovery.py','s03_strategy_research.py','c05_r0_market_economics.py',
                  'c05_t1_event_control.py'):
         sources[name]=sha256((ROOT/'scripts'/name).read_bytes()).hexdigest()
@@ -524,6 +548,8 @@ def main():
     parser.add_argument('--output-dir',type=Path,default=OUT)
     parser.add_argument('--census-only',action='store_true')
     parser.add_argument('--reuse-census',type=Path)
+    parser.add_argument('--workers',type=int,choices=(1,2),default=1,
+                        help='Two Linux fork workers independently scan symbols; deterministic merge')
     args=parser.parse_args()
     validate_inputs(); _memoize_numeric();args.output_dir.mkdir(parents=True,exist_ok=True)
     panel=load_public_um_archive_panel(ROOT/'research/c04/historical_manifest.json',args.data_root,source_end_exclusive=END)
@@ -535,7 +561,7 @@ def main():
         census,digest=old.checked_json(args.reuse_census,compressed=True)
         if any(census.get(k)!=v for k,v in binding.items()): raise ValueError('census binding mismatch')
     else:
-        census={**binding,**scan(panel)}
+        census={**binding,**run_census(panel,args.workers)}
         if len(census['pool'])!=122976: raise ValueError('incomplete two-month window census')
         census['matches']=select_matches(census['events'],census['pool']);digest=config_hash(census)
     write_gzip(args.output_dir/'S04_CAUSAL_CENSUS.json.gz',{**census,'content_sha256':digest})

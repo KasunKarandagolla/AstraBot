@@ -61,6 +61,12 @@ def test_entry_chase_and_already_touched_target_are_not_retroactive_wins():
     assert 'TARGET_ALREADY_TOUCHED' in s.geometry(x,bar(s.START,close='100'),[],context())['policy_vetoes']
 
 
+def test_exhausted_projection_preserves_missing_target_rejection_and_shadow_path():
+    r=s.geometry(setup(target=None),bar(s.START,close='100'),[],context())
+    assert r['targets']==[] and 'NO_FORMATION_TARGET' in r['geometry_rejections']
+    assert not s.is_base(r) and not any(r['adverse_geometry'].values())
+
+
 @pytest.mark.parametrize('side',['LONG','SHORT'])
 def test_cashflow_stop_first_gap_and_actual_fee_notionals(side):
     long=side=='LONG'
