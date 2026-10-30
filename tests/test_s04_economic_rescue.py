@@ -176,11 +176,12 @@ def test_all_original_paths_and_cashflows_by_independent_touch_arithmetic():
         h=e['outcomes']['720'];rows=[bars[k] for k in h['source_keys']]
         assert all(s.dt(b['open_time'])<s.month_end(s.dt(e['terminal_at'])) for b in rows)
         sgn=D(1) if e['side']=='LONG' else D(-1)
-        stop,target=D(e['stop']),D(e['targets'][0]['price'])
+        stop=D(e['stop'])
+        target=D(e['targets'][0]['price']) if e['targets'] else None
         si=next((i for i,b in enumerate(rows) if (D(b['low'])<=stop if sgn==1 else D(b['high'])>=stop)),None)
-        ti=next((i for i,b in enumerate(rows) if (D(b['high'])>=target if sgn==1 else D(b['low'])<=target)),None)
+        ti=next((i for i,b in enumerate(rows) if target is not None and (D(b['high'])>=target if sgn==1 else D(b['low'])<=target)),None)
         assert h['full_ladder_lower']==(h['ordered_ladder'] and ti is not None and (si is None or ti<si))
-        if len(rows)<143:continue
+        if len(rows)<143 or target is None:continue
         k=142;exit_price=D(rows[k]['close'])
         for i,b in enumerate(rows[:143]):
             if (D(b['low'])<=stop if sgn==1 else D(b['high'])>=stop):

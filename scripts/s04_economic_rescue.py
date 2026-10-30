@@ -580,7 +580,7 @@ def main():
         'research_code_sha256':{str(p.relative_to(ROOT)):sha256(p.read_bytes()).hexdigest() for p in
             [Path(__file__),ROOT/'scripts/s01_economic_recovery.py',ROOT/'scripts/s03_strategy_research.py',
              ROOT/'scripts/c05_r0_market_economics.py',ROOT/'scripts/c05_t1_event_control.py',
-             ROOT/'src/astrabot/research/context.py',ROOT/'src/astrabot/research/replay.py',ROOT/'src/astrabot/research/levels.py']}}
+             *sorted((ROOT/'src/astrabot').rglob('*.py'))]}}
     packet['content_sha256']=config_hash(packet)
     write_gzip(args.output_dir/'S04_EVIDENCE.json.gz',packet)
     (args.output_dir/'S04_RESULTS.md').write_text(render(packet))
