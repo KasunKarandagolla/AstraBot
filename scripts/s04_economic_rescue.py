@@ -369,6 +369,8 @@ def summarize(census, events, controls):
                 ('rejected_confirmations',[e for e in rows if not is_base(e)]))},
             'ablations':{name:summarize_group([e for e in rows if is_base(e,ignored=ignored)],controls)
                          for name,ignored in ABLATIONS.items()},
+            'ablation_added_cases':{name:summarize_group([e for e in rows if is_base(e,ignored=ignored)
+                and not is_base(e)],controls) for name,ignored in ABLATIONS.items()},
             'volatility_quartiles':{str(q):summarize_group([e for e in base if min(3,int(D(e['atr_percentile'])//25))==q],controls)
                                    for q in range(4)},
             'portfolio':portfolio(base)}

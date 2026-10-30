@@ -1,0 +1,45 @@
+{
+  "schema_version": "s04.source-facts.v1",
+  "authority": [
+    "https://github.com/KasunKarandagolla/AstraBot/issues/18",
+    "https://github.com/KasunKarandagolla/AstraBot/issues/22"
+  ],
+  "observed_date": "2026-10-30",
+  "cloud_reprocessed_original_owner_feeds": false,
+  "owner_host_original_run": {
+    "commit": "654b6c96aefcd537d7f10bf10361ee896c515f97",
+    "symbol": "SOLUSDT",
+    "market_day": "2024-10-01",
+    "report_sha256": "911c271fe4eba4e6c79b284c11bd6d4234341a853b7de635c0fe870703add61e",
+    "matrix_sha256": "e5cf28b5f3a4723dd3bec36706f2656f68f87a300608eb208de01f4a9a33c575",
+    "diagnostic_sha256": "44263dc39376a79d71a23f85c29e4d2e2a03b641442179bbe41a3b8008c89e3c",
+    "original_streams": [
+      {"feed": "quotes", "rows": 1064711, "sha256": "ce31562cbfa20312aeda0246caf2d83754ce90835ce7579aeca40988b50f68cc"},
+      {"feed": "derivative_ticker", "rows": 119927, "sha256": "8c7301a2b3aa22de1430af3844afac9bb05de061dfc28a65a7bdc4920c1357d7"},
+      {"feed": "book_snapshot_25", "rows": 1522898, "sha256": "19655523821b384f741715a2d4bf5db2fe1f825fddbed66ecaf9ef1796a6e3ba"}
+    ],
+    "provider_v2_slots_at_0030_0105_0805_1605_utc": [30, 60, 60, 60],
+    "strict_v1_exact_adjacent_gaps": [1, 2, 0, 1],
+    "provider_v2_complete_cutoffs": 3,
+    "strict_v1_passing_cutoffs": 0,
+    "owner_receipt_selected": 0,
+    "quote_fidelity": "RECONSTRUCTED_L2_QUOTE",
+    "provider_receipt_is_owner_receipt": false,
+    "strategy_outcomes_inspected": false
+  },
+  "source_acceptance": {"PARTIAL": 7, "UNVERIFIED": 2, "SOURCE_ACCEPTED": 0},
+  "production_c02_policy": "c02-universe-v1_UNCHANGED",
+  "owner_approved_production_clock_migration": false,
+  "remaining_facts": [
+    "dated instrument identity/lifecycle/linear units and complete effective filters",
+    "original OI-specific measurement clock, units and contemporaneous mark notional",
+    "depth amount units, sequence/gap quality and notional around 0.2% mid",
+    "accepted actual source availability and owner-receipt contract",
+    "contemporaneously published event/news coverage and deterministic blackouts",
+    "account fee tier, order/approval/IOC timestamps, nonfills, partials and protection",
+    "actual funding exposure at settlement and time-dependent mark notional",
+    "representative multi-day multi-symbol source-eligible intended signals"
+  ],
+  "strict_historical_admissions": 0,
+  "procurement_or_capture_authorized": false
+}
