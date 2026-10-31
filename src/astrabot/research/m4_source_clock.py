@@ -120,13 +120,18 @@ class SourceCompleteness:
     """External evidence that source rows have been checked and hashed.
 
     complete_through: exclusive verified event-time watermark.
-    observed_at: first time this verification may be used by replay.
+    replay_proxy_available_at: EXCHANGE-CLOCK proxy of when complete 30s
+        coverage could be assumed available in a historical replay.
+    verified_at: real audit time the retained archive was checked, which can
+        be years after event time; NEVER use it as the event's availability
+        or as proof of the owner's original receipt.
     Does NOT establish original owner receipt or archive creation time.
     """
     complete_through: datetime
-    observed_at: datetime
+    replay_proxy_available_at: datetime
     source_digest: str
     provenance: Literal["SYNTHETIC_FIXTURE", "HASH_VERIFIED_ARCHIVE_REPLAY"]
+    verified_at: datetime | None = None
 
 
 @dataclass(frozen=True)
@@ -170,7 +175,7 @@ def aggregate_verified_30s(
         raise SourceNotReady("bucket must align to UTC 00/30 second")
     end = bucket_start + THIRTY_SECONDS
     watermark = _utc(completeness.complete_through, "complete_through")
-    watermark_visible = _utc(completeness.observed_at, "completeness.observed_at")
+    watermark_visible = _utc(completeness.replay_proxy_available_at, "replay_proxy_available_at")
     if watermark < end or watermark_visible > as_of:
         raise SourceNotReady("verified source-completeness watermark unavailable")
     if as_of < end + ONE_MS:
@@ -181,6 +186,10 @@ def aggregate_verified_30s(
         raise SourceNotReady("missing or malformed completeness source SHA-256")
     if completeness.provenance not in ("HASH_VERIFIED_ARCHIVE_REPLAY", "SYNTHETIC_FIXTURE"):
         raise SourceNotReady("unsupported completeness provenance")
+    if completeness.provenance == "HASH_VERIFIED_ARCHIVE_REPLAY" and completeness.verified_at is None:
+        raise SourceNotReady("archive verification timestamp required")
+    if completeness.verified_at is not None:
+        _utc(completeness.verified_at, "verified_at")
 
     required = (
         "aggregate_trade_id", "trade_id", "price", "base_quantity", "buyer_is_maker",
