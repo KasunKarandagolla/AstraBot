@@ -6,11 +6,11 @@ A caller must not assert archive completeness without upstream verification.
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from hashlib import sha256
-import json
 from typing import TYPE_CHECKING, Literal, Sequence
 
 if TYPE_CHECKING:
@@ -52,7 +52,7 @@ class PriorDayReference:
     low: Decimal
     candle_count: int
     source_digest: str
-    fidelity: Literal["VENUE_REPORTED_1M_EXCHANGE_CLOSE_PROXY"] = (
+    fidelity: Literal["VENUE_REPORTED_1M_EXCHANGE_CLOSE_PROXY", "SYNTHETIC_FIXTURE"] = (
         "VENUE_REPORTED_1M_EXCHANGE_CLOSE_PROXY"
     )
 
@@ -90,28 +90,52 @@ def prior_utc_day_reference(
             raise SourceNotReady("source available_at precedes candle close")
         if available > as_of:
             raise SourceNotReady("prior-day candle was not available as of decision")
-        if not (c.low <= c.open <= c.high and c.low <= c.close <= c.high):
+        ohlc = tuple(Decimal(value) for value in (c.open, c.high, c.low, c.close))
+        if any(not value.is_finite() or value <= 0 for value in ohlc):
+            raise SourceNotReady("invalid prior-day candle OHLC")
+        opened_price, high_price, low_price, close_price = ohlc
+        if not (low_price <= opened_price <= high_price
+                and low_price <= close_price <= high_price):
             raise SourceNotReady("invalid candle OHLC")
         by_open[opened] = c
     if any(previous + i * ONE_MIN not in by_open for i in range(1440)):
         raise SourceNotReady("missing prior-day minute")
     ordered = [by_open[previous + i * ONE_MIN] for i in range(1440)]
     latest_available = max(_utc(c.available_at, "available_at") for c in ordered)
+    fidelities = {c.fidelity for c in ordered}
+    if len(fidelities) != 1 or not fidelities <= {"VENUE_REPORTED", "SYNTHETIC_FIXTURE"}:
+        raise SourceNotReady("prior-day reference requires consistent venue-reported or synthetic candles")
+    reference_fidelity = (
+        "SYNTHETIC_FIXTURE" if fidelities == {"SYNTHETIC_FIXTURE"}
+        else "VENUE_REPORTED_1M_EXCHANGE_CLOSE_PROXY"
+    )
     # The digest must change if the market values change under the SAME source IDs.
     # It attests to this derived reference, not to an archive's original identity.
     digest_rows = [
-        [c.source_record_id, c.observation_id, c.open_time.isoformat(),
+        [c.symbol, c.instrument_id, c.interval, c.data_source, c.source_version,
+         c.units, c.fidelity, c.quality, c.source_record_id, c.observation_id,
+         c.open_time.isoformat(), c.close_time.isoformat(),
          c.available_at.isoformat(), str(c.open), str(c.high), str(c.low),
          str(c.close), c.source_sha256]
         for c in ordered
     ]
-    digest = sha256(json.dumps(digest_rows, separators=(",", ":")).encode()).hexdigest()
+    digest_payload = {
+        "reference_day": previous.date().isoformat(),
+        "as_of": as_of.isoformat(),
+        "symbol": symbol,
+        "instrument_id": instrument,
+        "fidelity": reference_fidelity,
+        "candle_count": 1440,
+        "candles": digest_rows,
+    }
+    digest = sha256(json.dumps(
+        digest_payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     return PriorDayReference(
         symbol=symbol, instrument_id=instrument, reference_day=previous.date(),
         as_of=as_of, available_at=latest_available,
         high=max(Decimal(c.high) for c in ordered),
         low=min(Decimal(c.low) for c in ordered), candle_count=1440,
-        source_digest=digest,
+        source_digest=digest, fidelity=reference_fidelity,
     )
 
 
@@ -154,7 +178,9 @@ class TradeDerived30sBar:
     last_aggregate_id: str
     source_digest: str
     input_digest: str
-    fidelity: Literal["TRADE_AGG_30S_DERIVED"] = "TRADE_AGG_30S_DERIVED"
+    fidelity: Literal["TRADE_AGG_30S_DERIVED", "SYNTHETIC_FIXTURE"] = (
+        "TRADE_AGG_30S_DERIVED"
+    )
 
 
 def aggregate_verified_30s(
@@ -193,13 +219,20 @@ def aggregate_verified_30s(
 
     required = (
         "aggregate_trade_id", "trade_id", "price", "base_quantity", "buyer_is_maker",
-        "aggressor_side", "available_at", "quality", "event_time",
+        "aggressor_side", "available_at", "quality", "event_time", "fidelity",
     )
     if any(not all(hasattr(t, field) for field in required) for t in trades):
         raise SourceNotReady("requires original trade-derived records, not OHLC candles")
     selected = [t for t in trades if bucket_start <= _utc(t.event_time, "event_time") < end]
     if not selected:
         raise SourceNotReady("empty 30s window; cannot infer OHLC")
+    fidelities = {t.fidelity for t in selected}
+    if len(fidelities) != 1 or not fidelities <= {"TRADE_AGG", "SYNTHETIC_FIXTURE"}:
+        raise SourceNotReady("30s aggregation requires consistent trade-derived fidelity")
+    output_fidelity = (
+        "SYNTHETIC_FIXTURE" if fidelities == {"SYNTHETIC_FIXTURE"}
+        else "TRADE_AGG_30S_DERIVED"
+    )
     symbol, instrument = _symbol_and_instrument(selected)
     if completeness.provenance == "HASH_VERIFIED_ARCHIVE_REPLAY":
         if any(t.source_sha256 != completeness.source_digest for t in selected):
@@ -228,7 +261,10 @@ def aggregate_verified_30s(
         expected = "SELL" if t.buyer_is_maker else "BUY"
         if t.aggressor_side != expected:
             raise SourceNotReady("buyer-maker aggressor mapping mismatch")
-        if Decimal(t.price) <= 0 or Decimal(t.base_quantity) <= 0:
+        price = Decimal(t.price)
+        quantity = Decimal(t.base_quantity)
+        if (not price.is_finite() or price <= 0
+                or not quantity.is_finite() or quantity <= 0):
             raise SourceNotReady("nonpositive trade price or quantity")
         previous = (event, identifier)
     prices = [Decimal(t.price) for t in selected]
@@ -237,9 +273,10 @@ def aggregate_verified_30s(
     sell = sum((Decimal(t.base_quantity) for t in selected if t.aggressor_side == "SELL"), Decimal(0))
     ids = [str(t.aggregate_trade_id or t.trade_id) for t in selected]
     input_rows = [
-        [str(t.aggregate_trade_id or t.trade_id), t.event_time.isoformat(),
-         t.available_at.isoformat(), str(t.price), str(t.base_quantity),
-         t.aggressor_side, t.source_sha256]
+        [t.symbol, t.instrument_id, t.fidelity, t.data_source, t.source_version,
+         t.observation_id, str(t.aggregate_trade_id or t.trade_id), t.trade_id,
+         t.event_time.isoformat(), t.available_at.isoformat(), str(t.price),
+         str(t.base_quantity), t.buyer_is_maker, t.aggressor_side, t.source_sha256]
         for t in selected
     ]
     input_digest = sha256(json.dumps(input_rows, separators=(",", ":")).encode()).hexdigest()
@@ -254,4 +291,5 @@ def aggregate_verified_30s(
         aggregate_print_count=len(selected), first_aggregate_id=ids[0], last_aggregate_id=ids[-1],
         source_digest=completeness.source_digest,
         input_digest=input_digest,
+        fidelity=output_fidelity,
     )
