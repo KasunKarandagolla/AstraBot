@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from hashlib import sha256
+import json
 from typing import TYPE_CHECKING, Literal, Sequence
 
 if TYPE_CHECKING:
@@ -96,7 +97,15 @@ def prior_utc_day_reference(
         raise SourceNotReady("missing prior-day minute")
     ordered = [by_open[previous + i * ONE_MIN] for i in range(1440)]
     latest_available = max(_utc(c.available_at, "available_at") for c in ordered)
-    digest = sha256("|".join(str(c.source_record_id) for c in ordered).encode()).hexdigest()
+    # The digest must change if the market values change under the SAME source IDs.
+    # It attests to this derived reference, not to an archive's original identity.
+    digest_rows = [
+        [c.source_record_id, c.observation_id, c.open_time.isoformat(),
+         c.available_at.isoformat(), str(c.open), str(c.high), str(c.low),
+         str(c.close), c.source_sha256]
+        for c in ordered
+    ]
+    digest = sha256(json.dumps(digest_rows, separators=(",", ":")).encode()).hexdigest()
     return PriorDayReference(
         symbol=symbol, instrument_id=instrument, reference_day=previous.date(),
         as_of=as_of, available_at=latest_available,
@@ -139,6 +148,7 @@ class TradeDerived30sBar:
     first_aggregate_id: str
     last_aggregate_id: str
     source_digest: str
+    input_digest: str
     fidelity: Literal["TRADE_AGG_30S_DERIVED"] = "TRADE_AGG_30S_DERIVED"
 
 
@@ -152,6 +162,8 @@ def aggregate_verified_30s(
     observations, duplicate IDs and noncontiguous aggregate trade sequences.
     Child trade fills and forced liquidations cannot be identified here.
     """
+    if not isinstance(completeness, SourceCompleteness):
+        raise SourceNotReady("explicit source-completeness evidence required")
     bucket_start = _utc(bucket_start, "bucket_start")
     as_of = _utc(as_of, "as_of")
     if bucket_start.second not in (0, 30) or bucket_start.microsecond:
@@ -180,6 +192,9 @@ def aggregate_verified_30s(
     if not selected:
         raise SourceNotReady("empty 30s window; cannot infer OHLC")
     symbol, instrument = _symbol_and_instrument(selected)
+    if completeness.provenance == "HASH_VERIFIED_ARCHIVE_REPLAY":
+        if any(t.source_sha256 != completeness.source_digest for t in selected):
+            raise SourceNotReady("archive record hash differs from completeness source hash")
     seen = set()
     previous = None
     for t in selected:
@@ -212,6 +227,13 @@ def aggregate_verified_30s(
     buy = sum((Decimal(t.base_quantity) for t in selected if t.aggressor_side == "BUY"), Decimal(0))
     sell = sum((Decimal(t.base_quantity) for t in selected if t.aggressor_side == "SELL"), Decimal(0))
     ids = [str(t.aggregate_trade_id or t.trade_id) for t in selected]
+    input_rows = [
+        [str(t.aggregate_trade_id or t.trade_id), t.event_time.isoformat(),
+         t.available_at.isoformat(), str(t.price), str(t.base_quantity),
+         t.aggressor_side, t.source_sha256]
+        for t in selected
+    ]
+    input_digest = sha256(json.dumps(input_rows, separators=(",", ":")).encode()).hexdigest()
     return TradeDerived30sBar(
         symbol=symbol, instrument_id=instrument,
         open_time=bucket_start, end_exclusive=end,
@@ -222,4 +244,5 @@ def aggregate_verified_30s(
         signed_aggressive_quantity=buy - sell,
         aggregate_print_count=len(selected), first_aggregate_id=ids[0], last_aggregate_id=ids[-1],
         source_digest=completeness.source_digest,
+        input_digest=input_digest,
     )
