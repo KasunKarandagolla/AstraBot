@@ -1,0 +1,137 @@
+"""M4 source-clock integration tests using AstraBot's real Candle and Trade contracts.
+
+Synthetic fixtures only: no exchange, archive retrieval, P&L or signal decisions.
+"""
+from datetime import date, datetime, timedelta, timezone
+from decimal import Decimal as D
+
+import pytest
+
+from astrabot.data.models import Candle, Trade, binance_usdm_instrument_id
+from astrabot.research.m4_source_clock import (
+    SourceCompleteness, SourceNotReady, aggregate_verified_30s, prior_utc_day_reference,
+)
+
+UTC = timezone.utc
+START = datetime(2023, 1, 3, tzinfo=UTC)
+SYMBOL = "BTCUSDT"
+IID = binance_usdm_instrument_id(SYMBOL)
+
+
+def candle(opened: datetime, *, available_at: datetime | None = None) -> Candle:
+    close = opened + timedelta(minutes=1) - timedelta(milliseconds=1)
+    available = available_at or close + timedelta(milliseconds=1)
+    return Candle(
+        symbol=SYMBOL, instrument_id=IID, interval="1m", open_time=opened,
+        close_time=close, event_time=close, available_at=available,
+        ingested_at=available, as_of=available, data_source="synthetic.m4",
+        source_version="m4.synthetic.v1", units="quote_per_base",
+        fidelity="SYNTHETIC_FIXTURE", readiness="READY", quality="VALID",
+        observation_id=f"bar:{opened.isoformat()}", config_hash="synthetic",
+        open=D("100"), high=D("102"), low=D("98"), close=D("101"),
+        base_volume=D("10"), trade_count=1, is_closed=True,
+        source_record_id=f"source:{opened.isoformat()}",
+    )
+
+
+def trade(number: int, second: int, *, price="100", side="BUY", quantity="1") -> Trade:
+    t = START + timedelta(seconds=second)
+    buyer_is_maker = side == "SELL"
+    return Trade(
+        symbol=SYMBOL, instrument_id=IID,
+        event_time=t, available_at=t, ingested_at=t, as_of=t,
+        data_source="synthetic.m4", source_version="m4.synthetic.v1",
+        units="base_quantity", fidelity="SYNTHETIC_FIXTURE",
+        readiness="READY", quality="VALID", observation_id=f"t:{number}",
+        config_hash="synthetic", trade_id=str(number), aggregate_trade_id=str(number),
+        first_trade_id=str(number), last_trade_id=str(number),
+        price=D(price), base_quantity=D(quantity),
+        quote_quantity=D(price)*D(quantity), buyer_is_maker=buyer_is_maker,
+        aggressor_side=side,
+    )
+
+
+def complete(*, observed: datetime | None = None, digest: str = "a" * 64) -> SourceCompleteness:
+    return SourceCompleteness(
+        complete_through=START + timedelta(seconds=30),
+        observed_at=observed or START + timedelta(seconds=30, milliseconds=1),
+        source_digest=digest, provenance="SYNTHETIC_FIXTURE",
+    )
+
+
+def sample_day():
+    start = START - timedelta(days=1)
+    return [candle(start + timedelta(minutes=i)) for i in range(1440)]
+
+
+def test_uses_actual_astrabot_candle_for_midnight_reference():
+    ref = prior_utc_day_reference(sample_day(), day=date(2023, 1, 3), as_of=START)
+    assert (ref.high, ref.low, ref.candle_count) == (D("102"), D("98"), 1440)
+    assert ref.available_at == START
+    assert ref.instrument_id == IID
+
+
+def test_actual_candle_late_availability_fails_closed():
+    rows = sample_day()
+    rows[-1] = rows[-1].model_copy(update={"available_at": START + timedelta(seconds=2)})
+    with pytest.raises(SourceNotReady, match="not available"):
+        prior_utc_day_reference(rows, day=START.date(), as_of=START)
+
+
+def test_future_candle_does_not_repaint_prior_day():
+    rows = sample_day()
+    old = prior_utc_day_reference(rows, day=START.date(), as_of=START)
+    extra = candle(START).model_copy(update={"high": D("999"), "low": D("1")})
+    new = prior_utc_day_reference([*rows, extra], day=START.date(), as_of=START)
+    assert (new.high, new.low, new.source_digest) == (old.high, old.low, old.source_digest)
+
+
+def test_true_30s_aggregation_from_actual_trade_contract():
+    rows = [trade(1, 2, price="100", quantity="2"),
+            trade(2, 14, price="101", side="SELL"),
+            trade(3, 29, price="99", quantity="3")]
+    result = aggregate_verified_30s(
+        rows, bucket_start=START, as_of=START + timedelta(seconds=30, milliseconds=1),
+        completeness=complete(),
+    )
+    assert (result.open, result.high, result.low, result.close) == (
+        D("100"), D("101"), D("99"), D("99"))
+    assert (result.aggressive_buy_quantity, result.aggressive_sell_quantity,
+            result.signed_aggressive_quantity) == (D("5"), D("1"), D("4"))
+    assert result.fidelity == "TRADE_AGG_30S_DERIVED"
+
+
+def test_future_trade_outside_bucket_cannot_repaint_result():
+    rows = [trade(1, 2), trade(2, 13)]
+    kwargs = {"bucket_start": START, "as_of": START+timedelta(seconds=30, milliseconds=1),
+              "completeness": complete()}
+    old = aggregate_verified_30s(rows, **kwargs)
+    future = trade(3, 30, price="10000")
+    assert aggregate_verified_30s([*rows, future], **kwargs) == old
+
+
+def test_actual_trade_quality_gap_blocks_output():
+    rows = [trade(1, 2), trade(3, 13)]
+    with pytest.raises(SourceNotReady, match="continuity gap"):
+        aggregate_verified_30s(rows, bucket_start=START,
+                               as_of=START+timedelta(minutes=1), completeness=complete())
+
+
+def test_bad_source_digest_is_rejected():
+    with pytest.raises(SourceNotReady, match="SHA-256"):
+        aggregate_verified_30s([trade(1, 2)], bucket_start=START,
+                               as_of=START+timedelta(minutes=1),
+                               completeness=complete(digest="x" * 64))
+
+
+def test_source_watermark_must_exist_as_of_decision():
+    with pytest.raises(SourceNotReady, match="watermark unavailable"):
+        aggregate_verified_30s([trade(1, 2)], bucket_start=START,
+                               as_of=START+timedelta(seconds=30, milliseconds=1),
+                               completeness=complete(observed=START+timedelta(seconds=31)))
+
+
+def test_1m_ohlc_is_not_accepted_as_a_trade_source():
+    with pytest.raises(SourceNotReady, match="not OHLC"):
+        aggregate_verified_30s([candle(START)], bucket_start=START,
+                               as_of=START+timedelta(seconds=31), completeness=complete())
