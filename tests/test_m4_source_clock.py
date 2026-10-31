@@ -135,3 +135,44 @@ def test_1m_ohlc_is_not_accepted_as_a_trade_source():
     with pytest.raises(SourceNotReady, match="not OHLC"):
         aggregate_verified_30s([candle(START)], bucket_start=START,
                                as_of=START+timedelta(seconds=31), completeness=complete())
+
+def test_prior_day_digest_changes_if_ohlc_changes_without_id_change():
+    rows = sample_day()
+    old = prior_utc_day_reference(rows, day=START.date(), as_of=START)
+    changed = rows.copy()
+    changed[3] = changed[3].model_copy(update={"high": D("103")})
+    new = prior_utc_day_reference(changed, day=START.date(), as_of=START)
+    assert old.source_digest != new.source_digest
+    assert old.high != new.high
+
+
+def test_30s_digest_changes_if_trade_price_changes_without_id_change():
+    kwargs = dict(bucket_start=START, as_of=START+timedelta(seconds=31), completeness=complete())
+    original = [trade(1, 2), trade(2, 13)]
+    prior = aggregate_verified_30s(original, **kwargs)
+    changed = [original[0], original[1].model_copy(update={"price": D("104"),
+                 "quote_quantity": D("104")})]
+    after = aggregate_verified_30s(changed, **kwargs)
+    assert prior.source_digest == after.source_digest
+    assert prior.input_digest != after.input_digest
+    assert prior.high != after.high
+
+
+def test_hashed_archive_attestation_requires_each_row_source_hash():
+    attestation = SourceCompleteness(
+        complete_through=START+timedelta(seconds=30),
+        observed_at=START+timedelta(seconds=30, milliseconds=1),
+        source_digest="a"*64, provenance="HASH_VERIFIED_ARCHIVE_REPLAY")
+    kwargs = dict(bucket_start=START, as_of=START+timedelta(seconds=31), completeness=attestation)
+    with pytest.raises(SourceNotReady, match="archive record hash"):
+        aggregate_verified_30s([trade(1, 2)], **kwargs)
+    hashed = trade(1, 2).model_copy(update={"source_sha256": "a"*64})
+    result = aggregate_verified_30s([hashed], **kwargs)
+    assert result.source_digest == "a"*64
+    assert len(result.input_digest) == 64
+
+
+def test_invalid_attestation_object_fails_closed():
+    with pytest.raises(SourceNotReady, match="source-completeness evidence"):
+        aggregate_verified_30s([trade(1, 2)], bucket_start=START,
+                               as_of=START+timedelta(seconds=31), completeness=None)
