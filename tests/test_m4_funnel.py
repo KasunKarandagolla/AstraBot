@@ -4,13 +4,19 @@ Only synthetic observations. No market-data retrieval, profitability, S3-S6
 confirmation, order simulation or live execution.
 """
 from datetime import datetime, timedelta, timezone
+from dataclasses import replace
 from decimal import Decimal as D
 
 import pytest
 
 from astrabot.data.models import Trade, binance_usdm_instrument_id
 from astrabot.research.m4_source_clock import PriorDayReference, SourceNotReady
-from astrabot.research.m4_funnel import SessionCoverage, enumerate_m4_penetrations
+from astrabot.research.m4_funnel import (
+    M4StageEvidence,
+    SessionCoverage,
+    causal_confirmation_timestamp,
+    enumerate_m4_penetrations,
+)
 
 UTC = timezone.utc
 DAY = datetime(2023, 1, 3, tzinfo=UTC)
@@ -25,7 +31,7 @@ def reference(*, available_at=DAY):
         reference_day=(DAY-timedelta(days=1)).date(),
         as_of=DAY, available_at=available_at,
         high=D("102.0"), low=D("98.0"),
-        candle_count=1440, source_digest="b"*64,
+        candle_count=1440, source_digest="b"*64, fidelity="SYNTHETIC_FIXTURE",
     )
 
 
@@ -76,9 +82,17 @@ def test_both_sides_and_no_false_confirmation():
     assert (result.n1_penetration_prints, result.n2_deduplicated_events) == (3, 2)
     assert [c.side for c in result.candidates] == ["LONG", "SHORT"]
     assert [c.reference_type for c in result.candidates] == ["PDL", "PDH"]
+    assert all(c.print_fidelity == c.reference_fidelity == "SYNTHETIC_FIXTURE"
+               for c in result.candidates)
+    assert all(c.s4_observation_end == c.t1+timedelta(seconds=90)
+               for c in result.candidates)
     assert result.candidates[0].penetration_ticks == D("1")
     assert result.n3_participation_pass is result.n6_confirmed_trigger is None
     assert result.status == "RESEARCH_ONLY_S1_S2_NO_CONFIRMATION"
+    assert {b.stage for b in result.stage_boundaries} == {
+        "S2_REARM", "S3", "S4", "S5", "S6"}
+    assert all(b.confirmation_timestamp is None and b.executable is False
+               for b in result.stage_boundaries)
 
 
 def test_15m_dedup_boundary_uses_first_accepted_per_side():
@@ -93,6 +107,56 @@ def test_identical_input_is_deterministic_and_future_print_is_ignored():
     a = run(rows)
     b = run([*rows, trade(3, 4200, "102.3", buyer_is_maker=False)])
     assert a == b == run(rows)
+
+
+def test_event_id_binds_print_values_even_when_source_id_is_unchanged():
+    original = trade(1, 10, "97.9")
+    revised = original.model_copy(update={"price": D("97.8")})
+    first = run([original]).candidates[0]
+    second = run([revised]).candidates[0]
+    assert first.aggregate_trade_id == second.aggregate_trade_id
+    assert first.source_digest == second.source_digest
+    assert first.event_id != second.event_id
+
+
+def test_forged_reference_with_incomplete_or_impossible_clock_fails_closed():
+    bad_count = replace(reference(), candle_count=1439)
+    with pytest.raises(SourceNotReady, match="1440"):
+        run([], reference=bad_count)
+
+    impossible_clock = replace(
+        reference(available_at=DAY - timedelta(microseconds=1)),
+        as_of=DAY-timedelta(seconds=1))
+    with pytest.raises(SourceNotReady, match="available|chronology"):
+        run([], reference=impossible_clock)
+
+
+def test_s6_timestamp_waits_for_all_inputs_and_rejects_lookahead():
+    s4_end = DAY + timedelta(seconds=90)
+    inputs = (
+        M4StageEvidence("S2_REARM", DAY+timedelta(seconds=20), DAY+timedelta(seconds=21)),
+        M4StageEvidence("S3", DAY+timedelta(seconds=30), DAY+timedelta(seconds=32)),
+        M4StageEvidence("S4", s4_end, DAY+timedelta(seconds=91)),
+        M4StageEvidence("S5", DAY+timedelta(seconds=40), DAY+timedelta(seconds=95)),
+    )
+    cutoff = DAY + timedelta(seconds=100)
+    assert causal_confirmation_timestamp(inputs, t1=DAY, as_of=cutoff) == DAY+timedelta(seconds=95)
+
+    with pytest.raises(SourceNotReady, match="causally unavailable"):
+        causal_confirmation_timestamp(
+            (*inputs[:-1], replace(inputs[-1], available_at=cutoff+timedelta(microseconds=1))),
+            t1=DAY, as_of=cutoff)
+    with pytest.raises(SourceNotReady, match="90-second clock"):
+        causal_confirmation_timestamp(
+            (*inputs[:-2], replace(inputs[-2], evaluated_through=DAY+timedelta(seconds=89)), inputs[-1]),
+            t1=DAY, as_of=cutoff)
+    with pytest.raises(SourceNotReady, match="qualified S2 re-arm and S3-S5"):
+        causal_confirmation_timestamp(inputs[:-1], t1=DAY, as_of=cutoff)
+    with pytest.raises(SourceNotReady, match="duplicated"):
+        causal_confirmation_timestamp((*inputs, inputs[0]), t1=DAY, as_of=cutoff)
+    with pytest.raises(SourceNotReady, match="failed upstream"):
+        causal_confirmation_timestamp(
+            (*inputs[:-1], replace(inputs[-1], passed=False)), t1=DAY, as_of=cutoff)
 
 
 def test_empty_session_requires_explicit_source_coverage():

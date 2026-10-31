@@ -69,6 +69,17 @@ def test_uses_actual_astrabot_candle_for_midnight_reference():
     assert (ref.high, ref.low, ref.candle_count) == (D("102"), D("98"), 1440)
     assert ref.available_at == START
     assert ref.instrument_id == IID
+    assert ref.fidelity == "SYNTHETIC_FIXTURE"
+
+
+def test_prior_day_reference_preserves_venue_fidelity_and_rejects_derived_bars():
+    venue_rows = [c.model_copy(update={"fidelity": "VENUE_REPORTED"}) for c in sample_day()]
+    ref = prior_utc_day_reference(venue_rows, day=START.date(), as_of=START)
+    assert ref.fidelity == "VENUE_REPORTED_1M_EXCHANGE_CLOSE_PROXY"
+
+    derived_rows = [c.model_copy(update={"fidelity": "BAR_DERIVED_APPROX"}) for c in sample_day()]
+    with pytest.raises(SourceNotReady, match="venue-reported or synthetic candles"):
+        prior_utc_day_reference(derived_rows, day=START.date(), as_of=START)
 
 
 def test_actual_candle_late_availability_fails_closed():
@@ -98,7 +109,21 @@ def test_true_30s_aggregation_from_actual_trade_contract():
         D("100"), D("101"), D("99"), D("99"))
     assert (result.aggressive_buy_quantity, result.aggressive_sell_quantity,
             result.signed_aggressive_quantity) == (D("5"), D("1"), D("4"))
-    assert result.fidelity == "TRADE_AGG_30S_DERIVED"
+    assert result.fidelity == "SYNTHETIC_FIXTURE"
+
+
+def test_30s_aggregation_rejects_approximate_trade_side_inputs():
+    estimated = trade(1, 2).model_copy(update={"fidelity": "BAR_DERIVED_APPROX"})
+    with pytest.raises(SourceNotReady, match="trade-derived fidelity"):
+        aggregate_verified_30s([estimated], bucket_start=START,
+                               as_of=START+timedelta(seconds=31), completeness=complete())
+
+
+def test_30s_aggregation_rejects_mixed_synthetic_and_venue_fidelity():
+    rows = [trade(1, 2), trade(2, 3).model_copy(update={"fidelity": "TRADE_AGG"})]
+    with pytest.raises(SourceNotReady, match="consistent trade-derived fidelity"):
+        aggregate_verified_30s(rows, bucket_start=START,
+                               as_of=START+timedelta(seconds=31), completeness=complete())
 
 
 def test_future_trade_outside_bucket_cannot_repaint_result():
@@ -146,6 +171,47 @@ def test_prior_day_digest_changes_if_ohlc_changes_without_id_change():
     assert old.high != new.high
 
 
+def test_prior_day_digest_binds_symbol_and_instrument_identity():
+    original = prior_utc_day_reference(
+        sample_day(), day=START.date(), as_of=START)
+    other_symbol = [
+        c.model_copy(update={
+            "symbol": "ETHUSDT",
+            "instrument_id": binance_usdm_instrument_id("ETHUSDT"),
+        })
+        for c in sample_day()
+    ]
+    other = prior_utc_day_reference(
+        other_symbol, day=START.date(), as_of=START)
+    assert (other.symbol, other.instrument_id) != (original.symbol, original.instrument_id)
+    assert other.source_digest != original.source_digest
+
+
+def test_prior_day_digest_binds_reference_asof_clock():
+    rows = sample_day()
+    midnight = prior_utc_day_reference(rows, day=START.date(), as_of=START)
+    later = prior_utc_day_reference(
+        rows, day=START.date(), as_of=START+timedelta(minutes=1))
+    assert (midnight.high, midnight.low) == (later.high, later.low)
+    assert later.source_digest != midnight.source_digest
+
+
+def test_prior_day_nonfinite_candle_values_fail_closed():
+    rows = sample_day()
+    rows[0] = rows[0].model_copy(update={"high": D("NaN")})
+    with pytest.raises(SourceNotReady, match="invalid prior-day candle OHLC"):
+        prior_utc_day_reference(rows, day=START.date(), as_of=START)
+
+
+def test_nonfinite_trade_values_fail_closed_in_30s_aggregation():
+    kwargs = dict(bucket_start=START, as_of=START+timedelta(seconds=31),
+                  completeness=complete())
+    with pytest.raises(SourceNotReady, match="trade price or quantity"):
+        aggregate_verified_30s([trade(1, 2).model_copy(update={"price": D("NaN")})], **kwargs)
+    with pytest.raises(SourceNotReady, match="trade price or quantity"):
+        aggregate_verified_30s([trade(1, 2).model_copy(update={"base_quantity": D("Infinity")})], **kwargs)
+
+
 def test_30s_digest_changes_if_trade_price_changes_without_id_change():
     kwargs = dict(bucket_start=START, as_of=START+timedelta(seconds=31), completeness=complete())
     original = [trade(1, 2), trade(2, 13)]
@@ -156,6 +222,17 @@ def test_30s_digest_changes_if_trade_price_changes_without_id_change():
     assert prior.source_digest == after.source_digest
     assert prior.input_digest != after.input_digest
     assert prior.high != after.high
+
+
+def test_30s_input_digest_binds_instrument_identity():
+    kwargs = dict(bucket_start=START, as_of=START+timedelta(seconds=31), completeness=complete())
+    btc = aggregate_verified_30s([trade(1, 2)], **kwargs)
+    eth_trade = trade(1, 2).model_copy(update={
+        "symbol": "ETHUSDT",
+        "instrument_id": binance_usdm_instrument_id("ETHUSDT"),
+    })
+    eth = aggregate_verified_30s([eth_trade], **kwargs)
+    assert eth.input_digest != btc.input_digest
 
 
 def test_hashed_archive_attestation_requires_each_row_source_hash():
