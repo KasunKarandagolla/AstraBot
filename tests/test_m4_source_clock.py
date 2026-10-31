@@ -54,7 +54,7 @@ def trade(number: int, second: int, *, price="100", side="BUY", quantity="1") ->
 def complete(*, observed: datetime | None = None, digest: str = "a" * 64) -> SourceCompleteness:
     return SourceCompleteness(
         complete_through=START + timedelta(seconds=30),
-        observed_at=observed or START + timedelta(seconds=30, milliseconds=1),
+        replay_proxy_available_at=observed or START + timedelta(seconds=30, milliseconds=1),
         source_digest=digest, provenance="SYNTHETIC_FIXTURE",
     )
 
@@ -161,8 +161,9 @@ def test_30s_digest_changes_if_trade_price_changes_without_id_change():
 def test_hashed_archive_attestation_requires_each_row_source_hash():
     attestation = SourceCompleteness(
         complete_through=START+timedelta(seconds=30),
-        observed_at=START+timedelta(seconds=30, milliseconds=1),
-        source_digest="a"*64, provenance="HASH_VERIFIED_ARCHIVE_REPLAY")
+        replay_proxy_available_at=START+timedelta(seconds=30, milliseconds=1),
+        source_digest="a"*64, provenance="HASH_VERIFIED_ARCHIVE_REPLAY",
+        verified_at=datetime(2026, 10, 31, tzinfo=UTC))
     kwargs = dict(bucket_start=START, as_of=START+timedelta(seconds=31), completeness=attestation)
     with pytest.raises(SourceNotReady, match="archive record hash"):
         aggregate_verified_30s([trade(1, 2)], **kwargs)
@@ -176,3 +177,31 @@ def test_invalid_attestation_object_fails_closed():
     with pytest.raises(SourceNotReady, match="source-completeness evidence"):
         aggregate_verified_30s([trade(1, 2)], bucket_start=START,
                                as_of=START+timedelta(seconds=31), completeness=None)
+
+
+def test_retrospective_archive_verification_is_not_market_arrival():
+    # A 2026 audit can authenticate a 2023 file, but cannot establish original
+    # 2023 owner receipt. The output is expressly an exchange-clock replay proxy.
+    attestation = SourceCompleteness(
+        complete_through=START+timedelta(seconds=30),
+        replay_proxy_available_at=START+timedelta(seconds=30, milliseconds=1),
+        source_digest="a"*64, provenance="HASH_VERIFIED_ARCHIVE_REPLAY",
+        verified_at=datetime(2026, 10, 31, tzinfo=UTC))
+    hashed = trade(1, 2).model_copy(update={"source_sha256": "a"*64})
+    result = aggregate_verified_30s(
+        [hashed], bucket_start=START, as_of=START+timedelta(seconds=31),
+        completeness=attestation)
+    assert result.available_at == START+timedelta(seconds=30, milliseconds=1)
+    assert attestation.verified_at > result.available_at
+
+
+def test_archive_claim_without_verification_time_fails_closed():
+    attestation = SourceCompleteness(
+        complete_through=START+timedelta(seconds=30),
+        replay_proxy_available_at=START+timedelta(seconds=30, milliseconds=1),
+        source_digest="a"*64, provenance="HASH_VERIFIED_ARCHIVE_REPLAY")
+    hashed = trade(1, 2).model_copy(update={"source_sha256": "a"*64})
+    with pytest.raises(SourceNotReady, match="verification timestamp required"):
+        aggregate_verified_30s(
+            [hashed], bucket_start=START, as_of=START+timedelta(seconds=31),
+            completeness=attestation)
